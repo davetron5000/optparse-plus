@@ -1,4 +1,4 @@
-<i>Developed using <a href="http://tom.preston-werner.com/2010/08/23/readme-driven-development.html">Readme-driven development</a>; that's why there's only a README</i>
+<i>Developed using {Readme-driven devlopment}[http://tom.preston-werner.com/2010/08/23/readme-driven-development.html] that's why there's only a README</i>
 
 = Methadone - kick the bash habit and start your command line apps off right
 
