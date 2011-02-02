@@ -1,3 +1,5 @@
+<i>Developed using <a href="http://tom.preston-werner.com/2010/08/23/readme-driven-development.html">Readme-driven development</a>; that's why there's only a README</i>
+
 = Methadone - kick the bash habit and start your command line apps off right
 
 Author::  Dave Copeland (mailto:davetron5000 at g mail dot com)
