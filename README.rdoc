@@ -20,7 +20,7 @@ This *is* *not* a gem you have to depend on, but an advanced template for creati
 
 == Install
 
-    gem instal methadone
+    gem install methadone
 
 == Use
 
@@ -46,6 +46,7 @@ This will create a canonical +bin/+ +lib/+ +test/+ +Rakefile+ directory structur
 * +OptionParser+ configured to parse your CLI
 * A logger that will put errors to STDERR and has controllable log levels
 * Proper exit codes, with support for using exceptions to handle error conditions
+* Testing support
 * Configure all of this, and set up your own templates
 
 == Why?
