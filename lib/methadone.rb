@@ -1,0 +1,3 @@
+module Methadone
+  # Your code goes here...
+end
