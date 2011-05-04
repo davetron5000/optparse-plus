@@ -1,55 +1,9 @@
-<i>Developed using {Readme-driven devlopment}[http://tom.preston-werner.com/2010/08/23/readme-driven-development.html] that's why there's only a README</i>
-
 = Methadone - kick the bash habit and start your command line apps off right
 
 Author::  Dave Copeland (mailto:davetron5000 at g mail dot com)
 Copyright:: Copyright (c) 2011 by Dave Copeland
 License:: Distributes under the Apache License, see LICENSE.txt in the source distro
 
-This is an application to bootstrap *any* command-line automation script.  Instead of creating bash script that eventually becomes a mess, use methadone to kick things off right and have a script that is:
+A smattering of tools to make your command-line apps easily awesome; kick the bash habit without sacrificing any of the power.
 
-* Plays Well With Others
-* Helpful
-* Polished
-* Easy to Maintain
-
-This *is* *not* a gem you have to depend on, but an advanced template for creating your application.  Think of it as a more sophisticated version of cloning a scaffold git repo
-
-* {Source on Github}[http://github.com/davetron5000/methadone]
-* RDoc[http://davetron5000.github.com/methadone]
-
-== Install
-
-    gem install methadone
-
-== Use
-
-    methadone init my_cmd -a -b -c -f FILENAME --filename=FILENAME -d DATE:Time
-
-This will create a shell of a command-line application named +my_cmd+ that does the following:
-
-* <code>-a</code>, <code>-b</code>, and <code>-c</code> are switches accepted on the command line
-* <code>-f</code> or <code>--filename</code> can be used to specify some string called "FILENAME"
-* <code>-d</code> specifies some argument called "DATE" that will be converted into a <code>Time</code>
-
-If you use the optional <code>-f</code> flag to +init+:
-
-    methadone init -f my_cmd -a -b -c -f FILENAME --filename=FILENAME -d DATE:Time
-
-This will create a canonical +bin/+ +lib/+ +test/+ +Rakefile+ directory structure to allow you to develop a more sophisitcated application.
-
-
-== What you get
-
-* Sensible shebang line
-* Well-organized script file that facilitates functional decomposition
-* +OptionParser+ configured to parse your CLI
-* A logger that will put errors to STDERR and has controllable log levels
-* Proper exit codes, with support for using exceptions to handle error conditions
-* Testing support
-* Configure all of this, and set up your own templates
-
-== Why?
-
-Because there's some boilerplate that, if it's done for you, can let you make an awesome command-line application very easily, making +bash+ a much less tempting option for just a quick script.  You shouldn't be using bash, and rash will help you kick the habit.
-
+Currently, this is under development and has one fledgling class, Methadone::CLILogger, that you can use for outputing log messages.
