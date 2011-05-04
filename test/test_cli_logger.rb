@@ -20,13 +20,6 @@ class TestCLILogger < BaseTest
     $stdout = @real_stdout
   end
 
-  def logger_with_blank_format
-    logger = CLILogger.new
-    logger.formatter = @blank_format
-    logger.level = Logger::Severity::DEBUG
-    logger
-  end
-
   test "logger sends everything to stdout, and warns, errors, and fatals to stderr" do
     logger = logger_with_blank_format
 
@@ -110,6 +103,15 @@ class TestCLILogger < BaseTest
     logger.error("error")
     $stdout.string.should == "debug\nerror\n"
     $stderr.string.should == "ERROR_LOGGER: error\n"
+  end
+
+  private 
+
+  def logger_with_blank_format
+    logger = CLILogger.new
+    logger.formatter = @blank_format
+    logger.level = Logger::Severity::DEBUG
+    logger
   end
 
 end
