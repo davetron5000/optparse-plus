@@ -6,4 +6,39 @@ License:: Distributes under the Apache License, see LICENSE.txt in the source di
 
 A smattering of tools to make your command-line apps easily awesome; kick the bash habit without sacrificing any of the power.
 
-Currently, this is under development and has one fledgling class, Methadone::CLILogger, that you can use for outputing log messages.
+Currently, this is under development and has the following to offer:
+
+* Methadone::CLILogger - a logger subclass that sends error message to standard error and all messages to standard out
+* Methadone::CLILogging - a module that, when included in any class, provides easy access to a shared logger
+
+
+=== Examples
+
+==== Using STDOUT as a log, respecting STDERR
+
+    require 'methadone'
+
+    include Methadone::CLILogging
+
+    command = "rm -rf /tmp/*"
+    debug("About to run #{command}") # => goes only to STDOUT
+    if system(command)
+      info("Succesfully ran #{command}") # => goes only to STDOUT
+    else
+      error("There was a problem running #{command}") # => goes to STDOUT AND STDERR
+    end
+
+==== Using a log file, but respecting STDERR
+
+    require 'methadone'
+
+    include Methadone::CLILogging
+
+    self.logger = CLILogger.new("logfile.txt")
+    command = "rm -rf /tmp/*"
+    debug("About to run #{command}") # => goes only to logfile.txt
+    if system(command)
+      info("Succesfully ran #{command}") # => goes only to logfile.txt
+    else
+      error("There was a problem running #{command}") # => goes to logfile.txt AND STDERR
+    end

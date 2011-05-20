@@ -3,14 +3,14 @@ require 'logger'
 module Methadone
   # A Logger appropriate for a command-line program in that it logs
   # all messages (based on level) to the standard output and logs "error" type
-  # messages additioanlly to the standard error.  By default, this will pretty
+  # messages additionally to the standard error.  By default, this will pretty
   # much do what you want, however it can be customized:
   # 
   # * You can override the devices used by passing different devices to the constructor
   # * You can adjust the level of message that goes to the error logger via error_level=
   # * You can adjust the format for messages to the error logger separately via error_formatter=
   #
-  # Example
+  # === Example
   #
   #     logger = CLILogger.new
   #     logger.debug("Starting up") # => only the standard output gets this
@@ -45,18 +45,18 @@ module Methadone
     end
 
     # Set the threshold for what messages go to the error device.  Note that calling
-    # level= will *not* affect the error logger
+    # #level= will *not* affect the error logger
     #
-    # +level+:: a constant from Logger::Severity for the level of message that should go
+    # +level+:: a constant from Logger::Severity for the level of messages that should go
     #           to the error logger
     def error_level=(level)
       @stderr_logger.level = level
     end
 
-    # Overrides the formatter for the error logger.  A future call to formatter will
-    # affect both, so order of the calls matters
+    # Overrides the formatter for the error logger.  A future call to #formatter= will
+    # affect both, so the order of the calls matters.
     #
-    # +formatter+:: Proc that handles the formatting, the same as for formatter=
+    # +formatter+:: Proc that handles the formatting, the same as for #formatter=
     def error_formatter=(formatter)
       @stderr_logger.formatter=formatter
     end
