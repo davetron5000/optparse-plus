@@ -21,5 +21,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("rspec-expectations")
   s.add_development_dependency("rake")
   s.add_development_dependency("rdoc","~> 3.6.1")
+  s.add_development_dependency("grancher")
   s.add_development_dependency("hanna-nouveau")
+  s.add_development_dependency("aruba")
 end

@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby -w
+
+require 'optparse'
+
+option_parser = OptionParser.new do |opts|
+  executable_name = File.basename(__FILE__)
+  opts.banner = "Usage: #{executable_name} [options]"
+end
+
+option_parser.parse!
+

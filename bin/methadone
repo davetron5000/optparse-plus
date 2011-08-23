@@ -1,0 +1,76 @@
+#!/usr/bin/env ruby -w
+
+require 'fileutils'
+require 'erb'
+
+include FileUtils
+
+def main(basedir)
+  mkdir_p basedir
+
+  gemname = File.basename(basedir)
+  chdir File.dirname(basedir)
+
+  %x[bundle gem #{gemname}]
+
+  chdir gemname
+
+  tempalte_dirs_in(:full).each  { |dir| mkdir_p dir }
+
+  copy_file "Rakefile"
+  copy_file "test/tc_something.rb"
+  copy_file "features/executable.feature", :as => "#{gemname}.feature", :binding => binding
+  copy_file "features/support/env.rb"
+  copy_file "features/step_definitions/executable_steps.rb", :as => "#{gemname}_steps.rb"
+  copy_file "bin/executable", :as => gemname, :executable => true
+
+end
+
+
+# Copies a file, running it through ERB
+#
+# +relative_path+:: path to the file, relative to the project root, minus the .erb extension
+#                   You should use forward slashes to separate paths; this method
+#                   will handle making the ultimate path OS independent.
+# +options+:: Options to affect how the copy is done:
+#             <tt>:from</tt>:: The name of the profile from which to find the file, "full" by default
+#             <tt>:as</tt>:: The name the file should get if not the one in relative_path
+#             <tt>:executable</tt>:: true if this file should be set executable
+#             <tt>:binding</tt>:: the binding to use for the template
+def copy_file(relative_path,options = {})
+  options[:from] ||= :full
+
+  relative_path = File.join(relative_path.split(/\//))
+
+  template_path = File.join(template_dir(options[:from]),relative_path + ".erb")
+  template = ERB.new(File.open(template_path).readlines.join(''))
+
+  relative_path_parts = File.split(relative_path)
+  relative_path_parts[-1] = options[:as] if options[:as]
+
+  erb_binding = options[:binding] or binding
+
+  File.open(File.join(relative_path_parts),'w') do |file|
+    file.puts template.result(erb_binding)
+    file.chmod(0755) if options[:executable]
+  end
+end
+
+# Get the location of the templates for profile "from"
+def template_dir(from)
+  File.join(File.dirname(__FILE__),'..','templates',from.to_s)
+end
+
+def tempalte_dirs_in(profile)
+  template_dir = template_dir(:full)
+
+  Dir["#{template_dir}/**/*"].select { |x| 
+    File.directory? x 
+  }.map { |dir| 
+    dir.gsub(/^#{template_dir}\//,'')
+  }
+end
+
+
+main(ARGV[0])
+

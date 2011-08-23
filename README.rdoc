@@ -42,3 +42,24 @@ Currently, this is under development and has the following to offer:
     else
       error("There was a problem running #{command}") # => goes to logfile.txt AND STDERR
     end
+
+== TODO
+
+* Support for running external commands easily, with full error checking
+* Support for main method-style implementation
+* Easy support for filtering the output of a command, e.g. <tt>File.open("ls|")</tt> Perl-style
+
+
+    sh 'cp foo bar'
+    # how it works
+
+    def sh(command)
+      debug("Running command '#{command}'")
+      # run with open 3 and log the outpu
+      raise "Error running #{command}" unless command.succeeded?
+    end
+
+    # When run from main
+    main do |options,args|
+      sh 'cp foo bar'
+    end
