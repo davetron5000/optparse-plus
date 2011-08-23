@@ -2,10 +2,20 @@
 
 require 'fileutils'
 require 'erb'
+require 'optparse'
 
 include FileUtils
 
-def main(basedir)
+def main(basedir,force)
+  if Dir.exists? basedir
+    if force
+      rm_rf basedir, :verbose => true, :secure => true
+    else
+      STDERR.puts "error: #{basedir} exists, use --force to override"
+      return 1
+    end
+  end
+
   mkdir_p basedir
 
   gemname = File.basename(basedir)
@@ -15,7 +25,7 @@ def main(basedir)
 
   chdir gemname
 
-  tempalte_dirs_in(:full).each  { |dir| mkdir_p dir }
+  template_dirs_in(:full).each  { |dir| mkdir_p dir }
 
   copy_file "Rakefile"
   copy_file "test/tc_something.rb"
@@ -23,9 +33,41 @@ def main(basedir)
   copy_file "features/support/env.rb"
   copy_file "features/step_definitions/executable_steps.rb", :as => "#{gemname}_steps.rb"
   copy_file "bin/executable", :as => gemname, :executable => true
+  add_to_file "#{gemname}.gemspec", [
+    "  s.add_development_dependency('rdoc')",
+    "  s.add_development_dependency('grancher')",
+    "  s.add_development_dependency('aruba')",
+  ], :before => /^end\s*$/
 
+  return 0
 end
 
+# Add content to a file
+#
+# +file+:: path to the file
+# +lines+:: Array of String representing the lines to add
+# +options+:: Hash of options:
+#             <tt>:before</tt>:: A regexp that will appear right after the new content. i.e.
+#                                this is where to insert said content.
+def add_to_file(file,lines,options = {})
+  new_lines = []
+  found_line = false
+  File.open(file).readlines.each do |line|
+    line.chomp!
+    if options[:before] && options[:before] === line
+      found_line = true
+      new_lines += lines
+    end
+    new_lines << line
+  end
+
+  raise "No line matched #{options[:before]}" if options[:before] && !found_line
+
+  new_lines += lines unless options[:before]
+  File.open(file,'w') do |fp|
+    new_lines.each { |line| fp.puts line }
+  end
+end
 
 # Copies a file, running it through ERB
 #
@@ -58,10 +100,10 @@ end
 
 # Get the location of the templates for profile "from"
 def template_dir(from)
-  File.join(File.dirname(__FILE__),'..','templates',from.to_s)
+  File.join(File.dirname(EXE),'..','templates',from.to_s)
 end
 
-def tempalte_dirs_in(profile)
+def template_dirs_in(profile)
   template_dir = template_dir(:full)
 
   Dir["#{template_dir}/**/*"].select { |x| 
@@ -71,6 +113,16 @@ def tempalte_dirs_in(profile)
   }
 end
 
+options = {}
+option_parser = OptionParser.new do |opts|
+  opts.on("--force","Overwrite files if they exist") do
+    options[:force] = true
+  end
+end
 
-main(ARGV[0])
+option_parser.parse!
+
+EXE = File.expand_path(__FILE__)
+
+exit main(ARGV[0],options[:force])
 
