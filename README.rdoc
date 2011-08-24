@@ -8,9 +8,45 @@ A smattering of tools to make your command-line apps easily awesome; kick the ba
 
 Currently, this is under development and has the following to offer:
 
-* Methadone::CLILogger - a logger subclass that sends error message to standard error and all messages to standard out
-* Methadone::CLILogging - a module that, when included in any class, provides easy access to a shared logger
+* Bootstrapping a new CLI app
+* Utility Classes
+  * Methadone::CLILogger - a logger subclass that sends error message to standard error and all messages to standard out
+  * Methadone::CLILogging - a module that, when included in any class, provides easy access to a shared logger
+* Cucumber Steps
 
+
+== Bootstrapping
+
+The +methadone+ command-line app will bootstrap a new command-line app, setting up a proper gem structure, unit tests, and cucumber-based tests with aruba:
+
+    $ methadone --help
+    Usage: methadone [options] app_name
+            --force                      Overwrite files if they exist
+    $ methadone newgem
+    $ cd newgem
+    $ rake
+    1 tests, 1 assertions, 0 failures, 0 errors, 0 skips
+    1 scenario (1 passed)
+    3 steps (3 passed)
+    $ cat features/newgem.feature
+    Feature: My bootstrapped app kinda works
+      In order to get going on coding my awesome app
+      I want to have aruba and cucumber setup
+      So I don't have to do it myself
+
+      Scenario: App just runs
+        When I run `newgem --help`
+        Then the exit status should be 0
+        And the output should contain:
+        """
+        Usage: newgem [options]
+        """
+
+Basically, this sets you up with all the boilerplate that you *should* be using to write a command-line app.
+
+== Utility Classes
+
+Currently, there are classes the assist in directing output logger-style to the right place; basically ensuring that errors go to +STDERR+ and everything else goes to +STDOUT+.  All of this is, of course, configurable
 
 === Examples
 
@@ -43,6 +79,37 @@ Currently, this is under development and has the following to offer:
       error("There was a problem running #{command}") # => goes to logfile.txt AND STDERR
     end
 
+== Cucumber Steps
+
+Methadone uses aruba[http://www.github.com/cucumber/aruba] for BDD-style testing with cucumber. This library has some awesome steps, and methadone provides additiona, more opinionated, steps:
+
+* Run <tt>command_to_run --help</tt> using aruba
+
+    When I get help for "command_to_run"
+
+* Make sure that each option shows up in the help and has *some* sort of documentation
+
+    Then the following options should be documented:
+      |--force|
+      |-x     |
+
+* Check an individual option for documentation:
+
+    Then the option "--force" should be documented
+
+* Checks that the help has a proper usage banner
+
+    Then the banner should be present
+
+* Checks that the usage banner indicates it takes options via <tt>[options]</tt>
+
+    Then the banner should document that this app takes options
+
+* Checks that the app's usage banner documents that its arguments are <tt>args</tt>
+
+    Then the banner should document that this app's arguments are "args"
+
+
 == TODO
 
 * Support for running external commands easily, with full error checking
@@ -63,3 +130,5 @@ Currently, this is under development and has the following to offer:
     main do |options,args|
       sh 'cp foo bar'
     end
+
+

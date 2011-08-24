@@ -2,6 +2,7 @@ When /^I get help for "([^"]*)"$/ do |app_name|
   @app_name = app_name
   When %(I run `#{app_name} --help`)
 end
+
 Then /^the following options should be documented:$/ do |options|
   options.raw.each do |option|
     Then %(the option "#{option[0]}" should be documented)
