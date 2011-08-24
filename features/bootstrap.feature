@@ -80,3 +80,11 @@ Feature: Bootstrap a new command-line app
     error: app_dir required
     """
 
+  Scenario: Help is properly documented
+    When I get help for "methadone"
+    Then the exit status should be 0
+    And the following options should be documented:
+      |--force|
+    And the banner should be present
+    And the banner should document that this app takes options
+    And the banner should document that this app's arguments are "app_name"
