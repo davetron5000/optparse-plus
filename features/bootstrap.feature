@@ -71,3 +71,12 @@ Feature: Bootstrap a new command-line app
     When I successfully run `methadone tmp/newgem`
     And I run `methadone --force tmp/newgem`
     Then the exit status should be 0
+
+  Scenario: We must supply a dirname
+    When I run `methadone`
+    Then the exit status should not be 0
+    And the stderr should contain:
+    """
+    error: app_dir required
+    """
+

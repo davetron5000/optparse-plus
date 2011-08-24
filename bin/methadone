@@ -124,5 +124,10 @@ option_parser.parse!
 
 EXE = File.expand_path(__FILE__)
 
-exit main(ARGV[0],options[:force])
+if ARGV.empty?
+  STDERR.puts("error: app_dir required")
+  exit 2
+else
+  exit main(ARGV[0],options[:force])
+end
 
