@@ -35,7 +35,6 @@ def main(basedir,force)
   copy_file "bin/executable", :as => gemname, :executable => true
   add_to_file "#{gemname}.gemspec", [
     "  s.add_development_dependency('rdoc')",
-    "  s.add_development_dependency('grancher')",
     "  s.add_development_dependency('aruba')",
   ], :before => /^end\s*$/
 
