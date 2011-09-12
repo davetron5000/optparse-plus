@@ -6,6 +6,8 @@ require 'cucumber/rake/task'
 require 'rdoc/task'
 require 'grancher/task'
 
+include Rake::DSL
+
 Bundler::GemHelper.install_tasks
 
 Rake::TestTask.new do |t|

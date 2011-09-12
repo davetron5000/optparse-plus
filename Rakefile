@@ -7,6 +7,8 @@ require 'grancher/task'
 require 'cucumber'
 require 'cucumber/rake/task'
 
+include Rake::DSL
+
 Bundler::GemHelper.install_tasks
 
 desc 'run tests'
@@ -33,9 +35,11 @@ end
 CUKE_RESULTS = 'results.html'
 CLEAN << CUKE_RESULTS
 Cucumber::Rake::Task.new(:features) do |t|
-  t.cucumber_opts = "features --format html -o #{CUKE_RESULTS} --format progress -x"
+  t.cucumber_opts = "features --format html -o #{CUKE_RESULTS} --format pretty -x"
   t.fork = false
 end
 
 desc 'Publish rdoc on github pages and push to github'
 task :publish_rdoc => [:rdoc,:publish]
+
+task :default => [:test, :features]

@@ -21,6 +21,10 @@ Then /^the banner should document that this app takes options$/ do
   Then %(the output should match /\[options\]/)
 end
 
-Then /^the banner should document that this app's arguments are "([^"]*)"$/ do |arg_name|
-  Then %(the output should match / #{arg_name}\s*$/)
+Then /^the banner should document that this app's arguments are:$/ do |table|
+  expected_arguments = table.raw.map { |row|
+    option = row[0]
+    option = "[#{option}]" if row[1] == 'optional'
+  }.join(' ')
+  Then %(the output should contain "#{expected_arguments}")
 end

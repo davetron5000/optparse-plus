@@ -36,14 +36,14 @@ Feature: Bootstrap a new command-line app
     rake build         # Build newgem-0.0.1.gem into the pkg directory
     rake clean         # Remove any temporary products.
     rake clobber       # Remove any generated file.
-    rake clobber_rdoc  # Remove rdoc products
+    rake clobber_rdoc  # Remove RDoc HTML files
     rake features      # Run Cucumber features
     rake install       # Build and install newgem-0.0.1.gem into system gems
     rake publish       # Builds and pushes the gh-pages-branch
     rake publish_rdoc  # Publish rdoc on github pages and push to github
-    rake rdoc          # Build the rdoc HTML Files
+    rake rdoc          # Build RDoc HTML files
     rake release       # Create tag v0.0.1 and build and push newgem-0.0.1.gem to Rubygems
-    rake rerdoc        # Force a rebuild of the RDOC files
+    rake rerdoc        # Rebuild RDoc HTML files
     rake test          # Run tests
     """    
     When I run `rake`
@@ -88,4 +88,4 @@ Feature: Bootstrap a new command-line app
     And the banner should be present
     And the banner should document that this app takes options
     And the banner should document that this app's arguments are:
-      |app_name|
+      |app_name|required|

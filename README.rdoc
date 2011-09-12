@@ -81,8 +81,23 @@ Currently, there are classes the assist in directing output logger-style to the 
 
 == Cucumber Steps
 
-Methadone uses aruba[http://www.github.com/cucumber/aruba] for BDD-style testing with cucumber. This library has some awesome steps, and methadone provides additiona, more opinionated, steps:
+Methadone uses aruba[http://www.github.com/cucumber/aruba] for BDD-style testing with cucumber. This library has some awesome steps, and methadone provides additional, more opinionated, steps.  
 
+=== Example
+
+Here's an example from methadone's own tests:
+
+    Scenario: Help is properly documented
+      When I get help for "methadone"
+      Then the exit status should be 0
+      And the following options should be documented:
+        |--force|
+      And the banner should be present
+      And the banner should document that this app takes options
+      And the banner should document that this app's arguments are:
+        |app_name|required|
+
+=== Steps Provided
 * Run <tt>command_to_run --help</tt> using aruba
 
     When I get help for "command_to_run"
