@@ -6,11 +6,11 @@ Gem::Specification.new do |s|
   s.name        = "methadone"
   s.version     = Methadone::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["TODO: Write your name"]
-  s.email       = ["TODO: Write your email address"]
-  s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.authors     = ["davetron5000"]
+  s.email       = ["davetron5000 at gmail.com"]
+  s.homepage    = "http://github.com/davetron5000/methadone"
+  s.summary     = %q{Kick the bash habit and start your command-line apps off right}
+  s.description = %q{Methadone provides a lot of small but useful features for developing a command-line app, including an opinionated bootstrapping process, some helpful cucumber steps, and some classes to bridge logging and output into a simple, unified, interface}
 
   s.rubyforge_project = "methadone"
 
