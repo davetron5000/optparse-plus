@@ -39,8 +39,6 @@ Feature: Bootstrap a new command-line app
     rake clobber_rdoc  # Remove RDoc HTML files
     rake features      # Run Cucumber features
     rake install       # Build and install newgem-0.0.1.gem into system gems
-    rake publish       # Builds and pushes the gh-pages-branch
-    rake publish_rdoc  # Publish rdoc on github pages and push to github
     rake rdoc          # Build RDoc HTML files
     rake release       # Create tag v0.0.1 and build and push newgem-0.0.1.gem to Rubygems
     rake rerdoc        # Rebuild RDoc HTML files

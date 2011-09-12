@@ -14,6 +14,10 @@ Currently, this is under development and has the following to offer:
   * Methadone::CLILogging - a module that, when included in any class, provides easy access to a shared logger
 * Cucumber Steps
 
+== Links
+
+* {Source on Github}[http://github.com/davetron5000/methadone]
+* RDoc[http://rdoc.info/github/davetron5000/methadone/master/frames]
 
 == Bootstrapping
 
@@ -125,25 +129,8 @@ Here's an example from methadone's own tests:
     Then the banner should document that this app's arguments are "args"
 
 
-== TODO
+== What might be
 
 * Support for running external commands easily, with full error checking
 * Support for main method-style implementation
 * Easy support for filtering the output of a command, e.g. <tt>File.open("ls|")</tt> Perl-style
-
-
-    sh 'cp foo bar'
-    # how it works
-
-    def sh(command)
-      debug("Running command '#{command}'")
-      # run with open 3 and log the outpu
-      raise "Error running #{command}" unless command.succeeded?
-    end
-
-    # When run from main
-    main do |options,args|
-      sh 'cp foo bar'
-    end
-
-

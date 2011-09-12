@@ -3,7 +3,6 @@ require 'rake/clean'
 require 'rake/testtask'
 gem 'rdoc'
 require 'rdoc/task'
-require 'grancher/task'
 require 'cucumber'
 require 'cucumber/rake/task'
 
@@ -26,20 +25,11 @@ Rake::RDocTask.new do |rd|
   rd.title = 'Methadone - Power Up your Command Line Apps'
 end
 
-Grancher::Task.new do |g|
-  g.branch = 'gh-pages'
-  g.push_to = 'origin'
-  g.directory 'html'
-end
-
 CUKE_RESULTS = 'results.html'
 CLEAN << CUKE_RESULTS
 Cucumber::Rake::Task.new(:features) do |t|
   t.cucumber_opts = "features --format html -o #{CUKE_RESULTS} --format pretty -x"
   t.fork = false
 end
-
-desc 'Publish rdoc on github pages and push to github'
-task :publish_rdoc => [:rdoc,:publish]
 
 task :default => [:test, :features]
