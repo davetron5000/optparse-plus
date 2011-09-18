@@ -87,4 +87,4 @@ Feature: Bootstrap a new command-line app
     And the banner should be present
     And the banner should document that this app takes options
     And the banner should document that this app's arguments are:
-      |app_name|required|
+      |app_name|which is required|

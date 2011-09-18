@@ -24,7 +24,7 @@ end
 Then /^the banner should document that this app's arguments are:$/ do |table|
   expected_arguments = table.raw.map { |row|
     option = row[0]
-    option = "[#{option}]" if row[1] == 'optional'
+    option = "[#{option}]" if row[1] == 'optional' || row[1] == 'which is optional'
   }.join(' ')
   Then %(the output should contain "#{expected_arguments}")
 end
