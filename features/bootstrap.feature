@@ -26,9 +26,10 @@ Feature: Bootstrap a new command-line app
       |tmp/newgem/features/support/env.rb                   |
       |tmp/newgem/features/step_definitions/newgem_steps.rb |
       |tmp/newgem/test/tc_something.rb                      |
-    And the file "tmp/newgem/newgem.gemspec" should match /add_development_dependency\('grancher'/
     And the file "tmp/newgem/newgem.gemspec" should match /add_development_dependency\('aruba'/
     And the file "tmp/newgem/newgem.gemspec" should match /add_development_dependency\('rdoc'/
+    And the file "tmp/newgem/newgem.gemspec" should match /add_development_dependency\('rake','~> 0.9.2'/
+    And the file "tmp/newgem/newgem.gemspec" should match /add_dependency\('methadone'/
     Given I cd to "tmp/newgem"
     When I successfully run `rake -T`
     Then the output should contain:
