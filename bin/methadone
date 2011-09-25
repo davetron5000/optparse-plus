@@ -117,7 +117,8 @@ end
 options = {}
 option_parser = OptionParser.new do |opts|
   executable = File.basename(__FILE__)
-  opts.banner = "Usage: #{executable} [options] app_name"
+  opts.banner = "Usage: #{executable} [options] app_name\n\n" +
+  "Kick the bash habit by bootstrapping your Ruby command-line apps\n\nOptions:"
 
   opts.on("--force","Overwrite files if they exist") do
     options[:force] = true

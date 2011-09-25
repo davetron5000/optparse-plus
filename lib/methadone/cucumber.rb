@@ -19,6 +19,7 @@ end
 
 Then /^the banner should document that this app takes options$/ do
   Then %(the output should match /\[options\]/)
+  And %(the output should contain "Options")
 end
 
 Then /^the banner should document that this app's arguments are:$/ do |table|
@@ -27,4 +28,21 @@ Then /^the banner should document that this app's arguments are:$/ do |table|
     option = "[#{option}]" if row[1] == 'optional' || row[1] == 'which is optional'
   }.join(' ')
   Then %(the output should contain "#{expected_arguments}")
+end
+
+Then /^the banner should document that this app takes no options$/ do
+  Then %(the output should not contain "[options]")
+  And %(the output should not contain "Options")
+end
+
+Then /^the banner should document that this app takes no arguments$/ do
+  Then %(the output should match /Usage: #{@app_name}\\s*$/)
+end
+
+Then /^there should be a one line summary of what the app does$/ do
+  output_lines = all_output.split(/\n/)
+  output_lines.should have_at_least(3).items
+  # [0] is our banner, which we've checked for
+  output_lines[1].should match(/^\s*$/)
+  output_lines[2].should match(/^\w\w+\s+\w\w+/)
 end

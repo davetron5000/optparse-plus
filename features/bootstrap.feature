@@ -31,7 +31,12 @@ Feature: Bootstrap a new command-line app
     And the file "tmp/newgem/newgem.gemspec" should match /add_development_dependency\('rake','~> 0.9.2'/
     And the file "tmp/newgem/newgem.gemspec" should match /add_dependency\('methadone'/
     Given I cd to "tmp/newgem"
-    When I successfully run `rake -T`
+    And my app's name is "newgem"
+    When I successfully run `bin/newgem --help`
+    Then the banner should be present
+    And the banner should document that this app takes no options
+    And the banner should document that this app takes no arguments
+    When I successfully run `rake -T -I../../lib`
     Then the output should contain:
     """
     rake build         # Build newgem-0.0.1.gem into the pkg directory
@@ -45,7 +50,7 @@ Feature: Bootstrap a new command-line app
     rake rerdoc        # Rebuild RDoc HTML files
     rake test          # Run tests
     """    
-    When I run `rake`
+    When I run `rake -I../../../../lib`
     Then the exit status should be 0
     And the output should contain:
     """
@@ -54,7 +59,7 @@ Feature: Bootstrap a new command-line app
     And the output should contain:
     """
     1 scenario (1 passed)
-    3 steps (3 passed)
+    5 steps (5 passed)
     """
 
   Scenario: Won't squash an existing dir
@@ -79,6 +84,7 @@ Feature: Bootstrap a new command-line app
     error: app_dir required
     """
 
+    @debug
   Scenario: Help is properly documented
     When I get help for "methadone"
     Then the exit status should be 0
@@ -88,3 +94,4 @@ Feature: Bootstrap a new command-line app
     And the banner should document that this app takes options
     And the banner should document that this app's arguments are:
       |app_name|which is required|
+    And there should be a one line summary of what the app does

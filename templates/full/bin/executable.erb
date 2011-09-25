@@ -4,7 +4,11 @@ require 'optparse'
 
 option_parser = OptionParser.new do |opts|
   executable_name = File.basename(__FILE__)
-  opts.banner = "Usage: #{executable_name} [options]"
+  opts.banner = "Usage: #{executable_name}"
+  # When/if you add options:
+  # opts.banner = "Usage: #{executable_name} [options]\n\n" +
+  # "One-line description of your app\n\n" +
+  # "Options:"
 end
 
 option_parser.parse!
