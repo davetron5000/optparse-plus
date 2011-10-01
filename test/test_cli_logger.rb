@@ -20,7 +20,28 @@ class TestCLILogger < BaseTest
     $stdout = @real_stdout
   end
 
-  test "logger sends everything to stdout, and warns, errors, and fatals to stderr" do
+  test "when both stderr and stdin are ttys, split the log messages between them and don't format" do
+    class << $stderr
+      def tty?; true; end
+    end
+    class << $stdout
+      def tty?; true; end
+    end
+
+    logger = CLILogger.new
+    logger.level = Logger::DEBUG
+
+    logger.debug("debug")
+    logger.info("info")
+    logger.warn("warn")
+    logger.error("error")
+    logger.fatal("fatal")
+
+    $stdout.string.should == "debug\ninfo\n"
+    $stderr.string.should == "warn\nerror\nfatal\n"
+  end
+
+  test "logger sends debug and info to stdout, and warns, errors, and fatals to stderr" do
     logger = logger_with_blank_format
 
     logger.debug("debug")

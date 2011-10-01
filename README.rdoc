@@ -10,7 +10,7 @@ Currently, this is under development and has the following to offer:
 
 * Bootstrapping a new CLI app
 * Utility Classes
-  * Methadone::CLILogger - a logger subclass that sends error message to standard error and all messages to standard out
+  * Methadone::CLILogger - a logger subclass that sends messages to standard error standard out as appropriate
   * Methadone::CLILogging - a module that, when included in any class, provides easy access to a shared logger
 * Cucumber Steps
 
@@ -61,14 +61,16 @@ Currently, there are classes the assist in directing output logger-style to the 
     include Methadone::CLILogging
 
     command = "rm -rf /tmp/*"
-    debug("About to run #{command}") # => goes only to STDOUT
+    debug("About to run #{command}") # => goes only to STDOUT, no logging format
     if system(command)
-      info("Succesfully ran #{command}") # => goes only to STDOUT
+      info("Succesfully ran #{command}") # => goes only to STDOUT, no logging format
     else
-      error("There was a problem running #{command}") # => goes to STDOUT AND STDERR
+      error("There was a problem running #{command}") # => goes only to STDERR, no logging format
     end
 
 ==== Using a log file, but respecting STDERR
+
+Here, since we have a logfile, that logfile gets ALL messages and they have the default logger format.
 
     require 'methadone'
 
@@ -76,11 +78,13 @@ Currently, there are classes the assist in directing output logger-style to the 
 
     self.logger = CLILogger.new("logfile.txt")
     command = "rm -rf /tmp/*"
-    debug("About to run #{command}") # => goes only to logfile.txt
+    debug("About to run #{command}") # => goes only to logfile.txt, in the logger-style format
     if system(command)
-      info("Succesfully ran #{command}") # => goes only to logfile.txt
+      info("Succesfully ran #{command}") # => goes only to logfile.txt, in the logger-style format
     else
-      error("There was a problem running #{command}") # => goes to logfile.txt AND STDERR
+      error("There was a problem running #{command}") 
+      # => goes to logfile.txt in the logger-style format, and
+      #    to STDERR in a plain format
     end
 
 == Cucumber Steps
@@ -143,6 +147,5 @@ Here's an example from methadone's own tests:
 
 == What might be
 
-* Support for running external commands easily, with full error checking
-* Support for main method-style implementation
-* Easy support for filtering the output of a command, e.g. <tt>File.open("ls|")</tt> Perl-style
+See {the roadmap}[https://github.com/davetron5000/methadone/wiki/Roadmap]
+
