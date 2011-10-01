@@ -1,7 +1,17 @@
 #!/usr/bin/env ruby -w
 
 require 'optparse'
+require 'methadone'
 
+include Methadone::Main
+
+main do |options|
+  # your program code here
+end
+
+# supplemental methods here
+
+options = {}
 option_parser = OptionParser.new do |opts|
   executable_name = File.basename(__FILE__)
   opts.banner = "Usage: #{executable_name}"
@@ -9,7 +19,17 @@ option_parser = OptionParser.new do |opts|
   # opts.banner = "Usage: #{executable_name} [options]\n\n" +
   # "One-line description of your app\n\n" +
   # "Options:"
+
+  # opts.on("--flag VAL","Some flag") do |val|
+  #   options[:flag] = val
+  # end
+  #
+  # opts.on("--[no-]switch","Some switch") do |switch|
+  #   options[:switch] = switch
+  # end
 end
 
 option_parser.parse!
 
+ARGV << options
+go!

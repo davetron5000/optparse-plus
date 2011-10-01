@@ -52,6 +52,7 @@ class TestCLILogger < BaseTest
     err = StringIO.new
 
     logger = CLILogger.new(out,err)
+    logger.level = Logger::DEBUG
     logger.formatter = @blank_format
 
     logger.debug("debug")
@@ -80,6 +81,7 @@ class TestCLILogger < BaseTest
 
   test "both loggers use the same date format" do
     logger = CLILogger.new
+    logger.level = Logger::DEBUG
     logger.datetime_format = "the time"
     logger.debug("debug")
     logger.error("error")

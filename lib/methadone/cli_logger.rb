@@ -40,6 +40,7 @@ module Methadone
     # +error_device+:: device where all error messages should go.  By default, this is Logger::Severity::WARN
     def initialize(log_device=$stdout,error_device=$stderr)
       super(log_device)
+      self.level = Logger::Severity::INFO
       @stderr_logger = Logger.new(error_device)
       @stderr_logger.level = Logger::Severity::WARN
     end

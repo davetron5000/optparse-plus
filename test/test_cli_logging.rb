@@ -27,6 +27,7 @@ class TestCLILogging < BaseTest
       logger.formatter = proc do |severity,datetime,progname,msg|
         msg + "\n"
       end
+      logger.level = Logger::DEBUG
     end
 
     def doit
