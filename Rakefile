@@ -1,7 +1,7 @@
 require 'bundler'
 require 'rake/clean'
 require 'rake/testtask'
-gem 'rdoc'
+gem 'rdoc' # I need to use the installed RDoc gem, not what comes with the system
 require 'rdoc/task'
 require 'cucumber'
 require 'cucumber/rake/task'
@@ -18,7 +18,7 @@ Rake::TestTask.new do |t|
 end
 
 desc 'build rdoc'
-Rake::RDocTask.new do |rd|
+RDoc::Task.new do |rd|
   rd.main = "README.rdoc"
   rd.generator = 'hanna'
   rd.rdoc_files.include("README.rdoc","lib/**/*.rb","bin/**/*")
@@ -33,5 +33,7 @@ Cucumber::Rake::Task.new(:features) do |t|
   t.cucumber_opts = "features --format html -o #{CUKE_RESULTS} --format pretty -x -s#{tag_opts}"
   t.fork = false
 end
+
+CLEAN << "coverage"
 
 task :default => [:test, :features]

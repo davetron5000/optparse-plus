@@ -6,3 +6,4 @@ html
 .*.sw?
 tmp
 results.html
+coverage
