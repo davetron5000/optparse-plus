@@ -6,9 +6,12 @@ License:: Distributes under the Apache License, see LICENSE.txt in the source di
 
 A smattering of tools to make your command-line apps easily awesome; kick the bash habit without sacrificing any of the power.
 
-Currently, this is under development and has the following to offer:
+The overall goal of this project is to allow you to write a command-line app in Ruby that is as close as possible to the expedience and concisenes of bash, but with all the power of Ruby available when you need it.
+
+Currently, this library is under development and has the following to offer:
 
 * Bootstrapping a new CLI app
+* Lightweight DSL to structure your bin file
 * Utility Classes
   * Methadone::CLILogger - a logger subclass that sends messages to standard error standard out as appropriate
   * Methadone::CLILogging - a module that, when included in any class, provides easy access to a shared logger
@@ -47,6 +50,40 @@ The +methadone+ command-line app will bootstrap a new command-line app, setting 
         """
 
 Basically, this sets you up with all the boilerplate that you *should* be using to write a command-line app.
+
+== DSL for your `bin` file
+
+A canonical `OptionParser` driven app has a few problems with it strucgturally that methadone can solve
+
+* Backwards organization - main logic is at the bottom of the file, not the top
+* Verbose to use +opts.on+ just to set a value in a +Hash+
+* No exception handling
+
+Methadone gives you a simple,lightweight DSL to help.  It's a work in progress, but here's what you have right now:
+
+    #!/usr/bin/env ruby
+    
+    require 'optparse'
+    require 'methadone'
+
+    include Methadone::Main
+
+    main do |arg1,arg2,arg3|
+      # your main logic goes here
+    end
+
+    opts = OptionParse.new do |opts|
+      # all your UI setup
+    end
+
+    go!
+
++go!+ runs the block you gave to +main+, passing it the unparsed +ARGV+ as parameters to the block.  
+
+Why not just <tt>def main</tt> and call that method?  +go!+ also handles exceptions:
+
+* Any uncaught exception that isn't a subclass of <tt>Methadone::Error</tt> will cause the app to exit with a 70 (standard Linux "internal error" exit status) and print the exception's messages to standard error, no backtrace
+* An instance of <tt>Methadone::Error</tt>, if caught, will have similar behavior, but the +exit_code+ method will be called on the exception to determine the exit status.  You can trigger this exception via <tt>exit_now! exit_stats,message</tt>
 
 == Utility Classes
 
