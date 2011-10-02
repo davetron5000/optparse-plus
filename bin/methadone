@@ -11,8 +11,10 @@ include FileUtils
 include Methadone::Main
 include Methadone::CLI
 
-main do |basedir,force|
-  check_and_prepare_basedir!(basedir,force)
+main do |basedir|
+  exit_now! 2, "error: app_dir required" unless basedir
+
+  check_and_prepare_basedir!(basedir,options[:force])
 
   gemname = File.basename(basedir)
   debug "Creating project for gem #{gemname}"
@@ -41,26 +43,11 @@ main do |basedir,force|
   ], :before => /^end\s*$/
 end
 
-options = {}
-option_parser = OptionParser.new do |opts|
-  executable = File.basename(__FILE__)
-  opts.banner = "Usage: #{executable} [options] app_name\n\n" +
+executable = File.basename(__FILE__)
+opts.banner = "Usage: #{executable} [options] app_name\n\n" +
   "Kick the bash habit by bootstrapping your Ruby command-line apps\n\nOptions:"
 
-  opts.on("--force","Overwrite files if they exist") do
-    options[:force] = true
-  end
-end
+on("--force","Overwrite files if they exist")
 
-option_parser.parse!
-
-EXE = File.expand_path(__FILE__)
-
-if ARGV.empty?
-  STDERR.puts("error: app_dir required")
-  exit 2
-end
-
-ARGV << options[:force]
 go!
 

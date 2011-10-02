@@ -5,31 +5,29 @@ require 'methadone'
 
 include Methadone::Main
 
-main do |options|
+main do # Add args you want: |like,so|
   # your program code here
+  # You can access CLI options via
+  # the options Hash
 end
 
 # supplemental methods here
 
-options = {}
-option_parser = OptionParser.new do |opts|
-  executable_name = File.basename(__FILE__)
-  opts.banner = "Usage: #{executable_name}"
-  # When/if you add options:
-  # opts.banner = "Usage: #{executable_name} [options]\n\n" +
-  # "One-line description of your app\n\n" +
-  # "Options:"
+executable_name = File.basename(__FILE__)
+opts.banner = "Usage: #{executable_name}"
 
-  # opts.on("--flag VAL","Some flag") do |val|
-  #   options[:flag] = val
-  # end
-  #
-  # opts.on("--[no-]switch","Some switch") do |switch|
-  #   options[:switch] = switch
-  # end
-end
+# When/if you add options:
+# opts.banner = "Usage: #{executable_name} [options]\n\n" +
+# "One-line description of your app\n\n" +
+# "Options:"
+#
+# Accept flags via:
+# on("--flag VAL","Some flag")
+# options[flag] will contain VAL
+#
+# Specify switches via:
+# on("--[no-]switch","Some switch")
+#
+# Or, just call OptionParser methods on opts
 
-option_parser.parse!
-
-ARGV << options
 go!

@@ -110,6 +110,72 @@ class TestMain < BaseTest
     assert_logged_at_error "oh noes"
   end
 
+  test "opts allows us to more expediently set up OptionParser" do
+    switch = nil
+    flag = nil
+    main do
+      switch = options[:switch]
+      flag = options[:flag]
+    end
+
+    opts.on("--switch") { options[:switch] = true }
+    opts.on("--flag FLAG") { |value| options[:flag] = value }
+
+    set_argv %w(--switch --flag value)
+
+    safe_go!
+
+    assert switch
+    assert_equal 'value',flag
+  end
+
+  test "when the command line is invalid, we exit with 1" do
+    main do
+    end
+
+    opts.on("--switch") { options[:switch] = true }
+    opts.on("--flag FLAG") { |value| options[:flag] = value }
+
+    set_argv %w(--invalid --flag value)
+
+    assert_exits(1) { go! }
+  end
+
+  test "omitting the block to opts simply sets the value in the options hash and returns itself" do
+    switch = nil
+    negatable = nil
+    flag = nil
+    f = nil
+    other = nil
+    some_other = nil
+    main do
+      switch = options[:switch]
+      flag = options[:flag]
+      f = options[:f]
+      negatable = options[:negatable]
+      other = options[:other]
+      some_other = options[:some_other]
+    end
+
+    on("--switch")
+    on("--[no-]negatable")
+    on("--flag FLAG","-f","Some documentation string")
+    on("--other") do 
+      options[:some_other] = true
+    end
+
+    set_argv %w(--switch --flag value --negatable --other)
+
+    safe_go!
+
+    assert switch
+    assert some_other
+    refute other
+    assert_equal 'value',flag
+    assert_equal 'value',f,opts.to_s
+    assert_match /Some documentation string/,opts.to_s
+  end
+
   private
 
   # Calls go!, but traps the exit

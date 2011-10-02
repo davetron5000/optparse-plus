@@ -83,7 +83,7 @@ module Methadone
 
     # Get the location of the templates for profile "from"
     def template_dir(from)
-      File.join(File.dirname(EXE),'..','templates',from.to_s)
+      File.join(File.dirname(__FILE__),'..','..','templates',from.to_s)
     end
 
     def template_dirs_in(profile)
