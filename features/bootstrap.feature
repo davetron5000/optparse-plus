@@ -79,10 +79,7 @@ Feature: Bootstrap a new command-line app
   Scenario: We must supply a dirname
     When I run `methadone`
     Then the exit status should not be 0
-    And the stderr should contain:
-    """
-    error: app_dir required
-    """
+    And the stderr should match /'app_name' is required/
 
     @debug
   Scenario: Help is properly documented

@@ -4,11 +4,14 @@ module Methadone
   # Include this module to gain access to the "canonical command-line app structure"
   # DSL.  This is a *very* lightweight layer on top of what you might
   # normally write that gives you just a bit of help to keep your code structured
-  # in a sensible way.
+  # in a sensible way.  You can use as much or as little as you want, though
+  # you must at least use #main to get any benefits.
   #
-  # You also get a more expedient interface to OptionParser.  For example, if
-  # we want our app to accept a negatable switch named "switch", and a flag
-  # named "flag", we can do the following:
+  # You also get a more expedient interface to OptionParser as well
+  # as checking for required arguments to your app.  For example, if
+  # we want our app to accept a negatable switch named "switch", a flag
+  # named "flag", and two arguments "needed" (which is required) 
+  # and "maybe" which optional, we can do the following:
   #
   #     #!/usr/bin/env ruby -w
   #       
@@ -16,7 +19,7 @@ module Methadone
   #      
   #     include Methadone::Main
   #     
-  #     main do
+  #     main do |needed, maybe|
   #       options[:switch] => true or false, based on command line
   #       options[:flag] => value of flag passed on command line
   #     end
@@ -24,8 +27,18 @@ module Methadone
   #     # Proxy to an OptionParser instance's on method
   #     on("--[no]-switch")
   #     on("--flag VALUE")
+  #
+  #     arg :needed
+  #     arg :maybe, :optional
   #     
   #     go!
+  #
+  # Our app then acts as follows:
+  #
+  #     $ our_app 
+  #     # => parse error: 'needed' is required
+  #     $ our_app foo
+  #     # => succeeds; "maybe" in main is nil
   #
   # This also includes Methadone::CLILogging to give you access to simple logging
   module Main
@@ -69,13 +82,21 @@ module Methadone
 
 
     # Start your command-line app, exiting appropriately when
-    # complete
+    # complete.
     #
     # This *will* exit your program when it completes.  If your
     # #main block evaluates to an integer, that value will be sent
     # to Kernel#exit, otherwise, this will exit with 0
+    #
+    # If the command-line options couldn't be parsed, this
+    # will exit with 64 and whatever message OptionParser provided.
+    #
+    # If a required argument (see #arg) is not found, this exits with
+    # 64 and a message about that missing argument.
+    #
     def go!
       opts.parse!
+      opts.check_args!
       result = call_main
       if result.kind_of? Fixnum
         exit result
@@ -84,7 +105,7 @@ module Methadone
       end
     rescue OptionParser::ParseError => ex
       error ex.message
-      exit 1
+      exit 64 # Linux standard for bad command line
     end
 
     # Call this to exit the program immediately
@@ -124,6 +145,31 @@ module Methadone
       opts.on(*args,&block)
     end
 
+    # Sets the name of an arguments your app accepts.  Note
+    # that no sanity checking is done on the configuration
+    # of your arguments you create via multiple calls to this method.
+    # Namely, the last argument should be the only one that is
+    # a :many or a :any, but the system here won't sanity check that.
+    #
+    # +arg_name+:: name of the argument to appear in documentation
+    #              This will be converted into a String and used to create
+    #              the banner (unless you have overridden the banner)
+    # +options+:: list (not Hash) of options:
+    #             <tt>:required</tt> - this arg is required (this is the default)
+    #             <tt>:optional</tt> - this arg is optional
+    #             <tt>:one</tt> - only one of this arg should be supplied (default)
+    #             <tt>:many</tt> - many of this arg may be supplied, but at least one is required
+    #             <tt>:any</tt> - any number, include zero, may be supplied
+    def arg(arg_name,*options)
+      opts.arg(arg_name,*options)
+    end
+
+    # Set the description of your app for inclusion in the help output.
+    # +desc+:: a short, one-line description of your app
+    def description(desc)
+      opts.description(desc)
+    end
+
     # Returns a Hash that you can use to store or retrieve options
     # parsed from the command line
     def options
@@ -160,6 +206,24 @@ module Methadone
     def initialize(option_parser,options)
       @option_parser = option_parser
       @options = options
+      @user_specified_banner = false
+      @accept_options = false
+      @args = []
+      @arg_options = {}
+      @description = nil
+      set_banner
+    end
+
+    def check_args!
+      ::Hash[@args.zip(::ARGV)].each do |arg_name,arg_value|
+        if @arg_options[arg_name].include? :required
+          if arg_value.nil?
+            message = "'#{arg_name.to_s}' is required"
+            message = "at least one " + message if @arg_options[arg_name].include? :many
+            raise ::OptionParser::ParseError,message
+          end
+        end
+      end
     end
 
     # If invoked as with OptionParser, behaves the exact same way.
@@ -168,6 +232,7 @@ module Methadone
     # the parsed command-line value.  See #opts in the Main module
     # for how that works.
     def on(*args,&block)
+      @accept_options = true
       if block
         @option_parser.on(*args,&block)
       else
@@ -176,6 +241,28 @@ module Methadone
           opt_names.each { |name| @options[name] = value }
         end
       end
+      set_banner
+    end
+
+    # Proxies to underlying OptionParser
+    def banner=(new_banner)
+      @option_parser.banner=new_banner
+      @user_specified_banner = true
+    end
+
+    # Sets the banner to include these arg names
+    def arg(arg_name,*options)
+      options << :optional if options.include?(:any) && !options.include?(:optional)
+      options << :required unless options.include? :optional
+      options << :one unless options.include?(:any) || options.include?(:many)
+      @args << arg_name
+      @arg_options[arg_name] = options
+      set_banner
+    end
+
+    def description(desc)
+      @description = desc
+      set_banner
     end
 
     # Defers all calls save #on to 
@@ -185,6 +272,31 @@ module Methadone
     end
 
     private
+
+    def set_banner
+      unless @user_specified_banner
+        new_banner="Usage: #{::File.basename($0)}"
+        new_banner += " [options]" if @accept_options
+        unless @args.empty?
+          new_banner += " " 
+          new_banner += @args.map { |arg|
+            if @arg_options[arg].include? :any
+              "[#{arg.to_s}...]"
+            elsif @arg_options[arg].include? :optional
+              "[#{arg.to_s}]"
+            elsif @arg_options[arg].include? :many
+              "#{arg.to_s}..."
+            else
+              arg.to_s
+            end
+          }.join(' ')
+        end
+        new_banner += "\n\n#{@description}" if @description
+        new_banner += "\n\nOptions:" if @accept_options
+
+        @option_parser.banner=new_banner
+      end
+    end
 
     def option_names(*opts_on_args,&block)
       opts_on_args.map { |arg|

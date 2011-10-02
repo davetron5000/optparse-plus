@@ -129,7 +129,7 @@ class TestMain < BaseTest
     assert_equal 'value',flag
   end
 
-  test "when the command line is invalid, we exit with 1" do
+  test "when the command line is invalid, we exit with 64" do
     main do
     end
 
@@ -138,7 +138,7 @@ class TestMain < BaseTest
 
     set_argv %w(--invalid --flag value)
 
-    assert_exits(1) { go! }
+    assert_exits(64) { go! }
   end
 
   test "omitting the block to opts simply sets the value in the options hash and returns itself" do
@@ -174,6 +174,87 @@ class TestMain < BaseTest
     assert_equal 'value',flag
     assert_equal 'value',f,opts.to_s
     assert_match /Some documentation string/,opts.to_s
+  end
+
+  test "without specifying options, [options] doesn't show up in our banner" do
+    main {}
+
+    refute_match /\[options\]/,opts.banner
+  end
+
+  test "when specifying an option, [options] shows up in the banner" do
+    main {}
+    on("-s")
+
+    assert_match /\[options\]/,opts.banner
+  end
+
+  test "I can specify which arguments my app takes and if they are required" do
+    main {}
+    
+    arg :db_name
+    arg :user, :required
+    arg :password, :optional
+
+    assert_match /db_name user \[password\]$/,opts.banner
+  end
+
+  test "I can specify which arguments my app takes and if they are singular or plural" do
+    main {}
+    
+    arg :db_name
+    arg :user, :required, :one
+    arg :tables, :many
+
+    assert_match /db_name user tables...$/,opts.banner
+  end
+
+  test "I can specify which arguments my app takes and if they are singular or optional plural" do
+    main {}
+    
+    arg :db_name
+    arg :user, :required, :one
+    arg :tables, :any
+
+    assert_match /db_name user \[tables...\]$/,opts.banner
+  end
+
+  test "I can set a description for my app" do
+    main {}
+    description "An app of total awesome"
+
+    assert_match /^An app of total awesome$/,opts.banner
+  end
+
+  test "when I override the banner, we don't automatically do anything" do
+    main {}
+    opts.banner = "FOOBAR"
+
+    on("-s")
+
+    assert_equal "FOOBAR",opts.banner
+  end
+
+  test "when I say an argument is required and its omitted, I get an error" do
+    main {}
+    arg :foo
+    arg :bar
+
+    set_argv %w(blah)
+
+    assert_exits(64) { go! }
+    assert_logged_at_error("parse error: 'bar' is required")
+  end
+
+  test "when I say an argument is many and its omitted, I get an error" do
+    main {}
+    arg :foo
+    arg :bar, :many
+
+    set_argv %w(blah)
+
+    assert_exits(64) { go! }
+    assert_logged_at_error("parse error: at least one 'bar' is required")
   end
 
   private

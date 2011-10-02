@@ -9,3 +9,7 @@ end
 Given /^my app's name is "([^"]*)"$/ do |app_name|
   @app_name = app_name
 end
+
+Then /^the stderr should match \/([^\/]*)\/$/ do |expected|
+  assert_matching_output(expected, all_stderr)
+end

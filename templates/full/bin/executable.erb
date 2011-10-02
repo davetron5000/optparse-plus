@@ -13,13 +13,9 @@ end
 
 # supplemental methods here
 
-executable_name = File.basename(__FILE__)
-opts.banner = "Usage: #{executable_name}"
+# Declare command-line interface here
 
-# When/if you add options:
-# opts.banner = "Usage: #{executable_name} [options]\n\n" +
-# "One-line description of your app\n\n" +
-# "Options:"
+# description "one line description of your app"
 #
 # Accept flags via:
 # on("--flag VAL","Some flag")
@@ -29,5 +25,11 @@ opts.banner = "Usage: #{executable_name}"
 # on("--[no-]switch","Some switch")
 #
 # Or, just call OptionParser methods on opts
+#
+# Require an argument
+# arg :some_arg 
+#
+# # Make an argument optional
+# arg :optional_arg, :optional
 
 go!

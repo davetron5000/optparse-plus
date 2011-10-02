@@ -53,13 +53,13 @@ Basically, this sets you up with all the boilerplate that you *should* be using 
 
 == DSL for your `bin` file
 
-A canonical `OptionParser` driven app has a few problems with it strucgturally that methadone can solve
+A canonical `OptionParser` driven app has a few problems with it structurally that methadone can solve
 
 * Backwards organization - main logic is at the bottom of the file, not the top
 * Verbose to use +opts.on+ just to set a value in a +Hash+
 * No exception handling
 
-Methadone gives you a simple,lightweight DSL to help.  It's a work in progress, but here's what you have right now:
+Methadone gives you a simple,lightweight DSL to help.  It's important to note that we're taking a light touch here; this is all a thin wrapper around +OptionParser+ and you still have complete access to it if you'd like.  We're basically wrapping up some canonical boilerplate into more expedient code
 
     #!/usr/bin/env ruby
     
@@ -68,17 +68,39 @@ Methadone gives you a simple,lightweight DSL to help.  It's a work in progress, 
 
     include Methadone::Main
 
-    main do |arg1,arg2,arg3|
-      # your main logic goes here
+    main do |name,password|
+      name # => guaranteed to be non-nil
+      password # => nil if user omitted on command line
+      options[:switch] # => true if user used --switch or -s
+      options[:s]      # => ALSO true if user used --switch or -s
+      options[:f]      # => value of FILE if used on command-line
+      options[:flag]   # => ALSO value of FILE if used on command-line
+
+      # If something goes wrong, you can just raise an exception
+      # or call exit_now! if you want to control the exit status
     end
 
-    opts = OptionParse.new do |opts|
-      # all your UI setup
+    description "One line summary of your awesome app"
+
+    on("--[no-]switch","-s","Some switch")
+    on("-f FILE","--flag","Some flag")
+    on("-x FOO") do |foo|
+      # something more complex; this is exactly OptionParser opts.on 
     end
+
+    arg :name
+    arg :password, :optional
 
     go!
 
-+go!+ runs the block you gave to +main+, passing it the unparsed +ARGV+ as parameters to the block.  
++go!+ runs the block you gave to +main+, passing it the unparsed +ARGV+ as parameters to the block.  It will
+also parse the command-line via +OptionParser+ and do a check on the remaining arguments to see
+if there's enough to satisfy the <tt>:required</tt> args you've specified.
+
+Finally, the banner/help string will be full constructed based on the interface you've declared.  If you 
+don't accept options, <tt>[options]</tt> won't appear in the help.  The names of your arguments
+will appear in proper order and <tt>:optional</tt> ones will be in square brackets.  You don't have to 
+touch a thing.
 
 Why not just <tt>def main</tt> and call that method?  +go!+ also handles exceptions:
 

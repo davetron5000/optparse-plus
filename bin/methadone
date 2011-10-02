@@ -11,15 +11,13 @@ include FileUtils
 include Methadone::Main
 include Methadone::CLI
 
-main do |basedir|
-  exit_now! 2, "error: app_dir required" unless basedir
+main do |app_name|
+  check_and_prepare_basedir!(app_name,options[:force])
 
-  check_and_prepare_basedir!(basedir,options[:force])
-
-  gemname = File.basename(basedir)
+  gemname = File.basename(app_name)
   debug "Creating project for gem #{gemname}"
 
-  chdir File.dirname(basedir)
+  chdir File.dirname(app_name)
 
   %x[bundle gem #{gemname}]
 
@@ -43,11 +41,11 @@ main do |basedir|
   ], :before => /^end\s*$/
 end
 
-executable = File.basename(__FILE__)
-opts.banner = "Usage: #{executable} [options] app_name\n\n" +
-  "Kick the bash habit by bootstrapping your Ruby command-line apps\n\nOptions:"
+description "Kick the bash habit by bootstrapping your Ruby command-line apps"
 
 on("--force","Overwrite files if they exist")
+
+arg :app_name, :required
 
 go!
 
