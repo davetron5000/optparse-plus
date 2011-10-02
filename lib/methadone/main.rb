@@ -11,7 +11,7 @@ module Methadone
   # as checking for required arguments to your app.  For example, if
   # we want our app to accept a negatable switch named "switch", a flag
   # named "flag", and two arguments "needed" (which is required) 
-  # and "maybe" which optional, we can do the following:
+  # and "maybe" which is optional, we can do the following:
   #
   #     #!/usr/bin/env ruby -w
   #       
@@ -118,7 +118,11 @@ module Methadone
     end
 
     # Returns an OptionParser that you can use
-    # to declare your command-line interface.  The object returned as
+    # to declare your command-line interface.  Generally, you
+    # won't use this and will use #on directly, but this allows
+    # you to have complete control of option parsing.
+    #
+    # The object returned has
     # an additional feature that implements typical use of OptionParser.
     #
     #     opts.on("--flag VALUE")
@@ -155,11 +159,11 @@ module Methadone
     #              This will be converted into a String and used to create
     #              the banner (unless you have overridden the banner)
     # +options+:: list (not Hash) of options:
-    #             <tt>:required</tt> - this arg is required (this is the default)
-    #             <tt>:optional</tt> - this arg is optional
-    #             <tt>:one</tt> - only one of this arg should be supplied (default)
-    #             <tt>:many</tt> - many of this arg may be supplied, but at least one is required
-    #             <tt>:any</tt> - any number, include zero, may be supplied
+    #             <tt>:required</tt>:: this arg is required (this is the default)
+    #             <tt>:optional</tt>:: this arg is optional
+    #             <tt>:one</tt>:: only one of this arg should be supplied (default)
+    #             <tt>:many</tt>::  many of this arg may be supplied, but at least one is required
+    #             <tt>:any</tt>:: any number, include zero, may be supplied
     def arg(arg_name,*options)
       opts.arg(arg_name,*options)
     end
