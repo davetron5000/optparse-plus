@@ -102,10 +102,6 @@ don't accept options, <tt>[options]</tt> won't appear in the help.  The names of
 will appear in proper order and <tt>:optional</tt> ones will be in square brackets.  You don't have to 
 touch a thing.
 
-Why not just <tt>def main</tt> and call that method?  +go!+ also handles exceptions:
-
-* Any uncaught exception that isn't a subclass of <tt>Methadone::Error</tt> will cause the app to exit with a 70 (standard Linux "internal error" exit status) and print the exception's messages to standard error, no backtrace
-* An instance of <tt>Methadone::Error</tt>, if caught, will have similar behavior, but the +exit_code+ method will be called on the exception to determine the exit status.  You can trigger this exception via <tt>exit_now! exit_stats,message</tt>
 
 == Utility Classes
 
