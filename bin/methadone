@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby -w
 
-$: << File.join(File.dirname(__FILE__),'..','lib')
-
 require 'fileutils'
 require 'optparse'
 require 'methadone'

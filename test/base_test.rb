@@ -4,8 +4,9 @@ SimpleCov.start do
 end
 require 'test/unit'
 require 'rspec/expectations'
+require 'test/unit/given'
 
-class BaseTest < Test::Unit::TestCase
+class BaseTest < Test::Unit::Given::TestCase
   # Copied from Rails; makes a test method using a string
   def self.test(name, &block)
     test_name = "test_#{name.gsub(/\s+/,'_')}".to_sym
