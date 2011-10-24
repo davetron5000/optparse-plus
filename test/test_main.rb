@@ -52,7 +52,7 @@ class TestMain < BaseTest
     }
     When run_go_safely
     Then {
-      assert_equal %w(one two three),@params
+      @params.should == %w(one two three)
     }
   end
 
@@ -80,7 +80,7 @@ class TestMain < BaseTest
     }
     When run_go_safely
     Then {
-      assert_equal ['one','two',nil],@params
+      @params.should == ['one','two',nil]
     }
   end
 
@@ -162,8 +162,8 @@ class TestMain < BaseTest
     When run_go_safely
 
     Then {
-      assert @switch
-      assert_equal 'value',@flag
+      @switch.should be true
+      @flag.should == 'value'
     }
   end
 
@@ -213,12 +213,12 @@ class TestMain < BaseTest
     When run_go_safely
 
     Then {
-      assert @switch
-      assert @some_other
-      refute @other
-      assert_equal 'value',@flag
-      assert_equal 'value',@f,opts.to_s
-      assert_match /Some documentation string/,opts.to_s
+      @switch.should be true
+      @some_other.should be true
+      @other.should_not be true
+      @flag.should == 'value'
+      @f.should == 'value'
+      opts.to_s.should match /Some documentation string/
     }
   end
 
@@ -228,7 +228,7 @@ class TestMain < BaseTest
     }
 
     Then {
-      refute_match /\[options\]/,opts.banner
+      opts.banner.should_not match /\[options\]/
     }
   end
 
@@ -239,7 +239,7 @@ class TestMain < BaseTest
     }
 
     Then {
-      assert_match /\[options\]/,opts.banner
+      opts.banner.should match /\[options\]/
     }
 
   end
@@ -254,7 +254,7 @@ class TestMain < BaseTest
     }
 
     Then {
-      assert_match /db_name user \[password\]$/,opts.banner
+      opts.banner.should match /db_name user \[password\]$/
     }
   end
 
@@ -268,7 +268,7 @@ class TestMain < BaseTest
     }
 
     Then {
-      assert_match /db_name user tables...$/,opts.banner
+      opts.banner.should match /db_name user tables...$/
     }
   end
 
@@ -282,7 +282,7 @@ class TestMain < BaseTest
     }
 
     Then {
-      assert_match /db_name user \[tables...\]$/,opts.banner
+      opts.banner.should match /db_name user \[tables...\]$/
     }
   end
 
@@ -293,7 +293,7 @@ class TestMain < BaseTest
 
     }
     Then {
-      assert_match /^An app of total awesome$/,opts.banner
+      opts.banner.should match /^An app of total awesome$/
     }
   end
 
@@ -306,7 +306,7 @@ class TestMain < BaseTest
     }
 
     Then {
-      assert_equal "FOOBAR",opts.banner
+      opts.banner.should == 'FOOBAR'
     }
   end
 
@@ -357,14 +357,14 @@ class TestMain < BaseTest
   end
 
   def assert_logged_at_error(expected_message)
-    assert @logged.include?(expected_message),"#{@logged} didn't include '#{expected_message}'"
+    @logged.should include expected_message
   end
 
   def assert_exits(exit_code,message='',&block)
     block.call
     fail "Expected an exit of #{exit_code}, but we didn't even exit!"
   rescue SystemExit => ex
-    assert_equal exit_code,ex.status,message
+    ex.status.should == exit_code
   end
 
   def set_argv(args)
