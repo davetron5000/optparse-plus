@@ -166,10 +166,6 @@ class TestCLILogger < BaseTest
     end
   end
 
-  def And(&block)
-    Given block
-  end
-
   def stdout_should_have_everything
     proc do
       $stdout.string.should == "debug\ninfo\nwarn\nerror\nfatal\n"
