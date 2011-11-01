@@ -1,3 +1,4 @@
+@pending
 Feature: Users should get the license included
   As a user
   I'd like to be able to include a license
