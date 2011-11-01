@@ -22,7 +22,9 @@ Cucumber::Rake::Task.new(:features) do |t|
 end
 
 Rake::RDocTask.new do |rd|
+  <% if using_readme %>
   rd.main = "README.rdoc"
+  <% end %>
   rd.rdoc_files.include("README.rdoc","lib/**/*.rb","bin/**/*")
 end
 

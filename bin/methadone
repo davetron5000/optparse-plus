@@ -11,6 +11,7 @@ include Methadone::CLI
 
 main do |app_name|
   check_and_prepare_basedir!(app_name,options[:force])
+  using_readme = options[:readme]
 
   gemname = File.basename(app_name)
   debug "Creating project for gem #{gemname}"
@@ -24,7 +25,11 @@ main do |app_name|
   template_dirs_in(:full).each  { |dir| mkdir_p dir }
 
   ["Rakefile", ".gitignore", "test/tc_something.rb", "features/support/env.rb"].each do |file|
-    copy_file file
+    copy_file file, :binding => binding
+  end
+
+  if using_readme
+    copy_file "README.rdoc", :binding => binding 
   end
 
   copy_file "features/executable.feature", :as => "#{gemname}.feature", :binding => binding
@@ -39,9 +44,12 @@ main do |app_name|
   ], :before => /^end\s*$/
 end
 
+options[:readme] = true
+
 description "Kick the bash habit by bootstrapping your Ruby command-line apps"
 
 on("--force","Overwrite files if they exist")
+on("--[no-]readme","[Do not ]produce a README file")
 
 arg :app_name, :required
 
