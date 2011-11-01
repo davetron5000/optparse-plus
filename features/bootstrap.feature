@@ -96,22 +96,3 @@ Feature: Bootstrap a new command-line app
     And the banner should document that this app's arguments are:
       |app_name|which is required|
     And there should be a one line summary of what the app does
-
-  Scenario: I don't want a README
-    When I successfully run `methadone --no-readme tmp/newgem`
-    Then a README should not be generated
-    And the file "tmp/newgem/Rakefile" should not match /rd.main = "README.rdoc"/
-
-  Scenario Outline: Generate README
-    When I successfully run `methadone <flag> tmp/newgem`
-    Then a README should be generated in RDoc
-    And the README should contain the project name
-    And the README should contain my name
-    And the README should contain links to Github and RDoc.info
-    And the README should contain empty sections for common elements of a README
-    And the file "tmp/newgem/Rakefile" should match /rd.main = "README.rdoc"/
-
-    Examples:
-      |flag|
-      | |
-      |--readme|
