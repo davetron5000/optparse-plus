@@ -20,12 +20,17 @@ Feature: Bootstrap a new command-line app
     And the following files should exist:
       |tmp/newgem/newgem.gemspec                            |
       |tmp/newgem/Rakefile                                  |
+      |tmp/newgem/.gitignore                                |
       |tmp/newgem/Gemfile                                   |
       |tmp/newgem/bin/newgem                                |
       |tmp/newgem/features/newgem.feature                   |
       |tmp/newgem/features/support/env.rb                   |
       |tmp/newgem/features/step_definitions/newgem_steps.rb |
       |tmp/newgem/test/tc_something.rb                      |
+    And the file "tmp/newgem/.gitignore" should match /results.html/
+    And the file "tmp/newgem/.gitignore" should match /html/
+    And the file "tmp/newgem/.gitignore" should match /pkg/
+    And the file "tmp/newgem/.gitignore" should match /.DS_Store/
     And the file "tmp/newgem/newgem.gemspec" should match /add_development_dependency\('aruba'/
     And the file "tmp/newgem/newgem.gemspec" should match /add_development_dependency\('rdoc'/
     And the file "tmp/newgem/newgem.gemspec" should match /add_development_dependency\('rake','~> 0.9.2'/

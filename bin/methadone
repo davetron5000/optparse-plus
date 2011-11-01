@@ -23,7 +23,7 @@ main do |app_name|
 
   template_dirs_in(:full).each  { |dir| mkdir_p dir }
 
-  ["Rakefile", "test/tc_something.rb", "features/support/env.rb"].each do |file|
+  ["Rakefile", ".gitignore", "test/tc_something.rb", "features/support/env.rb"].each do |file|
     copy_file file
   end
 
