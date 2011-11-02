@@ -1,5 +1,12 @@
 require 'optparse'
 
+begin
+  basic_object = Module.const_get('BasicObject')
+  # We are 1.9.x
+rescue NameError
+  BasicObject = Object
+end
+
 module Methadone
   # Include this module to gain access to the "canonical command-line app structure"
   # DSL.  This is a *very* lightweight layer on top of what you might
@@ -273,6 +280,11 @@ module Methadone
     # the underlying OptionParser instance
     def method_missing(sym,*args,&block)
       @option_parser.send(sym,*args,&block)
+    end
+
+    # Since we extend Object on 1.8.x, to_s is defined and thus not proxied by method_missing
+    def to_s #::nodoc::
+      @option_parser.to_s
     end
 
     private

@@ -20,4 +20,8 @@ class BaseTest < Test::Unit::Given::TestCase
       end
     end
   end
+
+  def test_nothing
+    # Seems 1.8 wants to have a test here?
+  end
 end
