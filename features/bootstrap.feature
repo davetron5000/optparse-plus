@@ -57,10 +57,7 @@ Feature: Bootstrap a new command-line app
     """    
     When I run `rake -I../../../../lib`
     Then the exit status should be 0
-    And the output should contain:
-    """
-    1 tests, 1 assertions, 0 failures, 0 errors, 0 skips
-    """
+    And the output should match /1 tests, 1 assertions, 0 failures, 0 errors/
     And the output should contain:
     """
     1 scenario (1 passed)
