@@ -191,33 +191,45 @@ class TestMain < BaseTest
       @f = nil
       @other = nil
       @some_other = nil
+      @with_dashes = nil
       main do
-        @switch = options[:switch]
-        @flag = options[:flag]
-        @f = options[:f]
-        @negatable = options[:negatable]
-        @other = options[:other]
-        @some_other = options[:some_other]
+        @switch      = [options[:switch],options['switch']]
+        @flag        = [options[:flag],options['flag']]
+        @f           = [options[:f],options['f']]
+        @negatable   = [options[:negatable],options['negatable']]
+        @other       = [options[:other],options['other']]
+        @some_other  = [options[:some_other],options['some_other']]
+        @with_dashes = [options[:'flag-with-dashes'],options['flag-with-dashes']]
       end
 
       on("--switch")
       on("--[no-]negatable")
       on("--flag FLAG","-f","Some documentation string")
+      on("--flag-with-dashes FOO")
       on("--other") do 
         options[:some_other] = true
       end
 
-      set_argv %w(--switch --flag value --negatable --other)
+      set_argv %w(--switch --flag value --negatable --other --flag-with-dashes=BAR)
     }
 
     When run_go_safely
 
     Then {
-      @switch.should be true
-      @some_other.should be true
-      @other.should_not be true
-      @flag.should == 'value'
-      @f.should == 'value'
+      @switch[0].should be true
+      @some_other[0].should be true
+      @other[0].should_not be true
+      @flag[0].should == 'value'
+      @f[0].should == 'value'
+      @with_dashes[0].should == 'BAR'
+
+      @switch[1].should be true
+      @some_other[1].should be nil # ** this is set manually
+      @other[1].should_not be true
+      @flag[1].should == 'value'
+      @f[1].should == 'value'
+      @with_dashes[1].should == 'BAR'
+
       opts.to_s.should match /Some documentation string/
     }
   end

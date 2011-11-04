@@ -249,7 +249,10 @@ module Methadone
       else
         opt_names = option_names(*args)
         @option_parser.on(*args) do |value|
-          opt_names.each { |name| @options[name] = value }
+          opt_names.each do |name| 
+            @options[name] = value 
+            @options[name.to_s] = value 
+          end
         end
       end
       set_banner
@@ -316,11 +319,11 @@ module Methadone
 
     def option_names(*opts_on_args,&block)
       opts_on_args.map { |arg|
-        if arg =~ /^--\[no-\]([^-\s]*)/
+        if arg =~ /^--\[no-\]([^-\s][^\s]*)/
           $1.to_sym
-        elsif arg =~ /^--([^-\s]*)/
+        elsif arg =~ /^--([^-\s][^\s]**)/
           $1.to_sym
-        elsif arg =~ /^-([^-\s]*)/
+        elsif arg =~ /^-([^-\s][^\s]**)/
           $1.to_sym
         else
           nil
