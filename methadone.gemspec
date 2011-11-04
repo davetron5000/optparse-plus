@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("rspec-expectations", "~> 2.6")
   s.add_development_dependency("rake")
   s.add_development_dependency("rdoc","~> 3.9")
+  s.add_development_dependency("cucumber","~> 1.1.1")
   s.add_development_dependency("aruba")
   s.add_development_dependency("simplecov", "~> 0.5")
   s.add_development_dependency("test_unit-given", ">= 0.1.1")
