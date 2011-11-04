@@ -321,9 +321,9 @@ module Methadone
       opts_on_args.map { |arg|
         if arg =~ /^--\[no-\]([^-\s][^\s]*)/
           $1.to_sym
-        elsif arg =~ /^--([^-\s][^\s]**)/
+        elsif arg =~ /^--([^-\s][^\s]*)/
           $1.to_sym
-        elsif arg =~ /^-([^-\s][^\s]**)/
+        elsif arg =~ /^-([^-\s][^\s]*)/
           $1.to_sym
         else
           nil
