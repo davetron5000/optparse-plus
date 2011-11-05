@@ -18,6 +18,7 @@ class TestMain < BaseTest
 
   def teardown
     set_argv @original_argv
+    ENV.delete('DEBUG')
   end
 
   test_that "my main block gets called by run and has access to CLILogging" do
@@ -120,6 +121,20 @@ class TestMain < BaseTest
     }
   end
 
+  test_that "go allows the exception raised to leak through if DEBUG is set in the environment" do
+    Given {
+      ENV['DEBUG'] = 'true'
+      main do
+        raise ArgumentError,"oh noes"
+      end
+    }
+    Then {
+      assert_raises ArgumentError do
+        When run_go!
+      end
+    }
+  end
+
   test_that "go exits with the exit status included in the special-purpose excepiton" do
     Given {
       main do
@@ -129,6 +144,20 @@ class TestMain < BaseTest
     Then {
       assert_exits(4) { When run_go! }
       assert_logged_at_error "oh noes"
+    }
+  end
+
+  test_that "go allows the special methadone exception to leak through if DEBUG is set in the environment" do
+    Given {
+      ENV['DEBUG'] = 'true'
+      main do
+        raise Methadone::Error.new(4,"oh noes")
+      end
+    }
+    Then {
+      assert_raises Methadone::Error do 
+        When run_go!
+      end
     }
   end
 

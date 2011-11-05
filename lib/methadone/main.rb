@@ -193,9 +193,11 @@ module Methadone
     def call_main
       @main_block.call(*ARGV)
     rescue Methadone::Error => ex
+      raise ex if ENV['DEBUG']
       error ex.message unless no_message? ex
       ex.exit_code
     rescue => ex
+      raise ex if ENV['DEBUG']
       error ex.message unless no_message? ex
       70 # Linux sysexit code for internal software error
     end

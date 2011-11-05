@@ -78,6 +78,10 @@ Methadone gives you a simple,lightweight DSL to help.  It's important to note th
 
       # If something goes wrong, you can just raise an exception
       # or call exit_now! if you want to control the exit status
+      #
+      # Note that if you set DEBUG in the environment, the exception
+      # will leak through; this can be handy to figure out why
+      # your app might be failing
     end
 
     description "One line summary of your awesome app"
