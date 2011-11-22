@@ -94,8 +94,6 @@ class TestMain < BaseTest
     end
   end
 
-  def run_go!; proc { go! }; end
-
   test_that "go exits with the numeric value that main evaluated to" do
     [0,1,2,3].each do |exit_status|
       Given main_that_exits exit_status
@@ -132,6 +130,35 @@ class TestMain < BaseTest
       assert_raises ArgumentError do
         When run_go!
       end
+    }
+  end
+
+  test_that "An exception that's not a StandardError causes the excepteion to break through and raise" do
+    Given {
+      main do
+        raise Exception,"oh noes"
+      end
+    }
+    Then {
+      ex = assert_raises Exception do
+        When run_go!
+      end
+      assert_equal "oh noes",ex.message
+    }
+  end
+
+  test_that "Non-methadone exceptions leak through if we configure it that way" do
+    Given {
+      main do
+        raise StandardError,"oh noes"
+      end
+      leak_exceptions true
+    }
+    Then {
+      ex = assert_raises StandardError do
+        When run_go!
+      end
+      assert_equal "oh noes",ex.message
     }
   end
 
@@ -396,6 +423,8 @@ class TestMain < BaseTest
     go!
   rescue SystemExit
   end
+
+  def run_go!; proc { go! }; end
 
   def assert_logged_at_error(expected_message)
     @logged.should include expected_message

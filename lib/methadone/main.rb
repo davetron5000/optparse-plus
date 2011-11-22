@@ -87,6 +87,16 @@ module Methadone
       @option_parser = OptionParserProxy.new(OptionParser.new,@options)
     end
 
+    # Configure the auto-handling of StandardError exceptions caught
+    # from calling go!.
+    #
+    # leak - if true, go! will *not* catch StandardError exceptions, but instead
+    #        allow them to bubble up.  If false, they will be caught and handled as normal.
+    #        This does *not* affect Methadone::Error exceptions; those will NOT leak through.
+    def leak_exceptions(leak)
+      @leak_exceptions = leak
+    end
+
 
     # Start your command-line app, exiting appropriately when
     # complete.
@@ -198,6 +208,7 @@ module Methadone
       ex.exit_code
     rescue => ex
       raise ex if ENV['DEBUG']
+      raise ex if @leak_exceptions
       error ex.message unless no_message? ex
       70 # Linux sysexit code for internal software error
     end

@@ -95,6 +95,12 @@ Methadone gives you a simple,lightweight DSL to help.  It's important to note th
     arg :name
     arg :password, :optional
 
+    # If you want to avoid automatic exception catching/logging do:
+    #
+    # leak_exceptions true
+    #
+    # Note that Methadone::Error exceptions are always caught and logged
+
     go!
 
 +go!+ runs the block you gave to +main+, passing it the unparsed +ARGV+ as parameters to the block.  It will
