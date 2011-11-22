@@ -32,7 +32,7 @@ module Methadone
     # Change the global logger that includers will use.  Useful if you
     # don't want the default configured logger.
     #
-    # +new_logger+:: the new logger.  May not be nil and should be a a logger of some kind
+    # +new_logger+:: the new logger.  May not be nil and should be a logger of some kind
     def logger=(new_logger)
       raise ArgumentError,"Logger may not be nil" if new_logger.nil?
       @@logger = new_logger
