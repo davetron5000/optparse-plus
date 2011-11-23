@@ -239,6 +239,26 @@ class TestMain < BaseTest
     }
   end
 
+  test_that "when setting defualts they get copied to strings/symbols as well" do
+    Given {
+      @flag_with_string_key_defalt = nil
+      @flag_with_symbol_key_defalt = nil
+      main do
+        @flag_with_string_key_defalt = options[:foo]
+        @flag_with_symbol_key_defalt = options['bar']
+      end
+      options['foo'] = 'FOO'
+      options[:bar] = 'BAR'
+      on("--foo")
+      on("--bar")
+    }
+    When run_go_safely
+    Then {
+      assert_equal 'FOO',@flag_with_string_key_defalt
+      assert_equal 'BAR',@flag_with_symbol_key_defalt
+    }
+  end
+
   test_that "omitting the block to opts simply sets the value in the options hash and returns itself" do
     Given {
       @switch = nil

@@ -112,6 +112,7 @@ module Methadone
     # 64 and a message about that missing argument.
     #
     def go!
+      normalize_defaults
       opts.parse!
       opts.check_args!
       result = call_main
@@ -198,6 +199,20 @@ module Methadone
     end
 
     private
+
+    # Normalized all defaults to both string and symbol forms, so
+    # the user can access them via either means just as they would for
+    # non-defaulted options
+    def normalize_defaults
+      new_options = {}
+      options.each do |key,value|
+        unless value.nil?
+          new_options[key.to_s] = value
+          new_options[key.to_sym] = value
+        end
+      end
+      options.merge!(new_options)
+    end
 
     # Handle calling main and trapping any exceptions thrown
     def call_main
