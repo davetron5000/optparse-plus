@@ -1,27 +1,32 @@
-@pending
 Feature: Users should get the license included
   As a user
   I'd like to be able to include a license
   So that I don't have to hunt it down for every new project
 
-  Scenario: Use a custom license
-    Given a custom license is available at http://localhost:1234/my_license.txt
-    When I run successfully `methadone -l my_license --license-location=http://localhost:1234 newgem`
-    Then newgem's license should identical to the file at http://localhost:1234/my_license.txt
-    And the README should reference the license my_license
+  Background:
+    Given the directory "tmp/newgem" does not exist
+
+  Scenario: Use a non-stock license
+    When I successfully run `methadone -l custom tmp/newgem`
+    Then newgem's license should be an empty file
+    And the README should reference the need for a license
 
   Scenario Outline: Include one of a few stock licenses
-    When I run successfully `methadone -l <license> newgem`
+    When I successfully run `methadone -l <license> tmp/newgem`
     Then newgem's license should be the <license> license
     And the README should reference this license
 
     Examples:
-      |<license>|
+      |license|
       |apache|
-      |gpl|
       |mit|
 
+  Scenario: We only support a few licenses
+    When I run `methadone -l foobar tmp/newgem`
+    Then the exit status should not be 0
+    And the stderr should match /invalid argument: -l foobar/
+
   Scenario: No license specified
-    When I run successfully `methadone newgem`
-    Then the stderr should contain "Warning: your app has no license"
+    When I successfully run `methadone tmp/newgem`
+    Then the stderr should contain "your app has no license"
     And the README should not reference a license

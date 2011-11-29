@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby -w
+#!/usr/bin/env ruby
 
 require 'fileutils'
 require 'optparse'
@@ -28,6 +28,14 @@ main do |app_name|
     copy_file file, :binding => binding
   end
 
+  license = options[:license]
+  if license
+    copy_file "#{options[:license]}_LICENSE.txt", :as => "LICENSE.txt"
+  else
+    warn "your app has no license"
+  end
+
+
   if using_readme
     copy_file "README.rdoc", :binding => binding 
   end
@@ -50,6 +58,9 @@ description "Kick the bash habit by bootstrapping your Ruby command-line apps"
 
 on("--force","Overwrite files if they exist")
 on("--[no-]readme","[Do not ]produce a README file")
+
+licenses = %w(mit apache custom)
+on("-l LICENSE","--license",licenses,"Specify the license for your project (#{licenses.join('|')})")
 
 arg :app_name, :required
 

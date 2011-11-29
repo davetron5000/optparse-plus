@@ -2,7 +2,13 @@
 
 Author::  YOUR NAME (YOUR EMAIL)
 Copyright:: Copyright (c) <%= Time.now.year %> YOUR NAME
-License:: 
+<% if license %>
+<% if license == 'custom' %>
+License:: INSERT LICENSE HERE
+<% else %>
+License:: <%= license %>, see LICENSE.txt
+<% end %>
+<% end %>
 
 DESCRIBE YOUR GEM HERE
 
