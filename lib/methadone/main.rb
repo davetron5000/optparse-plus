@@ -1,7 +1,7 @@
 require 'optparse'
 
 begin
-  basic_object = Module.const_get('BasicObject')
+  Module.const_get('BasicObject')
   # We are 1.9.x
 rescue NameError
   BasicObject = Object
