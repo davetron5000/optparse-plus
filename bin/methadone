@@ -14,6 +14,8 @@ main do |app_name|
   using_readme = options[:readme]
 
   gemname = File.basename(app_name)
+  module_name = gemname.split(/_/).map(&:capitalize).join('')
+
   debug "Creating project for gem #{gemname}"
 
   chdir File.dirname(app_name)
@@ -42,7 +44,7 @@ main do |app_name|
 
   copy_file "features/executable.feature", :as => "#{gemname}.feature", :binding => binding
   copy_file "features/step_definitions/executable_steps.rb", :as => "#{gemname}_steps.rb"
-  copy_file "bin/executable", :as => gemname, :executable => true
+  copy_file "bin/executable", :as => gemname, :executable => true, :binding => binding
 
   add_to_file "#{gemname}.gemspec", [
     "  s.add_development_dependency('rdoc')",
@@ -63,6 +65,8 @@ licenses = %w(mit apache custom)
 on("-l LICENSE","--license",licenses,"Specify the license for your project (#{licenses.join('|')})")
 
 arg :app_name, :required
+
+version Methadone::VERSION
 
 go!
 

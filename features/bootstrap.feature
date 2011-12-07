@@ -37,9 +37,11 @@ Feature: Bootstrap a new command-line app
     And the file "tmp/newgem/newgem.gemspec" should match /add_dependency\('methadone'/
     Given I cd to "tmp/newgem"
     And my app's name is "newgem"
-    When I successfully run `bin/newgem --help`
+    When I successfully run `bin/newgem --help` with "lib" in the library path
     Then the banner should be present
-    And the banner should document that this app takes no options
+    And the banner should document that this app takes options
+    And the following options should be documented:
+      |--version|
     And the banner should document that this app takes no arguments
     When I successfully run `rake -T -I../../lib`
     Then the output should contain:
@@ -61,7 +63,7 @@ Feature: Bootstrap a new command-line app
     And the output should contain:
     """
     1 scenario (1 passed)
-    5 steps (5 passed)
+    6 steps (6 passed)
     """
 
   Scenario: Won't squash an existing dir

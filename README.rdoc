@@ -166,6 +166,7 @@ Here's an example from methadone's own tests:
       And the following options should be documented:
         |--force|
       And the banner should be present
+      And the banner should include the version
       And the banner should document that this app takes options
       And the banner should document that this app's arguments are:
         |app_name|which is required|
@@ -189,6 +190,10 @@ Here's an example from methadone's own tests:
 * Checks that the help has a proper usage banner
 
     Then the banner should be present
+
+* Checks that the banner includes the version
+
+    Then the banner should include the version
 
 * Checks that the usage banner indicates it takes options via <tt>[options]</tt>
 

@@ -428,6 +428,42 @@ class TestMain < BaseTest
     }
   end
 
+  test_that "when I specify a version, it shows up in the banner" do
+    Given  {
+      main{}
+      version "0.0.1"
+    }
+
+    Then {
+      opts.banner.should match /^v0.0.1/m
+    }
+  end
+
+  test_that "when I specify a version, I can get help via --version" do
+    Given  {
+      main{}
+      version "0.0.1"
+      set_argv(['--verison'])
+    }
+    Then run_go_safely
+    And {
+      opts.to_s.should match /Show help\/version info/m
+    }
+  end
+
+  test_that "when I specify a version with custom help, it shows up" do
+    @version_message = "SHOW ME VERSIONS"
+    Given  {
+      main{}
+      version "0.0.1",@version_message
+      set_argv(['--verison'])
+    }
+    Then run_go_safely
+    And {
+      opts.to_s.should match /#{@version_message}/
+    }
+  end
+
   private
 
   def main_shouldve_been_called

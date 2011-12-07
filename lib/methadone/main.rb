@@ -198,6 +198,22 @@ module Methadone
       @options
     end
 
+    # Set the version of your app so it appears in the
+    # banner.  This also adds --version as an option to your app which,
+    # when used, will act just like --help
+    #
+    # version - the current version of your app.  Should almost always be
+    #           YourApp::VERSION, where the module YourApp should've been generated
+    #           by the bootstrap script
+    # custom_message - if provided, customized the message shown next to --version
+    def version(version,custom_message='Show help/version info')
+      opts.version(version)
+      opts.on("--version",custom_message) do 
+        puts opts.to_s
+        exit 0
+      end
+    end
+
     private
 
     # Normalized all defaults to both string and symbol forms, so
@@ -250,6 +266,7 @@ module Methadone
       @args = []
       @arg_options = {}
       @description = nil
+      @version = nil
       set_banner
     end
 
@@ -318,6 +335,12 @@ module Methadone
       @option_parser.to_s
     end
 
+    # Sets the version for the banner
+    def version(version)
+      @version = version
+      set_banner
+    end
+
     private
 
     def set_banner
@@ -339,6 +362,7 @@ module Methadone
           }.join(' ')
         end
         new_banner += "\n\n#{@description}" if @description
+        new_banner += "\n\nv#{@version}" if @version
         new_banner += "\n\nOptions:" if @accept_options
 
         @option_parser.banner=new_banner

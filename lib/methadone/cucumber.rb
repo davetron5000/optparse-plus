@@ -38,6 +38,9 @@ end
 Then /^the banner should document that this app takes no arguments$/ do
   step %(the output should match /Usage: #{@app_name}\\s*\(\\[options\\]\)?$/)
 end
+
+Then /^the banner should include the version$/ do
+  step %(the output should match /v\\d+\\.\\d+\\.\\d+/)
 end
 
 Then /^there should be a one line summary of what the app does$/ do

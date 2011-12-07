@@ -2,6 +2,7 @@
 
 require 'optparse'
 require 'methadone'
+require '<%= gemname %>'
 
 include Methadone::Main
 
@@ -31,5 +32,7 @@ end
 #
 # # Make an argument optional
 # arg :optional_arg, :optional
+
+version <%= module_name %>::VERSION
 
 go!
