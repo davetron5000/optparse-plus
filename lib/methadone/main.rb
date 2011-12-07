@@ -1,9 +1,7 @@
 require 'optparse'
 
-begin
-  basic_object = Module.const_get('BasicObject')
-  # We are 1.9.x
-rescue NameError
+if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('1.9')
+  Object.send(:remove_const, :BasicObject)
   BasicObject = Object
 end
 
