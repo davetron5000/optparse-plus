@@ -36,7 +36,8 @@ Then /^the banner should document that this app takes no options$/ do
 end
 
 Then /^the banner should document that this app takes no arguments$/ do
-  step %(the output should match /Usage: #{@app_name}\\s*$/)
+  step %(the output should match /Usage: #{@app_name}\\s*\(\\[options\\]\)?$/)
+end
 end
 
 Then /^there should be a one line summary of what the app does$/ do
