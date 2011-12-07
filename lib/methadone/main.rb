@@ -1,6 +1,7 @@
 require 'optparse'
 
 if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('1.9')
+  Object.send(:remove_const, :BasicObject)
   BasicObject = Object
 end
 
