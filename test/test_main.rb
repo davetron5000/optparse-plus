@@ -9,6 +9,8 @@ class TestMain < BaseTest
     @logged = []
     @original_argv = ARGV.clone
     ARGV.clear
+    @old_stdout = $stdout
+    $stdout = StringIO.new
   end
 
   # Override error so we can capture what's being logged at this level
@@ -19,6 +21,7 @@ class TestMain < BaseTest
   def teardown
     set_argv @original_argv
     ENV.delete('DEBUG')
+    $stdout = @old_stdout
   end
 
   test_that "my main block gets called by run and has access to CLILogging" do
@@ -223,7 +226,7 @@ class TestMain < BaseTest
     }
   end
 
-  test_that "when the command line is invalid, we exit with 64" do
+  test_that "when the command line is invalid, we exit with 64 and print the CLI help" do
     Given {
       main do
       end
@@ -236,6 +239,7 @@ class TestMain < BaseTest
 
     Then {
       assert_exits(64) { When run_go! }
+      assert $stdout.string.include?(opts.to_s),"Expected #{$stdout.string} to contain #{opts.to_s}"
     }
   end
 
