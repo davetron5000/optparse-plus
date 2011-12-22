@@ -122,7 +122,10 @@ module Methadone
         exit 0
       end
     rescue OptionParser::ParseError => ex
+      puts
       error ex.message
+      puts
+      puts opts.help
       exit 64 # Linux standard for bad command line
     end
 
