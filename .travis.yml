@@ -1,3 +1,6 @@
+notifications:
+  email:
+    on_success: always
 script: 'bundle exec rake'
 rvm: 
   - 1.9.2
