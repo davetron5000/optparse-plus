@@ -468,6 +468,35 @@ class TestMain < BaseTest
     }
   end
 
+  test_that "default values for options are put into the docstring" do
+    Given {
+      main {}
+      options[:foo] = "bar"
+      on("--foo ARG","Indicate the type of foo")
+    }
+    When {
+      @help_string = opts.to_s
+    }
+    When {
+      @help_string.should match /\(default: bar\)/
+    }
+
+  end
+
+  test_that "default values for options with several names are put into the docstring" do
+    Given {
+      main {}
+      options[:foo] = "bar"
+      on("-f ARG","--foo","Indicate the type of foo")
+    }
+    When {
+      @help_string = opts.to_s
+    }
+    When {
+      @help_string.should match /\(default: bar\)/
+    }
+  end
+
   private
 
   def main_shouldve_been_called

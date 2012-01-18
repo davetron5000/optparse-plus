@@ -195,7 +195,23 @@ module Methadone
     end
 
     # Returns a Hash that you can use to store or retrieve options
-    # parsed from the command line
+    # parsed from the command line.  When you put values in here, if you do so
+    # *before* you've declared your command-line interface via #on, the value
+    # will be used in the docstring to indicate it is the default.
+    #
+    # Example
+    #
+    #     main do
+    #       puts options[:foo] # put the value of --foo that the user provided
+    #     end
+    #
+    #     options[:foo] = "bar" # set "bar" as the default value for --foo, which
+    #                           # will cause us to include "(default: bar)" in the
+    #                           # docstring
+    #
+    #     on("--foo FOO","Sets the foo")
+    #     go!
+    #
     def options
       @options
     end
@@ -291,6 +307,7 @@ module Methadone
     # for how that works.
     def on(*args,&block)
       @accept_options = true
+      args = add_default_value_to_docstring(*args)
       if block
         @option_parser.on(*args,&block)
       else
@@ -344,6 +361,22 @@ module Methadone
     end
 
     private
+
+    def add_default_value_to_docstring(*args)
+      default_value = nil
+      option_names_from(args).each do |option|
+        default_value = (@options[option.to_s] || @options[option.to_sym]) if default_value.nil?
+      end
+      if default_value.nil?
+        args
+      else
+        args + ["(default: #{default_value})"]
+      end
+    end
+
+    def option_names_from(args)
+      args.select { |_| _ =~ /^\-/ }.map { |_| _.gsub(/^\-+/,'').gsub(/\s.*$/,'') }
+    end
 
     def set_banner
       unless @user_specified_banner
