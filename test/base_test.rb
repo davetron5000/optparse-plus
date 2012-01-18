@@ -4,24 +4,7 @@ SimpleCov.start do
 end
 require 'test/unit'
 require 'rspec/expectations'
-require 'test/unit/given'
+require 'clean_test/test_case'
 
-class BaseTest < Test::Unit::Given::TestCase
-  # Copied from Rails; makes a test method using a string
-  def self.test(name, &block)
-    test_name = "test_#{name.gsub(/\s+/,'_')}".to_sym
-    defined = instance_method(test_name) rescue false
-    raise "#{test_name} is already defined in #{self}" if defined
-    if block_given?
-      define_method(test_name, &block)
-    else
-      define_method(test_name) do
-        raise "No implementation provided for #{name}"
-      end
-    end
-  end
-
-  def test_nothing
-    # Seems 1.8 wants to have a test here?
-  end
+class BaseTest < Clean::Test::TestCase
 end
