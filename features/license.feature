@@ -28,5 +28,10 @@ Feature: Users should get the license included
 
   Scenario: No license specified
     When I successfully run `methadone tmp/newgem`
-    Then the stderr should contain "your app has no license"
+    Then the stderr should contain "warning: your app has no license"
+    And the README should not reference a license
+
+  Scenario: No license specified explicitly
+    When I successfully run `methadone -l NONE tmp/newgem`
+    Then the stderr should not contain "warning: your app has no license"
     And the README should not reference a license
