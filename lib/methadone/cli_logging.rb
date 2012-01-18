@@ -30,13 +30,20 @@ module Methadone
     end
 
     # Change the global logger that includers will use.  Useful if you
-    # don't want the default configured logger.
+    # don't want the default configured logger.  Note that the +change_logger+
+    # version is preferred because Ruby will often parse <tt>logger = Logger.new</tt> as
+    # the declaration of, and assignment to, of a local variable.  You'd need to
+    # do <tt>self.logger=Logger.new</tt> to be sure.  This method
+    # is a bit easier.
     #
     # +new_logger+:: the new logger.  May not be nil and should be a logger of some kind
-    def logger=(new_logger)
+    def change_logger(new_logger)
       raise ArgumentError,"Logger may not be nil" if new_logger.nil?
       @@logger = new_logger
     end
+
+    alias logger= change_logger
+
 
     # pass-through to <tt>logger.debug(progname,&block)</tt>
     def debug(progname = nil, &block); logger.debug(progname,&block); end

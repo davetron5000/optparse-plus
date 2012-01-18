@@ -45,14 +45,33 @@ class TestCLILogging < BaseTest
     }
   end
 
-  test_that "we can change the global logger" do
+  test_that "we can change the global logger via self." do
     Given {
       @first = MyClassThatLogsToStdout.new
       @second = MyOtherClassThatLogsToStdout.new
       @logger_id = @second.logger_id
     }
     When {
-      @second.change_logger
+      @second.instance_eval do
+        self.logger=(Methadone::CLILogger.new)
+      end
+    }
+    Then {
+      @logger_id.should_not == @second.logger_id
+      @first.logger_id.should == @second.logger_id
+    }
+  end
+
+  test_that "we can change the global logger change_logger()" do
+    Given {
+      @first = MyClassThatLogsToStdout.new
+      @second = MyOtherClassThatLogsToStdout.new
+      @logger_id = @second.logger_id
+    }
+    When {
+      @second.instance_eval do
+        change_logger(Logger.new(STDERR))
+      end
     }
     Then {
       @logger_id.should_not == @second.logger_id
@@ -65,7 +84,11 @@ class TestCLILogging < BaseTest
       @other_class = MyOtherClassThatLogsToStdout.new
     }
     Then {
-      lambda { MyOtherClassThatLogsToStdout.new.change_to_nil_logger }.should raise_error(ArgumentError)
+      lambda { 
+        MyOtherClassThatLogsToStdout.new.instance_eval do
+          self.logger=(nil)
+        end
+      }.should raise_error(ArgumentError)
     }
   end
 
@@ -106,14 +129,6 @@ class TestCLILogging < BaseTest
       warn("warn")
       error("error")
       fatal("fatal")
-    end
-
-    def change_logger
-      self.logger=Methadone::CLILogger.new
-    end
-
-    def change_to_nil_logger
-      self.logger = nil
     end
 
     def logger_id; logger.object_id; end

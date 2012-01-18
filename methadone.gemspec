@@ -25,5 +25,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency("cucumber","~> 1.1.1")
   s.add_development_dependency("aruba")
   s.add_development_dependency("simplecov", "~> 0.5")
-  s.add_development_dependency("test_unit-given", ">= 0.1.1")
+  s.add_development_dependency("clean_test", "~> 0.10")
 end
