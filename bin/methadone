@@ -8,6 +8,7 @@ require 'methadone/cli'
 include FileUtils
 include Methadone::Main
 include Methadone::CLI
+include Methadone::SH
 
 main do |app_name|
   check_and_prepare_basedir!(app_name,options[:force])
@@ -20,7 +21,7 @@ main do |app_name|
 
   chdir File.dirname(app_name)
 
-  %x[bundle gem #{gemname}]
+  sh! "bundle gem #{gemname}"
 
   chdir gemname
 

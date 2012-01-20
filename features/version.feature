@@ -1,4 +1,3 @@
-@wip
 Feature: The version should show up in the banner by default
   As a developer
   I should be able to have the current gem version in the banner
