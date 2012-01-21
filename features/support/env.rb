@@ -9,13 +9,18 @@ Before do
   @puts = true
   @aruba_timeout_seconds = 60
   @original_rubylib = ENV['RUBYLIB']
+  @original_rubyopt = ENV['RUBYOPT']
 
   # We want to use, hopefully, the methadone from this codebase and not
   # the gem, so we put it in the RUBYLIB
   ENV['RUBYLIB'] = File.join(PROJECT_ROOT,'lib') + File::PATH_SEPARATOR + ENV['RUBYLIB'].to_s
+
+  # We need -rubygems here so that 1.8-style rubies work AND travis-ci doesn't barf with it in the shebang line
+  ENV['RUBYOPT'] = (ENV['RUBYOPT'] || '') + ' -rubygems'
 end
 
 After do
   # Put back how it was
   ENV['RUBYLIB'] = @original_rubylib
+  ENV['RUBYOPT'] = @original_rubyopt
 end
