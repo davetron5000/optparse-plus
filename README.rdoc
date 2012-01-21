@@ -23,7 +23,18 @@ Currently, this library is under development and has the following to offer:
 * {Source on Github}[http://github.com/davetron5000/methadone]
 * RDoc[http://rdoc.info/github/davetron5000/methadone/master/frames]
 
-== Bootstrapping
+== Platforms
+
+* Works completely on:
+  * MRI Ruby 1.9.2
+  * MRI Ruby 1.9.3
+  * MRI Ruby Head
+  * MRI Ruby 1.8.7
+  * RBX
+  * REE
+* For JRuby, everything works but aruba; aruba just doesn't work on JRuby for some reason, though this library *is* being used in production under JRuby 1.6.6
+
+== Bootstrapping a new CLI App
 
 The +methadone+ command-line app will bootstrap a new command-line app, setting up a proper gem structure, unit tests, and cucumber-based tests with aruba:
 
