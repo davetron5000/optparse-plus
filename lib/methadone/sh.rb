@@ -14,6 +14,10 @@ module Methadone
   # Methadone::CLILogging.  If you *don't*, you must provide a logger
   # via #set_sh_logger.
   #
+  # In order to work on as many Rubies as possible, this class defers the actual execution
+  # to an execution strategy.  See #set_exec_strategy if you think you'd like to override
+  # that, or just want to know how it works.
+  #
   # This is not intended to be a complete replacement for Open3, but instead of make common cases
   # and good practice easy to accomplish.
   module SH
@@ -80,7 +84,12 @@ module Methadone
       @sh_logger = logger
     end
 
-    # Set the strategy to use for executing commands.
+    # Public: Set the strategy to use for executing commands.  In general, you don't need to set this
+    # since this module chooses an appropriate implementation based on your Ruby platform.
+    # Currently, for 1.8-style Rubies, Open4 is used (see Methadone::ExecutionStrategy::Open_4).  
+    # For JRuby, JVM Runtime calls are used (see Methadone::ExecutionStrategy::JVM).  For all
+    # others, we use the built-in Open3 library (see Methadone::ExecutionStrategy::Open_3).
+    # See Methadone::ExecutionStrategy for how to implement your own.
     def set_exec_strategy(strategy)
       @execution_strategy = strategy
     end
@@ -91,63 +100,14 @@ module Methadone
       exec_strategy.exception_meaning_command_not_found
     end
 
-    class MRIExceutionStrategy
-      def exception_meaning_command_not_found
-        Errno::ENOENT
-      end
-    end
-
-    class Open3ExecutionStrategy < MRIExceutionStrategy
-      def run_command(command)
-        stdout,stderr,status = Open3.capture3(command)
-        [stdout.chomp,stderr.chomp,status]
-      end
-    end
-
-    class Open4ExecutionStrategy < MRIExceutionStrategy
-      def run_command(command)
-        pid, stdin_io, stdout_io, stderr_io = Open4::popen4(command)
-        stdin_io.close
-        stdout = stdout_io.read
-        stderr = stderr_io.read
-        _ , status = Process::waitpid2(pid)
-        [stdout.chomp,stderr.chomp,status]
-      end
-    end
-
-    class JVMExecutionStrategy
-      def run_command(command)
-        process = java.lang.Runtime.get_runtime.exec(command)
-        process.get_output_stream.close
-        stdout = input_stream_to_string(process.get_input_stream)
-        stderr = input_stream_to_string(process.get_error_stream)
-        exitstatus = process.wait_for
-        [stdout.chomp,stderr.chomp,OpenStruct.new(:exitstatus => exitstatus)]
-      end
-
-      def exception_meaning_command_not_found
-        NativeException
-      end
-
-    private
-      def input_stream_to_string(is)
-        ''.tap do |string|
-          ch = is.read
-          while ch != -1
-            string << ch
-            ch = is.read
-          end
-        end
-      end
-    end
 
     def self.default_exec_strategy_class
       if RUBY_PLATFORM == 'java'
-        JVMExecutionStrategy
+        Methadone::ExecutionStrategy::JVM
       elsif RUBY_VERSION =~ /^1.8/
-        Open4ExecutionStrategy
+        Methadone::ExecutionStrategy::Open_4
       else
-        Open3ExecutionStrategy
+        Methadone::ExecutionStrategy::Open_3
       end
     end
 

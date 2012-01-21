@@ -12,6 +12,7 @@ Currently, this library is under development and has the following to offer:
 
 * Bootstrapping a new CLI app
 * Lightweight DSL to structure your bin file
+* Simple wrapper for running external commands with good logging
 * Utility Classes
   * Methadone::CLILogger - a logger subclass that sends messages to standard error standard out as appropriate
   * Methadone::CLILogging - a module that, when included in any class, provides easy access to a shared logger
@@ -112,6 +113,52 @@ don't accept options, <tt>[options]</tt> won't appear in the help.  The names of
 will appear in proper order and <tt>:optional</tt> ones will be in square brackets.  You don't have to 
 touch a thing.
 
+== Wrapper for running external commands with good logging
+
+While backtick and <tt>%x[]</tt> are nice for compact, bash-like scripting, they have some failings:
+
+* You have to check the return value via <tt>$?</tt>
+* You have no access to the standard error
+* You really want to log: the command, the output, and the error so that for cron-like tasks, you can sort out what happened
+
+Enter Methadone::SH
+
+    include Methadone::SH
+
+    sh 'cp foo.txt /tmp'
+    # => logs the command to DEBUG, executes the command, logs its output to DEBUG and its
+    #    error output to WARN, returns 0
+    
+    sh 'cp non_existent_file.txt /nowhere_good'
+    # => logs the command to DEBUG, executes thecommand, logs its output to INFO and
+    #    its error output to WARN, returns the nonzero exit status of the underlying command
+    
+    sh! 'cp non_existent_file.txt /nowhere_good'
+    # => same as above, EXCEPT, raises a Methadone::FailedCommandError
+
+With this, you can easily script external commands in *almost* as expedient a fashion as with +bash+, however you get sensible logging along the way.  By default, this uses the logger provided by Methadone::CLILogging (which is *not* mixed in when you mix in Methadone::SH).  If you want to use a different logger, or don't want to mix in Methadone::CLILogging, simply call +set_sh_logger+ with your preferred logger.
+
+But that's not all!  You can run code when the command succeed by passing a block:
+
+    sh 'cp foo.txt /tmp' do
+      # Behaves exactly as before, but this block is called after
+    end
+
+    sh 'cp non_existent_file.txt /nowhere_good' do
+      # This block isn't called, since the command failed
+    end
+
+The <tt>sh!</tt> form works this way as well.  The block form is also how you can access the standard output or error of the command that ran.  Simply have your block accept one or two aguments:
+
+    sh 'ls -l /tmp/' do |stdout|
+      # stdout contains the output of the command
+    end
+    sh 'ls -l /tmp/ /non_existent_dir' do |stdout,stderr|
+      # stdout contains the output of the command,
+      # stderr contains the standard error output.
+    end
+
+This isn't a replacement for Open3 or ChildProcess, but a way to easily "do the right thing" for most cases.
 
 == Utility Classes
 
