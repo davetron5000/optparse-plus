@@ -1,4 +1,11 @@
-require 'open3'
+if RUBY_PLATFORM == 'java'
+  require 'java'
+  require 'ostruct'
+elsif RUBY_VERSION =~ /^1.8/
+  require 'open4'
+else
+  require 'open3'
+end
 
 module Methadone
   # Public: Module with various helper methods for executing external commands.
@@ -35,7 +42,7 @@ module Methadone
     def sh(command,&block)
       sh_logger.debug("Executing '#{command}'")
 
-      stdout,stderr,status = Open3.capture3(command)
+      stdout,stderr,status = exec_strategy.run_command(command)
 
       sh_logger.warn("Error output of '#{command}': #{stderr.chomp}")
 
@@ -48,7 +55,7 @@ module Methadone
       end
 
       status.exitstatus
-    rescue Errno::ENOENT => ex
+    rescue exception_meaning_command_not_found => ex
       sh_logger.error("Error running '#{command}': #{ex.message}")
       127
     end
@@ -73,7 +80,79 @@ module Methadone
       @sh_logger = logger
     end
 
+    # Set the strategy to use for executing commands.
+    def set_exec_strategy(strategy)
+      @execution_strategy = strategy
+    end
+
   private 
+
+    def exception_meaning_command_not_found
+      exec_strategy.exception_meaning_command_not_found
+    end
+
+    class MRIExceutionStrategy
+      def exception_meaning_command_not_found
+        Errno::ENOENT
+      end
+    end
+
+    class Open3ExecutionStrategy < MRIExceutionStrategy
+      def run_command(command)
+        Open3.capture3(command)
+      end
+    end
+
+    class Open4ExecutionStrategy < MRIExceutionStrategy
+      def run_command(command)
+        pid, stdin_io, stdout_io, stderr_io = Open4::popen4(command)
+        stdin_io.close
+        stdout = stdout_io.read
+        stderr = stderr_io.read
+        _ , status = Process::waitpid2(pid)
+        [stdout,stderr,status]
+      end
+    end
+
+    class JVMExecutionStrategy
+      def run_command(command)
+        process = java.lang.Runtime.get_runtime.exec(command)
+        process.get_output_stream.close
+        stdout = input_stream_to_string(process.get_input_stream)
+        stderr = input_stream_to_string(process.get_error_stream)
+        exitstatus = process.wait_for
+        [stdout,stderr,OpenStruct.new(:exitstatus => exitstatus)]
+      end
+
+      def exception_meaning_command_not_found
+        NativeException
+      end
+
+    private
+      def input_stream_to_string(is)
+        ''.tap do |string|
+          ch = is.read
+          while ch != -1
+            string << ch
+            ch = is.read
+          end
+        end
+      end
+    end
+
+    def self.default_exec_strategy_class
+      if RUBY_PLATFORM == 'java'
+        JVMExecutionStrategy
+      elsif RUBY_VERSION =~ /^1.8/
+        Open4ExecutionStrategy
+      else
+        Open3ExecutionStrategy
+      end
+    end
+
+    def exec_strategy
+      @execution_strategy ||= SH.default_exec_strategy_class.new 
+    end
 
     def sh_logger
       @sh_logger ||= self.logger
