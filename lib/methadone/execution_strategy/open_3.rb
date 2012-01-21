@@ -6,10 +6,6 @@ module Methadone
         stdout,stderr,status = Open3.capture3(command)
         [stdout.chomp,stderr.chomp,status]
       end
-
-      def exception_meaning_command_not_found
-        Errno::ENOENT
-      end
     end
   end
 end

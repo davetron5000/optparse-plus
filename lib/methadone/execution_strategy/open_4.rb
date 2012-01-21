@@ -11,10 +11,6 @@ module Methadone
         _ , status = Process::waitpid2(pid)
         [stdout.chomp,stderr.chomp,status]
       end
-
-      def exception_meaning_command_not_found
-        Errno::ENOENT
-      end
     end
   end
 end
