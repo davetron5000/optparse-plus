@@ -104,6 +104,8 @@ module Methadone
     def self.default_exec_strategy_class
       if RUBY_PLATFORM == 'java'
         Methadone::ExecutionStrategy::JVM
+      elsif defined?(RUBY_ENGINE) && RUBY_ENGINE == 'rbx'
+        Methadone::ExecutionStrategy::RBXOpen_4
       elsif RUBY_VERSION =~ /^1.8/
         Methadone::ExecutionStrategy::Open_4
       else

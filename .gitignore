@@ -7,3 +7,4 @@ html
 tmp
 results.html
 coverage
+*.rbc
