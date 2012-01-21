@@ -44,14 +44,14 @@ module Methadone
 
       stdout,stderr,status = exec_strategy.run_command(command)
 
-      sh_logger.warn("Error output of '#{command}': #{stderr.chomp}")
+      sh_logger.warn("Error output of '#{command}': #{stderr}") unless stderr.strip.length == 0
 
       if status.exitstatus != 0
-        sh_logger.info("Output of '#{command}': #{stdout.chomp}")
+        sh_logger.info("Output of '#{command}': #{stdout}")
         sh_logger.warn("Error running '#{command}'")
       else
-        sh_logger.debug("Output of '#{command}': #{stdout.chomp}") 
-        call_block(block,stdout.chomp,stderr.chomp) unless block.nil?
+        sh_logger.debug("Output of '#{command}': #{stdout}") 
+        call_block(block,stdout,stderr) unless block.nil?
       end
 
       status.exitstatus
@@ -99,7 +99,8 @@ module Methadone
 
     class Open3ExecutionStrategy < MRIExceutionStrategy
       def run_command(command)
-        Open3.capture3(command)
+        stdout,stderr,status = Open3.capture3(command)
+        [stdout.chomp,stderr.chomp,status]
       end
     end
 
@@ -110,7 +111,7 @@ module Methadone
         stdout = stdout_io.read
         stderr = stderr_io.read
         _ , status = Process::waitpid2(pid)
-        [stdout,stderr,status]
+        [stdout.chomp,stderr.chomp,status]
       end
     end
 
@@ -121,7 +122,7 @@ module Methadone
         stdout = input_stream_to_string(process.get_input_stream)
         stderr = input_stream_to_string(process.get_error_stream)
         exitstatus = process.wait_for
-        [stdout,stderr,OpenStruct.new(:exitstatus => exitstatus)]
+        [stdout.chomp,stderr.chomp,OpenStruct.new(:exitstatus => exitstatus)]
       end
 
       def exception_meaning_command_not_found

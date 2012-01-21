@@ -34,7 +34,7 @@ class TestSH < Clean::Test::TestCase
         @exit_code = self.send(method,@command)
       }
       Then {
-        assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout,test_command_stderr)
+        assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout)
       }
     end
 
@@ -51,7 +51,7 @@ class TestSH < Clean::Test::TestCase
       }
       Then {
         @stdout_received.should == test_command_stdout
-        assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout,test_command_stderr)
+        assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout)
       }
     end
 
@@ -68,7 +68,7 @@ class TestSH < Clean::Test::TestCase
       }
       Then {
         @block_called.should == true
-        assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout,test_command_stderr)
+        assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout)
       }
     end
 
@@ -84,7 +84,7 @@ class TestSH < Clean::Test::TestCase
       }
       Then {
         @block_called.should == true
-        assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout,test_command_stderr)
+        assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout)
       }
     end
 
@@ -104,8 +104,8 @@ class TestSH < Clean::Test::TestCase
       }
       Then {
         @stdout_received.should == test_command_stdout
-        @stderr_received.should == test_command_stderr
-        assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout,test_command_stderr)
+        @stderr_received.length.should == 0
+        assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout)
       }
     end
   end
@@ -184,22 +184,20 @@ class TestSH < Clean::Test::TestCase
       @command = test_command
     }
     When {
-      @test_app.sh @command
+      @exit_code = @test_app.sh @command
     }
     Then {
-      @logger.debugs[0].should == "Executing '#{@command}'"
-      @logger.debugs[1].should == "Output of '#{@command}': #{test_command_stdout}"
-      @logger.warns[0].should == "Error output of '#{@command}': #{test_command_stderr}"
+      assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout)
     }
   end
 
 private
 
-  def assert_successful_command_execution(exit_code,logger,command,stdout,stderr)
+  def assert_successful_command_execution(exit_code,logger,command,stdout)
     exit_code.should == 0
     logger.debugs[0].should == "Executing '#{command}'"
     logger.debugs[1].should == "Output of '#{command}': #{stdout}"
-    logger.warns[0].should == "Error output of '#{command}': #{stderr}"
+    logger.warns.length.should == 0
   end
 
   def assert_logger_output_for_failure(logger,command,stdout,stderr)
