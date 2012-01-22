@@ -1,7 +1,7 @@
 module Methadone
   module ExecutionStrategy
-    # ExecutionStrategy for the JVM that uses JVM classes to run the command and get its results.
-    class JVM
+    # Methadone::ExecutionStrategy for the JVM that uses JVM classes to run the command and get its results.
+    class JVM < Base
       def run_command(command)
         process = java.lang.Runtime.get_runtime.exec(command)
         process.get_output_stream.close

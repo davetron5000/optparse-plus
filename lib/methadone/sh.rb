@@ -8,45 +8,45 @@ else
 end
 
 module Methadone
-  # Public: Module with various helper methods for executing external commands.
+  # Module with various helper methods for executing external commands.
   # In most cases, you can use #sh to run commands and have decent logging
   # done.  You will likely use this in a class that also mixes-in
   # Methadone::CLILogging.  If you *don't*, you must provide a logger
   # via #set_sh_logger.
   #
   # In order to work on as many Rubies as possible, this class defers the actual execution
-  # to an execution strategy.  See #set_exec_strategy if you think you'd like to override
+  # to an execution strategy.  See #set_execution_strategy if you think you'd like to override
   # that, or just want to know how it works.
   #
   # This is not intended to be a complete replacement for Open3, but instead of make common cases
   # and good practice easy to accomplish.
   module SH
-    # Public: Run a shell command, capturing and logging its output.
+    # Run a shell command, capturing and logging its output.
     # If the command completed successfully, it's output is logged at DEBUG.
     # If not, its output as logged at INFO.  In either case, its
     # error output is logged at WARN.
     #
-    # command - the command to run
-    # block   - if provided, will be called if the command exited nonzero.  The block may take 0, 1, or 2 arguments.
-    #           The arguments provided are the standard output as a string and the standard error as a string,
-    #           You should be safe to pass in a lambda instead of a block, as long as your
-    #           lambda doesn't take more than two arguments
+    # command:: the command to run
+    # block:: if provided, will be called if the command exited nonzero.  The block may take 0, 1, or 2 arguments.
+    #         The arguments provided are the standard output as a string and the standard error as a string,
+    #         You should be safe to pass in a lambda instead of a block, as long as your
+    #         lambda doesn't take more than two arguments
     #
     # Example
     #
-    #   sh "cp foo /tmp"
-    #   sh "ls /tmp" do |stdout|
-    #     # stdout contains the output of ls /tmp
-    #   end
-    #   sh "ls -l /tmp foobar" do |stdout,stderr|
-    #     # ...
-    #   end
+    #     sh "cp foo /tmp"
+    #     sh "ls /tmp" do |stdout|
+    #       # stdout contains the output of ls /tmp
+    #     end
+    #     sh "ls -l /tmp foobar" do |stdout,stderr|
+    #       # ...
+    #     end
     #
     # Returns the exit status of the command.  Note that if the command doesn't exist, this returns 127.
     def sh(command,&block)
       sh_logger.debug("Executing '#{command}'")
 
-      stdout,stderr,status = exec_strategy.run_command(command)
+      stdout,stderr,status = execution_strategy.run_command(command)
 
       sh_logger.warn("Error output of '#{command}': #{stderr}") unless stderr.strip.length == 0
 
@@ -65,7 +65,7 @@ module Methadone
     end
 
     # Run a command, throwing an exception if the command exited nonzero.
-    # Otherwise, behaves exactly like #sh
+    # Otherwise, behaves exactly like #sh.
     #
     # Raises Methadone::FailedCommandError if the command exited nonzero.
     def sh!(command,&block)
@@ -74,7 +74,7 @@ module Methadone
       end
     end
 
-    # Public: Override the default logger (which is the one provided by CLILogging).
+    # Override the default logger (which is the one provided by CLILogging).
     # You would do this if you want a custom logger or you aren't mixing-in
     # CLILogging.
     #
@@ -84,24 +84,27 @@ module Methadone
       @sh_logger = logger
     end
 
-    # Public: Set the strategy to use for executing commands.  In general, you don't need to set this
-    # since this module chooses an appropriate implementation based on your Ruby platform.
-    # Currently, for 1.8-style Rubies, Open4 is used (see Methadone::ExecutionStrategy::Open_4).  
-    # For JRuby, JVM Runtime calls are used (see Methadone::ExecutionStrategy::JVM).  For all
-    # others, we use the built-in Open3 library (see Methadone::ExecutionStrategy::Open_3).
-    # See Methadone::ExecutionStrategy for how to implement your own.
-    def set_exec_strategy(strategy)
+    # Set the strategy to use for executing commands.  In general, you don't need to set this
+    # since this module chooses an appropriate implementation based on your Ruby platform:
+    #
+    # 1.8 Rubies, including 1.8, and REE:: Open4 is used via Methadone::ExecutionStrategy::Open_4
+    # Rubinius:: Open4 is used, but we handle things a bit differently; see Methadone::ExecutionStrategy::RBXOpen_4
+    # JRuby:: Use JVM calls to +Runtime+ via Methadone::ExecutionStrategy::JVM
+    # Windows:: Currently no support for Windows
+    # All others:: we use Open3 from the standard library, via Methadone::ExecutionStrategy::Open_3
+    #
+    # See Methadone::ExecutionStrategy::Base for how to implement your own.
+    def set_execution_strategy(strategy)
       @execution_strategy = strategy
     end
 
   private 
 
     def exception_meaning_command_not_found
-      exec_strategy.exception_meaning_command_not_found
+      execution_strategy.exception_meaning_command_not_found
     end
 
-
-    def self.default_exec_strategy_class
+    def self.default_execution_strategy_class
       if RUBY_PLATFORM == 'java'
         Methadone::ExecutionStrategy::JVM
       elsif defined?(RUBY_ENGINE) && RUBY_ENGINE == 'rbx'
@@ -113,14 +116,15 @@ module Methadone
       end
     end
 
-    def exec_strategy
-      @execution_strategy ||= SH.default_exec_strategy_class.new 
+    def execution_strategy
+      @execution_strategy ||= SH.default_execution_strategy_class.new 
     end
 
     def sh_logger
       @sh_logger ||= self.logger
     end
 
+    # Safely call our block, even if the user passed in a lambda
     def call_block(block,stdout,stderr)
       # blocks that take no arguments have arity -1.  Or 0.  Ugh.
       if block.arity > 0
@@ -135,6 +139,5 @@ module Methadone
         block.call
       end
     end
-
   end
 end

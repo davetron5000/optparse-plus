@@ -191,6 +191,53 @@ class TestSH < Clean::Test::TestCase
     }
   end
 
+  class MyExecutionStrategy
+    include Clean::Test::Any
+    attr_reader :command
+
+    def initialize(exitcode)
+      @exitcode = exitcode
+      @command = nil
+    end
+
+    def run_command(command)
+      @command = command
+      [any_string,any_string,OpenStruct.new(:exitstatus => @exit_code)]
+    end
+
+    def exception_meaning_command_not_found
+      RuntimeError
+    end
+  end
+
+  class MyExecutionStrategyApp
+    include Methadone::CLILogging
+    include Methadone::SH
+
+    attr_reader :strategy
+
+    def initialize(exit_code)
+      @strategy = MyExecutionStrategy.new(exit_code)
+      set_execution_strategy(@strategy)
+      set_sh_logger(CapturingLogger.new)
+    end
+  end
+
+  test_that "when I provide a custom execution strategy, it gets used" do
+    Given {
+      @exit_code = any_int :min => 0, :max => 127
+      @app = MyExecutionStrategyApp.new(@exit_code)
+      @command = "ls"
+    }
+    When {
+      @results = @app.sh(@command)
+    }
+    Then {
+      @app.strategy.command.should == @command
+      @results.should == @exitstatus
+    }
+  end
+
 private
 
   def assert_successful_command_execution(exit_code,logger,command,stdout)
