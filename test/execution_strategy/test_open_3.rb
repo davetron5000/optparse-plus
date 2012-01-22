@@ -1,5 +1,6 @@
 require 'base_test'
 require 'mocha'
+require 'open3'
 
 module ExecutionStrategy
   class TestOpen_3 < BaseTest
