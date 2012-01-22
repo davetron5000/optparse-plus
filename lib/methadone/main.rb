@@ -20,7 +20,7 @@ module Methadone
   # named "flag", and two arguments "needed" (which is required) 
   # and "maybe" which is optional, we can do the following:
   #
-  #     #!/usr/bin/env ruby -w
+  #     #!/usr/bin/env ruby
   #       
   #     require 'methadone'
   #      

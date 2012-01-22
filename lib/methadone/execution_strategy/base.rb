@@ -1,10 +1,4 @@
 module Methadone
-  # Module to contain ExecutionStrategy implementations.
-  # To build your own simply implement two methods:
-  #
-  # <tt>exception_meaning_command_not_found</tt>:: return the class that, if caught, means that the underlying command
-  #                                                couldn't be found.  This is needed because currently impelmentations
-  #                                                throw an exception, but they don't all throw the same one.
   module ExecutionStrategy
     # Base for any ExecutionStrategy implementation.  Currently, this is nothing more than an interface
     # specification.

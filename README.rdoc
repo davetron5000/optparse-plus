@@ -6,17 +6,15 @@ License:: Distributes under the Apache License, see LICENSE.txt in the source di
 
 A smattering of tools to make your command-line apps easily awesome; kick the bash habit without sacrificing any of the power.
 
-The overall goal of this project is to allow you to write a command-line app in Ruby that is as close as possible to the expedience and concisenes of bash, but with all the power of Ruby available when you need it.
+The goal of this project is to make it as easy as possible to write awesome and powerful command-line applications.
 
-Currently, this library is under development and has the following to offer:
+Toward that end, this gem provides:
 
-* Bootstrapping a new CLI app
-* Lightweight DSL to structure your bin file
-* Simple wrapper for running external commands with good logging
-* Utility Classes
-  * Methadone::CLILogger - a logger subclass that sends messages to standard error standard out as appropriate
-  * Methadone::CLILogging - a module that, when included in any class, provides easy access to a shared logger
-* Cucumber Steps
+* A command-line app to bootstrap a new command-line app.
+* A lightweight DSL to create your command-line interface, that loses none of <tt>OptionParser</tt>'s power.
+* A simplified means of running external commands that has better error handling and diagnostics.
+* Simplified zero-config logging that is a better-than-<tt>puts</tt> <tt>puts</tt>.
+* Cucumber Steps, built on Aruba, to allow you to test-drive your command-line app development.
 
 == Links
 
@@ -26,13 +24,13 @@ Currently, this library is under development and has the following to offer:
 == Platforms
 
 * Works completely on:
+  * MRI Ruby 1.8.7
   * MRI Ruby 1.9.2
   * MRI Ruby 1.9.3
   * MRI Ruby Head
-  * MRI Ruby 1.8.7
   * RBX
   * REE
-* For JRuby, everything works but aruba; aruba just doesn't work on JRuby for some reason, though this library *is* being used in production under JRuby 1.6.6
+* For JRuby, everything works but Aruba; Aruba just doesn't work on JRuby for some reason, though this library *is* being used in production under JRuby 1.6.6
 
 == Bootstrapping a new CLI App
 
@@ -61,68 +59,24 @@ The +methadone+ command-line app will bootstrap a new command-line app, setting 
         Usage: newgem [options]
         """
 
-Basically, this sets you up with all the boilerplate that you *should* be using to write a command-line app.
+Basically, this sets you up with all the boilerplate that you *should* be using to write a command-line app.  Specifically, you get:
 
-== DSL for your `bin` file
+* Gemified project (based on <tt>bundle gem</tt>)
+* An executable using Methadone::Main to outline your new app
+* <tt>Test::Unit</tt> test task set up and an empty unit test.
+* Aruba/Cucumber set up with a basic feature that exercise your executable
+* The outline of a README
+* An optional license included
 
-A canonical `OptionParser` driven app has a few problems with it structurally that methadone can solve
+== DSL for your <tt>bin</tt> file
+
+A canonical <tt>OptionParser</tt> driven app has a few problems with it structurally that methadone can solve
 
 * Backwards organization - main logic is at the bottom of the file, not the top
 * Verbose to use +opts.on+ just to set a value in a +Hash+
-* No exception handling
+* No exception handling - you have to explicitly call <tt>exit</tt> and/or let exceptions' stack traces leak through.
 
-Methadone gives you a simple,lightweight DSL to help.  It's important to note that we're taking a light touch here; this is all a thin wrapper around +OptionParser+ and you still have complete access to it if you'd like.  We're basically wrapping up some canonical boilerplate into more expedient code
-
-    #!/usr/bin/env ruby
-    
-    require 'optparse'
-    require 'methadone'
-
-    include Methadone::Main
-
-    main do |name,password|
-      name # => guaranteed to be non-nil
-      password # => nil if user omitted on command line
-      options[:switch] # => true if user used --switch or -s
-      options[:s]      # => ALSO true if user used --switch or -s
-      options[:f]      # => value of FILE if used on command-line
-      options[:flag]   # => ALSO value of FILE if used on command-line
-
-      # If something goes wrong, you can just raise an exception
-      # or call exit_now! if you want to control the exit status
-      #
-      # Note that if you set DEBUG in the environment, the exception
-      # will leak through; this can be handy to figure out why
-      # your app might be failing
-    end
-
-    description "One line summary of your awesome app"
-
-    on("--[no-]switch","-s","Some switch")
-    on("-f FILE","--flag","Some flag")
-    on("-x FOO") do |foo|
-      # something more complex; this is exactly OptionParser opts.on 
-    end
-
-    arg :name
-    arg :password, :optional
-
-    # If you want to avoid automatic exception catching/logging do:
-    #
-    # leak_exceptions true
-    #
-    # Note that Methadone::Error exceptions are always caught and logged
-
-    go!
-
-+go!+ runs the block you gave to +main+, passing it the unparsed +ARGV+ as parameters to the block.  It will
-also parse the command-line via +OptionParser+ and do a check on the remaining arguments to see
-if there's enough to satisfy the <tt>:required</tt> args you've specified.
-
-Finally, the banner/help string will be full constructed based on the interface you've declared.  If you 
-don't accept options, <tt>[options]</tt> won't appear in the help.  The names of your arguments
-will appear in proper order and <tt>:optional</tt> ones will be in square brackets.  You don't have to 
-touch a thing.
+Methadone provides Methadone::Main to help make a clean and easy-to-maintain <tt>bin</tt> file.  See the  {rdoc}[http://rubydoc.info/github/davetron5000/methadone/master/Methadone/Main] for an example, and see {my blog}[http://www.naildrivin5.com/blog/2011/12/19/methadone-the-awesome-cli-library.html] on the derivation of this module.
 
 == Wrapper for running external commands with good logging
 
@@ -132,87 +86,44 @@ While backtick and <tt>%x[]</tt> are nice for compact, bash-like scripting, they
 * You have no access to the standard error
 * You really want to log: the command, the output, and the error so that for cron-like tasks, you can sort out what happened
 
-Enter Methadone::SH
+Enter Methadone::SH 
 
-    include Methadone::SH
+    sh "cp foo.txt /tmp"
+    # => logs command at DEBUG level
+    #    if the command exited zero:
+    #        logs the standard output at DEBUG
+    #        logs the standard error at WARN
+    #    if the command exited nonzero:
+    #        logs the standard output at INFO
+    #        logs the standard error at WARN
+    #        returns the exit code for your examination
+    #
+    #        there's a LOT MORE
 
-    sh 'cp foo.txt /tmp'
-    # => logs the command to DEBUG, executes the command, logs its output to DEBUG and its
-    #    error output to WARN, returns 0
-    
-    sh 'cp non_existent_file.txt /nowhere_good'
-    # => logs the command to DEBUG, executes thecommand, logs its output to INFO and
-    #    its error output to WARN, returns the nonzero exit status of the underlying command
-    
-    sh! 'cp non_existent_file.txt /nowhere_good'
-    # => same as above, EXCEPT, raises a Methadone::FailedCommandError
-
-With this, you can easily script external commands in *almost* as expedient a fashion as with +bash+, however you get sensible logging along the way.  By default, this uses the logger provided by Methadone::CLILogging (which is *not* mixed in when you mix in Methadone::SH).  If you want to use a different logger, or don't want to mix in Methadone::CLILogging, simply call +set_sh_logger+ with your preferred logger.
-
-But that's not all!  You can run code when the command succeed by passing a block:
-
-    sh 'cp foo.txt /tmp' do
-      # Behaves exactly as before, but this block is called after
-    end
-
-    sh 'cp non_existent_file.txt /nowhere_good' do
-      # This block isn't called, since the command failed
-    end
-
-The <tt>sh!</tt> form works this way as well.  The block form is also how you can access the standard output or error of the command that ran.  Simply have your block accept one or two aguments:
-
-    sh 'ls -l /tmp/' do |stdout|
-      # stdout contains the output of the command
-    end
-    sh 'ls -l /tmp/ /non_existent_dir' do |stdout,stderr|
-      # stdout contains the output of the command,
-      # stderr contains the standard error output.
-    end
+See the {rdoc}[http://rubydoc.info/github/davetron5000/methadone/master/Methadone/SH] for more detailed examples and usage.
 
 This isn't a replacement for Open3 or ChildProcess, but a way to easily "do the right thing" for most cases.
 
-== Utility Classes
+== Zero-Config Logging
+
+Chances are, your code is littered with <tt>STDERR.puts</tt> on a good day, and nothing on a bad day.  You probably also have a bunch of debug <tt>puts</tt> calls that you have commented out.  Logging is extremely helpful in understand how your app is behaving (or how it behaved in the past).  Logging can be a pain to set up, and can also make it hard to give the user at the command-prompt a good experience.
+
+Methadone::CLILogger is designed to handle this.  It's a proper subclass of Ruby's built-in <tt>Logger</tt> with a few enhancements:
+
+* Messages don't get formatting if they are destined for a TTY (e.g. the user sitting at her terminal)
+* Errors and warnings go to the standard error.
+* Debug and info messages go to the standard output.
+* When these are redirected to a file, the log messages are properly date/time stamped as you'd expect
+* You can mix-in Methadone::CLILogging to get access to a global logger instances without resorting to an explicit global variable
+
+See {CLILogger's rdoc}[http://rubydoc.info/github/davetron5000/methadone/master/Methadone/CLILogger] and then {CLILogging's}[http://rubydoc.info/github/davetron5000/methadone/master/Methadone/CLILogging] for more.
+
 
 Currently, there are classes the assist in directing output logger-style to the right place; basically ensuring that errors go to +STDERR+ and everything else goes to +STDOUT+.  All of this is, of course, configurable
 
-=== Examples
-
-==== Using STDOUT as a log, respecting STDERR
-
-    require 'methadone'
-
-    include Methadone::CLILogging
-
-    command = "rm -rf /tmp/*"
-    debug("About to run #{command}") # => goes only to STDOUT, no logging format
-    if system(command)
-      info("Succesfully ran #{command}") # => goes only to STDOUT, no logging format
-    else
-      error("There was a problem running #{command}") # => goes only to STDERR, no logging format
-    end
-
-==== Using a log file, but respecting STDERR
-
-Here, since we have a logfile, that logfile gets ALL messages and they have the default logger format.
-
-    require 'methadone'
-
-    include Methadone::CLILogging
-
-    self.logger = CLILogger.new("logfile.txt")
-    command = "rm -rf /tmp/*"
-    debug("About to run #{command}") # => goes only to logfile.txt, in the logger-style format
-    if system(command)
-      info("Succesfully ran #{command}") # => goes only to logfile.txt, in the logger-style format
-    else
-      error("There was a problem running #{command}") 
-      # => goes to logfile.txt in the logger-style format, and
-      #    to STDERR in a plain format
-    end
-
 == Cucumber Steps
 
-Methadone uses aruba[http://www.github.com/cucumber/aruba] for BDD-style testing with cucumber. This library has some awesome steps, and methadone provides additional, more opinionated, steps.  
+Methadone uses aruba[http://www.github.com/cucumber/aruba] for BDD-style testing with cucumber. This library has some awesome steps, and Methadone provides additional, more opinionated, steps.  
 
 === Example
 
@@ -230,50 +141,9 @@ Here's an example from methadone's own tests:
         |app_name|which is required|
         |dir_name|which is optional|
 
-=== Steps Provided
-* Run <tt>command_to_run --help</tt> using aruba
+See Methadone::Cucumber or its {rdoc}[http://rubydoc.info/github/davetron5000/methadone/master/Methadone/Cucumber] for a list of all the steps provided.
 
-    When I get help for "command_to_run"
+== Contributing
 
-* Make sure that each option shows up in the help and has *some* sort of documentation
-
-    Then the following options should be documented:
-      |--force|
-      |-x     |
-
-* Check an individual option for documentation:
-
-    Then the option "--force" should be documented
-
-* Checks that the help has a proper usage banner
-
-    Then the banner should be present
-
-* Checks that the banner includes the version
-
-    Then the banner should include the version
-
-* Checks that the usage banner indicates it takes options via <tt>[options]</tt>
-
-    Then the banner should document that this app takes options
-
-* Do the opposite; check that you don't indicate options are accepted
-
-    Then the banner should document that this app takes no options
-
-* Checks that the app's usage banner documents that its arguments are <tt>args</tt>
-
-    Then the banner should document that this app's arguments are "args"
-
-* Do the opposite; check that your app doesn't take any arguments
-
-    Then the banner should document that this app takes no arguments
-
-* Check for a usage description which occurs after the banner and a blank line
-
-    Then there should be a one-line summary of what the app does
-
-== What might be
-
-See {the roadmap}[https://github.com/davetron5000/methadone/wiki/Roadmap]
-
+* Feel free to file an issue, even if you don't have time to submit a patch
+* Please try to include a test for any patch you submit.  If you don't include a test, I'll have to write one, and it'll take longer to get your code in.

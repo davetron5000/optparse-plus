@@ -11,15 +11,51 @@ module Methadone
   # Module with various helper methods for executing external commands.
   # In most cases, you can use #sh to run commands and have decent logging
   # done.  You will likely use this in a class that also mixes-in
-  # Methadone::CLILogging.  If you *don't*, you must provide a logger
-  # via #set_sh_logger.
+  # Methadone::CLILogging (remembering that Methadone::Main mixes this in for you).  
+  # If you <b>don't</b>, you must provide a logger via #set_sh_logger.
+  #
+  # == Examples
+  #
+  #    include Methadone::SH
+  #
+  #    sh 'cp foo.txt /tmp'
+  #    # => logs the command to DEBUG, executes the command, logs its output to DEBUG and its
+  #    #    error output to WARN, returns 0
+  # 
+  #    sh 'cp non_existent_file.txt /nowhere_good'
+  #    # => logs the command to DEBUG, executes the command, logs its output to INFO and
+  #    #    its error output to WARN, returns the nonzero exit status of the underlying command
+  # 
+  #    sh! 'cp non_existent_file.txt /nowhere_good'
+  #    # => same as above, EXCEPT, raises a Methadone::FailedCommandError
+  #
+  #     sh 'cp foo.txt /tmp' do
+  #       # Behaves exactly as before, but this block is called after
+  #     end
+  #
+  #     sh 'cp non_existent_file.txt /nowhere_good' do
+  #       # This block isn't called, since the command failed
+  #     end
+  #
+  #     sh 'ls -l /tmp/' do |stdout|
+  #       # stdout contains the output of the command
+  #     end
+  #     sh 'ls -l /tmp/ /non_existent_dir' do |stdout,stderr|
+  #       # stdout contains the output of the command,
+  #       # stderr contains the standard error output.
+  #      end
+  #    
+  # == Handling remote execution
   #
   # In order to work on as many Rubies as possible, this class defers the actual execution
   # to an execution strategy.  See #set_execution_strategy if you think you'd like to override
   # that, or just want to know how it works.
   #
-  # This is not intended to be a complete replacement for Open3, but instead of make common cases
-  # and good practice easy to accomplish.
+  # == More complex execution and subprocess management
+  #
+  # This is not intended to be a complete replacement for Open3 or an enhanced means of managing subprocesses.
+  # This is to make it easy for you to shell-out to external commands and have your app be robust and
+  # easy to maintain.
   module SH
     # Run a shell command, capturing and logging its output.
     # If the command completed successfully, it's output is logged at DEBUG.

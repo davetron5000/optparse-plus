@@ -2,17 +2,18 @@ require 'logger'
 
 module Methadone
   # A Logger instance that gives better control of messaging the user
-  # and logging app activity.  At it's most basic, you would use
-  # #info as a replacement for +puts+ and #error as a replacement
+  # and logging app activity.  At it's most basic, you would use <tt>info</tt>
+  # as a replacement for +puts+ and <tt>error</tt> as a replacement
   # for <tt>STDERR.puts</tt>.  Since this is a logger, however, you
   # can also use #debug, #warn, and #fatal, and you can control
   # the format and "logging level" as such.
   #
   # So, by default:
-  # * #debug messages do not appear anywhere
-  # * #info messages appear on the standard output
-  # * #warn, #error, and #fata messagse appear on the standard error
-  # * The default format of messages is simply the message, no logging cruft
+  # * debug messages do not appear anywhere
+  # * info messages appear on the standard output
+  # * warn, error, and fatal messagse appear on the standard error
+  # * The default format of messages is simply the message, no logging cruft, however if your output
+  #   is redirected to a file, a better timestamped logging format is used
   #
   # You can customize this in several ways:
   # 
