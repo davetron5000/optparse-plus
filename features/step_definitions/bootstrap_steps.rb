@@ -10,9 +10,9 @@ Given /^my app's name is "([^"]*)"$/ do |app_name|
   @app_name = app_name
 end
 
-Then /^the file "([^"]*)" should use the same block variable throughout$/ do |arg1|
+Then /^the file "([^"]*)" should use the same block variable throughout$/ do |file|
   prep_for_fs_check do
-    content = IO.read(arg1)
+    content = IO.read(file)
     from_bundler = content.match(/(\w+)\.authors/)[1]
     added_by_methadone = content.match(/(\w+).add_development_dependency\('rdoc'/)[1]
     from_bundler.should == added_by_methadone
