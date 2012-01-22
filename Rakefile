@@ -43,5 +43,5 @@ Cucumber::Rake::Task.new('features:wip') do |t|
 end
 
 CLEAN << "coverage"
-
+CLOBBER << FileList['**/*.rbc']
 task :default => [:test, :features]
