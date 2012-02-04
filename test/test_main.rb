@@ -6,16 +6,17 @@ class TestMain < BaseTest
   include Methadone::Main
 
   def setup
-    @logged = []
     @original_argv = ARGV.clone
     ARGV.clear
     @old_stdout = $stdout
     $stdout = StringIO.new
+    @logged = StringIO.new
+    @custom_logger = Logger.new(@logged)
   end
 
-  # Override error so we can capture what's being logged at this level
-  def error(string)
-    @logged << string
+  # Override the built-in logger so we can capture it
+  def logger
+    @custom_logger
   end
 
   def teardown
@@ -29,11 +30,11 @@ class TestMain < BaseTest
       @called = false
       main do
         begin
-          debug "debug"
-          info "info"
-          warn "warn"
-          error "error"
-          fatal "fatal"
+          logger.debug "debug"
+          logger.info "info"
+          logger.warn "warn"
+          logger.error "error"
+          logger.fatal "fatal"
           @called = true
         rescue => ex
           puts ex.message
@@ -516,7 +517,7 @@ class TestMain < BaseTest
   def run_go!; proc { go! }; end
 
   def assert_logged_at_error(expected_message)
-    @logged.should include expected_message
+    @logged.string.should include expected_message
   end
 
   def assert_exits(exit_code,message='',&block)

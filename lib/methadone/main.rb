@@ -14,6 +14,9 @@ module Methadone
   # in a sensible way.  You can use as much or as little as you want, though
   # you must at least use #main to get any benefits.
   #
+  # Further, you must provide access to a logger via a method named
+  # #logger.  If you include Methadone::CLILogging, this will be done for you
+  #
   # You also get a more expedient interface to OptionParser as well
   # as checking for required arguments to your app.  For example, if
   # we want our app to accept a negatable switch named "switch", a flag
@@ -24,21 +27,24 @@ module Methadone
   #       
   #     require 'methadone'
   #      
-  #     include Methadone::Main
-  #     
-  #     main do |needed, maybe|
-  #       options[:switch] => true or false, based on command line
-  #       options[:flag] => value of flag passed on command line
-  #     end
-  #     
-  #     # Proxy to an OptionParser instance's on method
-  #     on("--[no]-switch")
-  #     on("--flag VALUE")
+  #     class App
+  #       include Methadone::Main
+  #       include Methadone::CLILogging
+  #       
+  #       main do |needed, maybe|
+  #         options[:switch] => true or false, based on command line
+  #         options[:flag] => value of flag passed on command line
+  #       end
+  #       
+  #       # Proxy to an OptionParser instance's on method
+  #       on("--[no]-switch")
+  #       on("--flag VALUE")
   #
-  #     arg :needed
-  #     arg :maybe, :optional
-  #     
-  #     go!
+  #       arg :needed
+  #       arg :maybe, :optional
+  #       
+  #       go!
+  #     end
   #
   # Our app then acts as follows:
   #
@@ -47,9 +53,18 @@ module Methadone
   #     $ our_app foo
   #     # => succeeds; "maybe" in main is nil
   #
-  # This also includes Methadone::CLILogging to give you access to simple logging
+  # Note that we've done all of this inside a class that we called +App+.  This isn't strictly
+  # necessary, and you can just +include+ Methadone::Main and Methadone::CLILogging at the root
+  # of your +bin+ file if you like.  This is somewhat unsafe, because +self+ inside the +bin+
+  # file is Object, and any methods you create (or cause to be created via +include+) will be
+  # present on *every* object.  This can cause odd problems, so it's recommended that you
+  # *not* do this.
+  #
   module Main
-    include Methadone::CLILogging
+    def self.included(k)
+      k.extend(self)
+    end
+
     # Declare the main method for your app.
     # This allows you to specify the general logic of your
     # app at the top of your bin file, but can rely on any methods
@@ -122,7 +137,7 @@ module Methadone
         exit 0
       end
     rescue OptionParser::ParseError => ex
-      error ex.message
+      logger.error ex.message
       puts
       puts opts.help
       exit 64 # Linux standard for bad command line
@@ -253,12 +268,12 @@ module Methadone
       @main_block.call(*ARGV)
     rescue Methadone::Error => ex
       raise ex if ENV['DEBUG']
-      error ex.message unless no_message? ex
+      logger.error ex.message unless no_message? ex
       ex.exit_code
     rescue => ex
       raise ex if ENV['DEBUG']
       raise ex if @leak_exceptions
-      error ex.message unless no_message? ex
+      logger.error ex.message unless no_message? ex
       70 # Linux sysexit code for internal software error
     end
 
