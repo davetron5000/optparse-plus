@@ -67,7 +67,8 @@ module Methadone
       end
       @stderr_logger.add(severity,message,progname,&block)
     end
-    
+   
+    DEFAULT_ERROR_LEVEL = Logger::Severity::WARN
 
     # A logger that logs error-type messages to a second device; useful
     # for ensuring that error messages go to standard error.  This should be
@@ -82,16 +83,27 @@ module Methadone
     # +error_device+:: device where all error messages should go.  By default, this is Logger::Severity::WARN
     def initialize(log_device=$stdout,error_device=$stderr)
       super(log_device)
-      @split_logs = log_device.tty? && error_device.tty?
-      self.level = Logger::Severity::INFO
       @stderr_logger = Logger.new(error_device)
-      @stderr_logger.level = Logger::Severity::WARN
+
+      @split_logs = log_device.tty? && error_device.tty?
+
+      self.level = Logger::Severity::INFO
+      @stderr_logger.level = DEFAULT_ERROR_LEVEL
+
       self.formatter = BLANK_FORMAT if log_device.tty?
       @stderr_logger.formatter = BLANK_FORMAT if error_device.tty?
     end
 
+    def level=(level)
+      super(level)
+      current_error_level = @stderr_logger.level
+      if (level > DEFAULT_ERROR_LEVEL) && @split_logs
+        @stderr_logger.level = level
+      end
+    end
+
     # Set the threshold for what messages go to the error device.  Note that calling
-    # #level= will *not* affect the error logger
+    # #level= will *not* affect the error logger *unless* both devices are TTYs.
     #
     # +level+:: a constant from Logger::Severity for the level of messages that should go
     #           to the error logger

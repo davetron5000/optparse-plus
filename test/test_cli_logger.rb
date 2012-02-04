@@ -41,6 +41,27 @@ class TestCLILogger < BaseTest
     }
   end
 
+  test_that "when both stderr and stdin are ttys, setting the level higher than WARN should affect the error logger" do
+    Given {
+      class << $stderr
+        def tty?; true; end
+      end
+      class << $stdout
+        def tty?; true; end
+      end
+
+      @logger = CLILogger.new
+      @logger.level = Logger::ERROR
+    }
+
+    When log_all_levels
+
+    Then {
+      $stdout.string.should == ""
+      $stderr.string.should == "error\nfatal\n"
+    }
+  end
+
   test_that "logger sends debug and info to stdout, and warns, errors, and fatals to stderr" do
     Given a_logger_with_blank_format
     When log_all_levels
