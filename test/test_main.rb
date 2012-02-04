@@ -108,10 +108,6 @@ class TestMain < BaseTest
     end
   end
 
-  def main_that_exits(exit_status)
-    proc { main { exit_status } }
-  end
-
   test_that "go exits with 70, which is the Linux sysexits.h code for this sort of thing, if there's an exception" do
     Given {
       main do
@@ -546,6 +542,10 @@ class TestMain < BaseTest
   end
 
 private
+
+  def main_that_exits(exit_status)
+    proc { main { exit_status } }
+  end
 
   def app_to_use_environment
     lambda {
