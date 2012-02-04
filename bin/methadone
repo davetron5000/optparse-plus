@@ -62,6 +62,8 @@ on("--[no-]readme","[Do not ]produce a README file")
 licenses = %w(mit apache custom NONE)
 on("-l LICENSE","--license",licenses,"Specify the license for your project (#{licenses.join('|')})")
 
+use_log_level_option
+
 arg :app_name, :required
 
 version Methadone::VERSION

@@ -23,6 +23,11 @@ module Methadone
   #       end
   #     end
   module CLILogging
+
+    def self.included(k)
+      k.extend(self)
+    end
+
     # Access the shared logger.  All classes that include this module
     # will get the same logger via this method.
     def logger
@@ -40,6 +45,7 @@ module Methadone
     def change_logger(new_logger)
       raise ArgumentError,"Logger may not be nil" if new_logger.nil?
       @@logger = new_logger
+      @@logger.level = @log_level if @log_level
     end
 
     alias logger= change_logger
@@ -55,5 +61,33 @@ module Methadone
     def error(progname = nil, &block); logger.error(progname,&block); end
     # pass-through to <tt>logger.fatal(progname,&block)</tt>
     def fatal(progname = nil, &block); logger.fatal(progname,&block); end
+
+    LOG_LEVELS = {
+      'debug' => Logger::DEBUG,
+      'info' => Logger::INFO,
+      'warn' => Logger::WARN,
+      'error' => Logger::ERROR,
+      'fatal' => Logger::FATAL,
+    }
+
+    # Call this *if* you've included Methadone::Main to set up a <tt>--log-level</tt> option for your app
+    # that will allow the user to configure the logging level.
+    #
+    # Example:
+    #
+    #     main do 
+    #       # your app
+    #     end
+    #
+    #     use_log_level_option
+    #
+    #     go!
+    #
+    def use_log_level_option
+      on("--log-level LEVEL",LOG_LEVELS,"Set the logging level (#{LOG_LEVELS.keys.join('|')})","(Default: info)") do |level|
+        @log_level = level
+        logger.level = level
+      end
+    end
   end
 end
