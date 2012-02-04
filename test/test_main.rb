@@ -22,6 +22,7 @@ class TestMain < BaseTest
   def teardown
     set_argv @original_argv
     ENV.delete('DEBUG')
+    ENV.delete('APP_OPTS')
     $stdout = @old_stdout
   end
 
@@ -498,7 +499,71 @@ class TestMain < BaseTest
     }
   end
 
-  private
+  test_that "when getting defaults from an environment variable, show it in the help output" do
+    Given app_to_use_environment
+    When {
+      @help_string = opts.to_s
+    }
+    Then {
+      @help_string.should match /Default values can be placed in the APP_OPTS environment variable/
+    }
+  end
+
+  test_that "when we want to get opts from the environment, we can" do
+    Given app_to_use_environment
+    And {
+      @flag_value = '56'
+      @some_arg = any_string
+      set_argv([])
+      ENV['APP_OPTS'] = "--switch --flag=#{@flag_value} #{@some_arg}"
+    }
+    When {
+      @code = lambda { go! }
+    }
+    Then {
+      assert_exits(0,'',&@code)
+      @switch.should == true
+      @flag.should == @flag_value
+      @args.should == [@some_arg]
+    }
+  end
+
+  test_that "environment args are overridden by the command line" do
+    Given app_to_use_environment
+    And {
+      @flag_value = any_string
+      ENV['APP_OPTS'] = "--switch --flag=#{any_string}"
+      set_argv(['--flag',@flag_value])
+    }
+    When {
+      @code = lambda { go! }
+    }
+    Then {
+      assert_exits(0,'',&@code)
+      @switch.should == true
+      @flag.should == @flag_value
+    }
+  end
+
+private
+
+  def app_to_use_environment
+    lambda {
+      @switch = nil
+      @flag = nil
+      @args = nil
+      main do |*args|
+        @switch = options[:switch]
+        @flag = options[:flag]
+        @args = args
+      end
+
+      defaults_from_env_var 'APP_OPTS'
+
+      on('--switch','Some Switch')
+      on('--flag FOO','Some Flag')
+    }
+  end
 
   def main_shouldve_been_called
     Proc.new { assert @called,"Main block wasn't called?!" }

@@ -112,6 +112,14 @@ module Methadone
       @leak_exceptions = leak
     end
 
+    # Set the name of the environment variable where users can place default
+    # options for your app.  Omit this to disable the feature.
+    def defaults_from_env_var(env_var)
+      @env_var = env_var
+      opts.separator ''
+      opts.separator "Default values can be placed in the #{env_var} environment variable"
+      opts.separator ''
+    end
 
     # Start your command-line app, exiting appropriately when
     # complete.
@@ -128,6 +136,11 @@ module Methadone
     #
     def go!
       normalize_defaults
+      if @env_var
+        String(ENV[@env_var]).split(/\s+/).each do |arg|
+          ::ARGV.unshift(arg)
+        end
+      end
       opts.parse!
       opts.check_args!
       result = call_main

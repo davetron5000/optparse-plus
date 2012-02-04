@@ -75,5 +75,7 @@ arg :app_name, :required
 
 version Methadone::VERSION
 
+defaults_from_env_var 'METHODONE_OPTS'
+
 go!
 
