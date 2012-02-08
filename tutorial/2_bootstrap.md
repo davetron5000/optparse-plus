@@ -121,20 +121,22 @@ as the install with RubyGems.
 Before we move on, let's look at the cucumber scenario that Methadone generated for us.  We're goingn to work "outside in" on our
 app, so this will be a sneak peek at what we'll be doing next.
 
-    $ cat features/fullstop.feature 
-    Feature: My bootstrapped app kinda works
-      In order to get going on coding my awesome app
-      I want to have aruba and cucumber setup
-      So I don't have to do it myself
+```sh
+$ cat features/fullstop.feature 
+Feature: My bootstrapped app kinda works
+  In order to get going on coding my awesome app
+  I want to have aruba and cucumber setup
+  So I don't have to do it myself
 
-      Scenario: App just runs
-        When I get help for "fullstop"
-        Then the exit status should be 0
-        And the banner should be present
-        And the banner should document that this app takes options
-        And the following options should be documented:
-          |--version|
-        And the banner should document that this app takes no arguments
+  Scenario: App just runs
+    When I get help for "fullstop"
+    Then the exit status should be 0
+    And the banner should be present
+    And the banner should document that this app takes options
+    And the following options should be documented:
+      |--version|
+    And the banner should document that this app takes no arguments
+```
 
 This scenario might not persist in this form, but it's a good demonstration of how we'll be testing the command-line executable.
 As you can see, we have cucumber steps for all the parts of the user interface for our app, from the exit status to the banner to
