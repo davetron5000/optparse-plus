@@ -7,6 +7,11 @@ Ruby.  The book focuses on tools like `OptionParser` to create the app.  As I wr
 was a gap between `OptionParser`, which is very powerful, yet verbose, and other command line tools like [trollop][trollop], 
 [main][main], and [thor][thor], which have simple APIs, but aren't very powerful.  
 
+[clibook]: http://www.awesomecommandlineapps.com
+[main]: http://github.com/ahoward/main
+[trollop]: http://trollop.rubyforge.org
+[thor]: http://www.github.com/wycats/thor
+
 I created Methadone to bridge that gap.  Methadone provides all the power of `OptionParser`, but has a simple, clean API.
 Methadone also includes additional tools and classes to make your command-line apps even better.
 
@@ -26,11 +31,15 @@ This is a tutorial for making a simple command-line app.  Unlike some tutorials 
 a "test-first" approach.  One thing that Methadone tries to enable is using [TDD][tdd] for creating and writing your command-line
 app.  As such, we'll write tests as much as possible to drive our work.
 
+[tdd]: http://en.wikipedia.org/wiki/Test-driven_development
+
 ## The tutorial app
 
 The app we'll build is going to manage "dot files".  These are the files that live in your home directory and configure your
 shell, editor, and various other programs.  For example, `~/.bashrc` is the file to configure `bash`.  Many developers keep these
 files on [Github][github] so that they can maintain the same files across multiple computers.
+
+[github]: http://www.github.com
 
 To set this up on a new computer, you have to checkout the repo, and symlink all the files to your home directory.  To update the
 files you have to update the repo and then check if any new files were added.  This is the sort of tedious manual process that is
