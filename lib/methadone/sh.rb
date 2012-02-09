@@ -57,6 +57,9 @@ module Methadone
   # This is to make it easy for you to shell-out to external commands and have your app be robust and
   # easy to maintain.
   module SH
+    def self.included(k)
+      k.extend(self)
+    end
     # Run a shell command, capturing and logging its output.
     # If the command completed successfully, it's output is logged at DEBUG.
     # If not, its output as logged at INFO.  In either case, its
