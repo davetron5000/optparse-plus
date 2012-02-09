@@ -21,8 +21,7 @@ We'll do this thing entirely TDD
 1. Overview of fullstop
 2. Bootstrap app and write tests for UI
 3. Get to pass using `OptionParser`
-4. Refactor using methadone
-5. Add happy-path logic
-6. Add error cases
-7. Deep dive: Logging & Debugging
-8. Deep dive: SH
+4. Add happy-path logic
+5. Add error cases
+6. Deep dive: Logging & Debugging
+7. Deep dive: SH

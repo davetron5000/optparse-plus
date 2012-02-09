@@ -12,3 +12,9 @@ Feature: Checkout dotfiles
     And the banner should document that this app takes options
     And the banner should document that this app's arguments are:
       |repo_url|which is required|
+
+  Scenario: Happy Path
+    Given a git repo with some dotfiles at "/tmp/dotfiles.git"
+    When I successfully run `fullstop file:///tmp/dotfiles.git`
+    Then the dotfiles should be checked out in the directory "~/dotfiles"
+    And the files in "~/dotfiles" should be symlinked in my home directory

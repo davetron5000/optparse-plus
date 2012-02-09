@@ -7,8 +7,19 @@ require 'fullstop'
 class App
   include Methadone::Main
   include Methadone::CLILogging
+  # vvv
+  include Methadone::SH
+  # ^^^
 
-  main do 
+  #        vvv
+  main do |repo_url|
+    #      ^^^
+    
+    # vvv
+    Dir.chdir ENV['HOME'] do
+      sh "git clone #{repo_url}"
+    end
+    # ^^^
   end
 
   version Fullstop::VERSION
