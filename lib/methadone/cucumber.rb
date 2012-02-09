@@ -34,7 +34,9 @@ module Methadone
   # 
   # * Checks that the app's usage banner documents that its arguments are <tt>args</tt>
   # 
-  #     Then the banner should document that this app's arguments are "args"
+  #     Then the banner should document that this app's arguments are
+  #       |foo|which is optional|
+  #       |bar|which is required|
   # 
   # * Do the opposite; check that your app doesn't take any arguments
   # 
@@ -42,7 +44,7 @@ module Methadone
   # 
   # * Check for a usage description which occurs after the banner and a blank line
   # 
-  #     Then there should be a one-line summary of what the app does
+  #     Then there should be a one line summary of what the app does
   # 
   module Cucumber
   end
@@ -75,6 +77,7 @@ Then /^the banner should document that this app's arguments are:$/ do |table|
   expected_arguments = table.raw.map { |row|
     option = row[0]
     option = "[#{option}]" if row[1] == 'optional' || row[1] == 'which is optional'
+    option
   }.join(' ')
   step %(the output should contain "#{expected_arguments}")
 end
