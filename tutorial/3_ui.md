@@ -271,9 +271,30 @@ Options:
                      (Default: info)
 ```
 
-Not to bad for having written two lines of code!
+Not to bad for having written two lines of code!  We can also see that `fullstop` will error out if we omit our required
+argument, `repo_url`:
 
-It's also worth point out that Methadone is taking a very light touch.  We could completely re-implement `bin/fullstop` using
+```sh
+$ bundle exec bin/fullstop 
+parse error: 'repo_url' is required
+
+Usage: fullstop [options] repo_url
+
+Manages dotfiles from a git repo
+
+v0.0.1
+
+Options:
+  --version          Show help/version info
+  --log-level LEVEL  Set the logging level (debug|info|warn|error|fatal)
+                     (Default: info)
+$ echo $?
+64
+```
+
+We see an error message, and exited nonzero (64 is a somewhat standard exit code for issues with command-line invocation).
+
+It's also worth pointing out that Methadone is taking a very light touch.  We could completely re-implement `bin/fullstop` using
 `OptionParser` and still have our scenario pass.  As we'll see, few of Methadone's parts really rely on each other, and many can
 be used peacemeal, if that's what you want.
 
