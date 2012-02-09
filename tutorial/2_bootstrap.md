@@ -40,8 +40,9 @@ Our app that we'll be building in this tutorial is be called `fullstop`, which i
 $ methadone --readme --license apache fullstop
 $ cd fullstop
 $ ls
-Gemfile           README.rdoc       bin/              fullstop.gemspec  test/
-LICENSE.txt       Rakefile          features/         lib/
+Gemfile           README.rdoc       bin/              
+fullstop.gemspec  test/             LICENSE.txt       
+Rakefile          features/         lib/
 ```
 
 As you can see, we've got a generic gemified project.  We'll need to install a few gems using Bundler first:
