@@ -255,7 +255,23 @@ Feature: Checkout dotfiles
 ```
 
 Nice!  Now, if our UI should ever change, we'll notice the regression, and we have a very easy way to use TDD to create our
-application's UI.
+application's UI.  Let's take a look at it ourselves to see what it's like:
+
+```sh
+$ bundle exec bin/fullstop --help
+Usage: fullstop [options] repo_url
+
+Manages dotfiles from a git repo
+
+v0.0.1
+
+Options:
+  --version          Show help/version info
+  --log-level LEVEL  Set the logging level (debug|info|warn|error|fatal)
+                     (Default: info)
+```
+
+Not to bad for having written two lines of code!
 
 It's also worth point out that Methadone is taking a very light touch.  We could completely re-implement `bin/fullstop` using
 `OptionParser` and still have our scenario pass.  As we'll see, few of Methadone's parts really rely on each other, and many can
