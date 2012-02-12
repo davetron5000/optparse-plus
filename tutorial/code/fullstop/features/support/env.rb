@@ -13,6 +13,7 @@ Before do
   ENV['HOME'] = "/tmp/fakehome"
   FileUtils.rm_rf "/tmp/fakehome"
   FileUtils.mkdir "/tmp/fakehome"
+  @files_override = nil
 end
 
 After do

@@ -12,14 +12,25 @@ class App
 
   main do |repo_url|
     
-    #         vvv
     Dir.chdir options['checkout-dir'] do
-      #       ^^^
-      sh "git clone #{repo_url}"
       basedir = repo_url.split(/\//)[-1].gsub(/\.git$/,'')
-      Dir.entries(basedir).each do |file|
-        next if file == '.' || file == '..' || file == '.git'
-        FileUtils.ln_s file,'.'
+      # vvv
+      if options[:force] && Dir.exists?(basedir)
+        warn "deleting #{basedir} before cloning"
+        FileUtils.rm_rf basedir
+      end
+      # ^^^
+      if sh("git clone #{repo_url}") == 0
+        Dir.entries(basedir).each do |file|
+          next if file == '.' || file == '..' || file == '.git'
+          source_file = File.join(basedir,file)
+          # vvv
+          FileUtils.rm(file) if File.exists?(file) && options[:force]
+          # ^^^
+          FileUtils.ln_s source_file,'.'
+        end
+      else
+        exit_now!(1,"checkout dir already exists, use --force to overwrite")
       end
     end
   end
@@ -28,11 +39,9 @@ class App
 
   description 'Manages dotfiles from a git repo'
 
-  # vvv
   options['checkout-dir'] = ENV['HOME']
   on("--force","Overwrite files if they exist")
   on("-d DIR","--checkout-dir","Where to clone the repo")
-  # ^^^
 
   arg :repo_url
 
