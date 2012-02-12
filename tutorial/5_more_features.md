@@ -475,7 +475,7 @@ class App
         end
       else
         # vvv
-        exit_now!(1,"checkout dir already exists, use --force to overwrite")
+        exit_now!("checkout dir already exists, use --force to overwrite")
         # ^^^
       end
     end
@@ -498,8 +498,9 @@ end
 ```
 
 Since an exit of zero is considered success, we branch on that value, and call the method `exit_now!`, provided by Methadone, to
-stop the app with an error.  The first argument is the exit code we'd like to use, and the second argument is an error message to
-print to the standard error to let the user know why the app stopped abnormally.
+stop the app with an error.  The argument is an error message to
+print to the standard error to let the user know why the app stopped abnormally.  The app will then stop and exit nonzero.  If
+you want to customize the exit code, you can provide it as the first argument, with the message being the second argument.
 
 As you can see, our test now passes:
 
@@ -581,7 +582,7 @@ class App
           FileUtils.ln_s source_file,'.'
         end
       else
-        exit_now!(1,"checkout dir already exists, use --force to overwrite")
+        exit_now!("checkout dir already exists, use --force to overwrite")
       end
     end
   end

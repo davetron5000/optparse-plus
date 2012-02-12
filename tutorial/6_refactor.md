@@ -23,7 +23,7 @@ main do |repo_url|
         FileUtils.ln_s source_file,'.'
       end
     else
-      exit_now!(1,"checkout dir already exists, use --force to overwrite")
+      exit_now!("checkout dir already exists, use --force to overwrite")
     end
   end
 end
@@ -61,7 +61,7 @@ def self.clone_repo(repo_url,force)
     FileUtils.rm_rf repo_dir
   end
   unless sh("git clone #{repo_url}") == 0
-    exit_now!(1,"checkout dir already exists, use --force to overwrite")
+    exit_now!("checkout dir already exists, use --force to overwrite")
   end
   repo_dir
 end
@@ -142,7 +142,7 @@ module Fullstop
         FileUtils.rm_rf repo_dir
       end
       unless sh("git clone #{repo_url}") == 0
-        exit_now!(1,"checkout dir already exists, use --force to overwrite")
+        exit_now!("checkout dir already exists, use --force to overwrite")
       end
       Repo.new(repo_dir)
     end
@@ -173,7 +173,7 @@ require 'fullstop'
 require 'fileutils'
 
 class App
-  include Methadone::Main
+  include Methadone::ExitNow
   include Methadone::CLILogging
   include Methadone::SH
   include Fullstop
