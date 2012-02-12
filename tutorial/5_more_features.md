@@ -653,4 +653,4 @@ Feature: Checkout dotfiles
 ```
 
 We're starting to see a few features of Methadone that need some explanation, such as what those log messages are, and how the
-output of our commands is getting there.  But first, our `main` method is also becoming pretty messy.  Since Methadone allows and encourages you to write your app cleanly, we can refactor that code into classes that live inside `lib`.  We'll see how to do that in the next section
+output of our commands is getting there.  But first, our `main` method is also becoming pretty messy.  Since Methadone allows and encourages you to write your app cleanly, we can refactor that code into classes that live inside `lib`.  We'll see how to do that in the next section.
