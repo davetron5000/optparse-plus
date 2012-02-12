@@ -3,9 +3,7 @@
 require 'optparse'
 require 'methadone'
 require 'fullstop'
-# vvv
 require 'fileutils'
-# ^^^
 
 class App
   include Methadone::Main
@@ -14,21 +12,27 @@ class App
 
   main do |repo_url|
     
-    Dir.chdir ENV['HOME'] do
+    #         vvv
+    Dir.chdir options['checkout-dir'] do
+      #       ^^^
       sh "git clone #{repo_url}"
       basedir = repo_url.split(/\//)[-1].gsub(/\.git$/,'')
-      # vvv
       Dir.entries(basedir).each do |file|
         next if file == '.' || file == '..' || file == '.git'
         FileUtils.ln_s file,'.'
       end
-      # ^^^
     end
   end
 
   version Fullstop::VERSION
 
   description 'Manages dotfiles from a git repo'
+
+  # vvv
+  options['checkout-dir'] = ENV['HOME']
+  on("--force","Overwrite files if they exist")
+  on("-d DIR","--checkout-dir","Where to clone the repo")
+  # ^^^
 
   arg :repo_url
 

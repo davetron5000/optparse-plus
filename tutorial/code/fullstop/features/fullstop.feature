@@ -12,6 +12,10 @@ Feature: Checkout dotfiles
     And the banner should document that this app takes options
     And the banner should document that this app's arguments are:
       |repo_url|which is required|
+    And the following options should be documented:
+      | --force        |
+      | --checkout-dir |
+      | -d             |
 
   Scenario: Happy Path
     Given a git repo with some dotfiles at "/tmp/dotfiles.git"
