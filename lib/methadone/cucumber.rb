@@ -61,7 +61,7 @@ Then /^the following options should be documented:$/ do |options|
 end
 
 Then /^the option "([^"]*)" should be documented$/ do |option|
-  step %(the output should match /^\\s*#{option}\\s+\\w\\w\\w+/)
+  step %(the output should match /\\s*#{option}[\\s\\W]+\\w\\w\\w+/)
 end
 
 Then /^the banner should be present$/ do
