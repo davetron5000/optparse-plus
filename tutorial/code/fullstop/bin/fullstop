@@ -3,23 +3,27 @@
 require 'optparse'
 require 'methadone'
 require 'fullstop'
+# vvv
+require 'fileutils'
+# ^^^
 
 class App
   include Methadone::Main
   include Methadone::CLILogging
-  # vvv
   include Methadone::SH
-  # ^^^
 
-  #        vvv
   main do |repo_url|
-    #      ^^^
     
-    # vvv
     Dir.chdir ENV['HOME'] do
       sh "git clone #{repo_url}"
+      basedir = repo_url.split(/\//)[-1].gsub(/\.git$/,'')
+      # vvv
+      Dir.entries(basedir).each do |file|
+        next if file == '.' || file == '..' || file == '.git'
+        FileUtils.ln_s file,'.'
+      end
+      # ^^^
     end
-    # ^^^
   end
 
   version Fullstop::VERSION

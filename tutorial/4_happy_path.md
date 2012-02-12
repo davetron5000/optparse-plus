@@ -327,3 +327,77 @@ Tasks: TOP => features
 ```
 
 Instead of complaining that `~/dotfiles` didn't exist, it's now complaining that `.vimrc` isn't symlinked in our home directory.
+That makes sense, since our app just does the `git clone`.  Let's symlink everything using `ln_s` from `FileUtils`:
+
+```ruby
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'methadone'
+require 'fullstop'
+# vvv
+require 'fileutils'
+# ^^^
+
+class App
+  include Methadone::Main
+  include Methadone::CLILogging
+  include Methadone::SH
+
+  main do |repo_url|
+    
+    Dir.chdir ENV['HOME'] do
+      sh "git clone #{repo_url}"
+      basedir = repo_url.split(/\//)[-1].gsub(/\.git$/,'')
+      # vvv
+      Dir.entries(basedir).each do |file|
+        next if file == '.' || file == '..' || file == '.git'
+        FileUtils.ln_s file,'.'
+      end
+      # ^^^
+    end
+  end
+
+  version Fullstop::VERSION
+
+  description 'Manages dotfiles from a git repo'
+
+  arg :repo_url
+
+  use_log_level_option
+
+  go!
+end
+```
+
+This is pretty straightfoward, and we can see that our scenario passes!
+
+```sh
+$ rake features
+Feature: Checkout dotfiles
+  In order to get my dotfiles onto a new computer
+  I want a one-command way to keep them up to date
+  So I don't have to do it myself
+
+  Scenario: Basic UI
+    When I get help for "fullstop"
+    Then the exit status should be 0
+    And the banner should be present
+    And there should be a one line summary of what the app does
+    And the banner should include the version
+    And the banner should document that this app takes options
+    And the banner should document that this app's arguments are:
+      | repo_url | which is required |
+
+  Scenario: Happy Path
+    Given a git repo with some dotfiles at "/tmp/dotfiles.git"
+    When I successfully run `fullstop file:///tmp/dotfiles.git`
+    Then the dotfiles should be checked out in the directory "~/dotfiles"
+    And the files in "~/dotfiles" should be symlinked in my home directory
+
+2 scenarios (2 passed)
+11 steps (11 passed)
+0m0.396s
+```
+
+Now that we have the basics of our app running, we'll see how Methadone makes it easy to add new features.
