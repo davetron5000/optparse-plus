@@ -61,6 +61,7 @@ module Methadone
   # *not* do this.
   #
   module Main
+    include Methadone::ExitNow
     def self.included(k)
       k.extend(self)
     end
@@ -154,15 +155,6 @@ module Methadone
       puts
       puts opts.help
       exit 64 # Linux standard for bad command line
-    end
-
-    # Call this to exit the program immediately
-    # with the given error code and message.
-    #
-    # +exit_code+:: exit status you'd like to exit with
-    # +message+:: message to display to the user explaining the problem
-    def exit_now!(exit_code,message=nil)
-      raise Methadone::Error.new(exit_code,message)
     end
 
     # Returns an OptionParser that you can use

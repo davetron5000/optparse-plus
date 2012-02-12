@@ -1,6 +1,7 @@
 require 'methadone/version'
 require 'methadone/cli_logger'
 require 'methadone/cli_logging'
+require 'methadone/exit_now'
 require 'methadone/main'
 require 'methadone/error'
 require 'methadone/execution_strategy/base'
