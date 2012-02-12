@@ -3,7 +3,7 @@ module Fullstop
 
     include Methadone::CLILogging
     include Methadone::SH
-    include Methadone::Main
+    include Methadone::ExitNow
 
     def self.clone_from(repo_url,force=false)
       repo_dir = repo_url.split(/\//)[-1].gsub(/\.git$/,'')

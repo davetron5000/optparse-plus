@@ -1,5 +1,8 @@
 module Methadone
   module ExitNow
+    def self.included(k)
+      k.extend(self)
+    end
     # Call this to exit the program immediately
     # with the given error code and message.
     #
