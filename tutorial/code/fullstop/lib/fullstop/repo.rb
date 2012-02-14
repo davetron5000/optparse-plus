@@ -7,6 +7,9 @@ module Fullstop
 
     def self.clone_from(repo_url,force=false)
       repo_dir = repo_url.split(/\//)[-1].gsub(/\.git$/,'')
+      # vvv
+      debug "Cloning #{repo_url} into #{repo_dir}"
+      # ^^^
       if force && Dir.exists?(repo_dir)
         warn "deleting #{repo_dir} before cloning"
         FileUtils.rm_rf repo_dir
@@ -25,6 +28,9 @@ module Fullstop
     def files
       Dir.entries(@repo_dir).each do |file|
         next if file == '.' || file == '..' || file == '.git'
+        # vvv
+        debug "Yielding #{file}"
+        # ^^^
         yield file
       end
     end

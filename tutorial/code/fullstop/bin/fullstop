@@ -18,6 +18,7 @@ class App
         link_file(repo,file,options[:force])
       end
     end
+    info "Dotfiles symlinked"
   end
 
   def self.link_file(repo,file,overwrite)
