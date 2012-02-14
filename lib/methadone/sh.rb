@@ -90,10 +90,10 @@ module Methadone
       sh_logger.warn("Error output of '#{command}': #{stderr}") unless stderr.strip.length == 0
 
       if status.exitstatus != 0
-        sh_logger.info("Output of '#{command}': #{stdout}")
+        sh_logger.info("Output of '#{command}': #{stdout}") unless stdout.strip.length == 0
         sh_logger.warn("Error running '#{command}'")
       else
-        sh_logger.debug("Output of '#{command}': #{stdout}") 
+        sh_logger.debug("Output of '#{command}': #{stdout}") unless stdout.strip.length == 0
         call_block(block,stdout,stderr) unless block.nil?
       end
 
