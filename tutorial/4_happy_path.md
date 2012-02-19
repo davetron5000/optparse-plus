@@ -135,7 +135,7 @@ to explore this in more detail, check out the testing chapter of [my book][clibo
 
 [clibook]: http://www.awesomecommandlineapps.com
 
-Here's the code to implement these steps:
+Here's the code to implement these steps, which I've put in `features/step_definitions/fullstop_steps.rb`:
 
 ```ruby
 include FileUtils
