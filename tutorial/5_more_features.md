@@ -12,15 +12,10 @@ example:
 
 You can probably think of even more features.  To demonstrate how Methadone works, we're going to add these features:
 
-* a "force" switch that will blow away the git repo and re-clone it
-* a "location" flag that will allow us to control where the repo gets clone
+* a "force" switch that will blow away the git repo and re-clone it, called `--force`
+* a "location" flag that will allow us to control where the repo gets cloned, called `--checkout-dir` (which we'll also make available via `-d` as a mnemonic for "directory".  See [my book][clibook] for an in-depth discussion on why you should provide long-form options along with short-form options)
 
-We'll do this by adding a switch `--force` that will trigger the "blow away the repo" function.  We'll also add a flag
-`--checkout-dir` that will take an argument for where we should do the checkout.  It will also be available via `-d` for the
-convienience of command-line users (see [my book][clibook] to understand why we might want to provide both short and long-form
-options).
-
-First, let's test-drive our new user interface by updating our "Basic UI" scenario to look like so:
+Since we're working outside-in, we'll first create the user interface by modifying our UI scenario:
 
 ```cucumber
 Feature: Checkout dotfiles
@@ -37,10 +32,12 @@ Feature: Checkout dotfiles
     And the banner should document that this app takes options
     And the banner should document that this app's arguments are:
       |repo_url|which is required|
+    # vvv
     And the following options should be documented:
       | --force        |
       | --checkout-dir |
       | -d             |
+    # ^^^
 
   Scenario: Happy Path
     Given a git repo with some dotfiles at "/tmp/dotfiles.git"
@@ -112,7 +109,7 @@ Tasks: TOP => features
 As you can see, our tests are failing, because the documentation of the existence of our command-line option couldn't be found in
 the help output.
 
-To make this test pass in an `OptionParser` driven application, you might write something like this:
+To make this test pass in an `OptionParser`-driven application, you might write something like this:
 
 ```ruby
 options = {
@@ -131,26 +128,50 @@ end
 parser.parse!
 ```
 
-This is pretty tedious; when we parse command-line options, we almost always want to put the value of the option into a hash to
-inspect later during the execution of our program.  As we've mentioned, Methadone manages an instance of `OptionParser` that we
-can use.  We could write the above code almost exactly as written, and it would work fine, however Methadone provides more.
+As we learned earlier, Methadone manages an instance of `OptionParser` for us (and calls `parse!` in its `go!` method), so we could reduce this code to:
 
-Methadone's `Methadone::Main` module includes what is essentially a proxy to the managed `OptionParser` with various convienience
-methods built-in.    The one we want is called `on` and works just like the `on` method of `OptionParser`, with a few additional
-defaults.
+```ruby
+options = {
+  'checkout-dir' => ENV['HOME'],
+}
+opts.on("--force","Force overwriting existing files") do 
+  options[:force] = true
+end
+opts.on("-d DIR","--checkout-dir",
+        "Set the location of the checkout dir",
+        "(default: #{options['checkout-dir']})") do |dir|
+  options['checkout-dir'] = dir
+end
+```
 
-Before we see that, we need to *also* mention that Methadone manages a `Hash` into which our parsed options will be placed.  This
-`Hash` is available via the method `options`.  This method is available inside and outside of our `main` block, so we can use it
-to set defaults when declaring our UI, and we can use it to get the values the user specified on the command-line inside `main`.
+Methadone *also* manages an options hash for us, so that it can be made available to the `main` block.  It's available via the
+method `options`.  Methadone also provides a method `on` that delegates all of its arguments to the underlying `OptionParser`'s
+`on` method.  With both of these in mind, we could further reduce the code to:
 
-With all of that information, we can bring together how `on` works.  `on` will pass all of its command-line arguments to the `on`
-method of the underlying `OptionParser` instance, but will do two additional things:
+```ruby
+options['checkout-dir'] = ENV['HOME']
+on("--force","Force overwriting existing files") do 
+  options[:force] = true
+end
+on("-d DIR","--checkout-dir",
+        "Set the location of the checkout dir",
+        "(default: #{options['checkout-dir']})") do |dir|
+  options['checkout-dir'] = dir
+end
+```
+
+This is still pretty tedious:
+
+* Both blocks to `on` just set the value in the `options` hash.
+* We have to include the default value of `checkout-dir` in the documentation string.
+
+For apps with a lot of options, this can be a real pain to maintain.  Methadone has us covered.  The `on` method has more smarts
+than just delegating to `OptionParser`.  Specifically:
 
 * If you do *not* pass a block to `on`, it will provide `OptionParser` a block that sets the value of the command-line option inside the `options` hash.
-* If there is a default value for your option, it will be included in the help string.
+* If there is a default value for your flag (option that takes an argument), it will be included in the help string automatically.
 
-In other words, the above code, written against `OptionParser`, would look like this, in Methadone:
-
+In other words, we can reduce our option parsing code to these three lines:
 
 ```ruby
 options['checkout-dir'] = ENV['HOME']
@@ -163,12 +184,13 @@ That's it!  14 lines become 3.  When `main` executes, the following keys in `opt
 
 * `"force"` - true if the user specified `--force`
 * `:force` - the same
-* `"d"` - the value of the checkout dir (as given to `-d` or `--force`), or the default, i.e. not `nil`
+* `"d"` - the value of the checkout dir (as given to `-d` or `--checkout-dir`), or the default, i.e. never `nil`
 * `:d` - the same
 * `"checkout-dir"` - the same
 * `:'checkout-dir'` - the same
 
-Notice that each flag is available as a `String` or `Symbol` and that all forms of each option are present.
+Notice that each flag is available as a `String` or `Symbol` and that all forms of each option are present in the hash, meaning
+you can refer to the options in whichever way makes the code most readable.
 
 Coming back to our app, let's add this code and see if our test passes.  Here's what `bin/fullstop` looks like now:
 
@@ -276,7 +298,7 @@ Options:
 
 Take a moment to reflect on everything you're getting.  We specify only the names of options and their description, and Methadone
 handles the rest.  *And*, you can avoid all of this magic entirely, if you really need to, since you have access to the
-`OptionParser` instance via the `opts` method.
+`OptionParser` instance via the `opts` method.  You get all of the power of `OptionParser`, but without any framework lock-in.
 
 For completeness, let's go ahead an implement the two features now that we have the UI in place.  To do this, we'll create two
 new scenarios.
@@ -355,7 +377,7 @@ Tasks: TOP => features
 
 We're failing because the new file we added to our repo after the initial clone can't be found.  It's likely that our second
 clone failed, but we didn't notice, because we aren't checking.  If we run our app manually, we can see that errors are flying,
-but we aren't checking:
+but we're ignoring them: 
 
 ```sh
 $ HOME=/tmp/fake-home bundle exec bin/fullstop file:///tmp/dotfiles.git
@@ -447,7 +469,7 @@ It looks like `fullstop` is writing log messages.  It is, and we'll talk about t
 on the fact that we aren't producing the error message we expect.  Let's modify `bin/fullstop` to check that the call to `git`
 succeeded.  `sh` returns the exit status of the command it calls, so we can use that to fix things.
 
-Here's the changes we'l l make to `bin/fullstop` to check for this:
+Here's the changes we'll make to `bin/fullstop` to check for this:
 
 ```ruby
 #!/usr/bin/env ruby

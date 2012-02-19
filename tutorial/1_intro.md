@@ -21,9 +21,12 @@ fully tested.
 ## What you'll need
 
 You'll need an installation of Ruby and the ability to install Ruby gems.  I would recommend that you use rvm and a gemset to
-work through these, but they aren't required.  Although Methadone works on most versions of Ruby, I would recommend you use Ruby
+work through these, but they aren't required.  There's a decent [walkthrough][setup] on my book's website of setting this up the
+way I work.  Although Methadone works on most versions of Ruby, I would recommend you use Ruby
 1.9.3, if you can.  If not, try to use an MRI Ruby as those versions (1.8.7, REE, 1.9.2, or 1.9.3) have the highest compatibility
 with other gems.
+
+[setup]: http://www.awesomecommandlineapps.com/setup.html
 
 ## How this is organized
 

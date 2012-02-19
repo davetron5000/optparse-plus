@@ -2,10 +2,11 @@
 
 One thing that's great about writing a webapp with Ruby on Rails is that, with one command, you have a skeleton app, including
 a fully functional test framework set up.  You can start writing tests immediately.  There's no common equivalent for a
-command-line app, however Methadone aims to provide this.
+command-line app, which is what Methadone aims to provide.
 
 Methadone will also bootstrap other aspects of your app, such a `Rakefile`, a gemspec, a shell of an executable, a license, and a
-README.  First, let's install Methadone via RubyGems:
+README.  First, let's install Methadone via RubyGems (note that if your aren't using rvm, you may need to use `sudo` to install
+gems):
 
 ```sh
 $ gem install methadone
@@ -14,6 +15,11 @@ Successfully installed methadone-1.0.0
 1 gem installed
 Installing ri documentation for methadone-1.0.0...
 Installing RDoc documentation for methadone-1.0.0...
+```
+
+Methadone comes bundled with a command-linen app that will do the bootstrapping:
+
+```sh
 $ methadone --help
 Usage: methadone [options] app_name
 
@@ -32,22 +38,22 @@ Options:
 Default values can be placed in the METHODONE_OPTS environment variable
 ```
 
-As you can see, we got the Methadone gem installed, along with the `methadone` application, which will bootstrap our app.
+The app that we'll be building in this tutorial is be called `fullstop`, which is derived from the [British name][fullstop] for a period, which is the character used as a prefix to our dotfiles, and, is the reason they are called "dot" files in the first place.  Based on the command-line syntax for `methadone`, we can create our app right now with one simple command.  We'll use the Apache license as well as a README.
 
-Our app that we'll be building in this tutorial is be called `fullstop`, which is the British term for the period character that ends sentences and precedes the name of our dotfiles.  Based on the command-line syntax for `methadone`, we can create our app right now with one simple command.  We'll use the apache license as well as a README.
+[fullstop]: http://en.wikipedia.org/wiki/Full_stop
 
 ```sh
 $ methadone --readme --license apache fullstop
-$ cd fullstop
-$ ls
+$ ls fullstop
 Gemfile           README.rdoc       bin/              
 fullstop.gemspec  test/             LICENSE.txt       
 Rakefile          features/         lib/
 ```
 
-As you can see, we've got a generic gemified project.  We'll need to install a few gems using Bundler first:
+As you can see, we've got a generic gemified project.  Before we can start developing, we'll need to install a few gems using Bundler first:
 
 ```sh
+$ cd fullstop
 $ bundle install
 Fetching source index for http://rubygems.org/
 Installing rake (0.9.2.2) 
@@ -98,8 +104,12 @@ Finished tests in 0.000623s, 1605.1364 tests/s, 1605.1364 assertions/s.
 0m0.136s
 ```
 
-As you can see, we ran one unit test and one cucumber scenario.  Before we look at those, let's run the scaffold app that
-Methadone created for us:
+As you can see, we ran one unit test and one cucumber scenario.  These were provided by Methadone as placeholders for your tests.
+Just like what Ruby on Rails does when you create an app, Methadone has reduced the friction between your need to write software
+and your ability to do so.
+
+Methadone also generated a very basic scaffold of the command-line app itself.  It's in `bin` and is called `fullstop` (the
+argument we gave to `methadone`).  Let's run it now:
 
 ```sh
 $ bin/fullstop
@@ -108,7 +118,9 @@ from /Users/davec/.rvm/rubies/ruby-1.9.3-p0/lib/ruby/site_ruby/1.9.1/rubygems/cu
 from bin/fullstop:5:in `<main>'
 ```
 
-Oops!  What happened?  Methadone is encouraging you to develop your app with best practices, and one such practice is to not have
+Oops!  What happened?  
+
+Methadone is encouraging you to develop your app with best practices, and one such practice is to not have
 your executables mess with the load path.  In many Ruby command-line applications, you'll see code like this at the top of the
 file:
 
@@ -116,9 +128,7 @@ file:
 $: << File.join(File.dirname(__FILE__),'..','lib')
 ```
 
-This puts the directory `lib` relative to the `bin` directory where our executable lives into Ruby's load path.  This will allow
-*us* to run the app easily, but for your users, it's not necessary and it's generally not a good idea to modify the load path.
-In order to run our directly, we'll need to use `bundle exec`, like so:
+This puts the `lib` directory, that is relative to the `bin` directory (where our executable lives), into Ruby's load path.  This will allow *us* to run the app easily, but for your users, it's not necessary if you distribute your app with RubyGems (which you should do) and it's generally not a good idea to modify the load path.  In order to run the app directly during development, we'll need to use `bundle exec`, like so (note that we won't be running our app a lot in development, but scripting it using Aruba so we can test its behavior in an automated way):
 
 ```sh
 $ bundle exec bin/fullstop --help
@@ -132,15 +142,18 @@ Options:
                                          (Default: info)
 ```
 
+
 Not too bad!  We've got the makings of a reasonable help system, versioning support, a usage statement and a working executable.
 Just remember to run the app with `bundle exec` while you're developing.  Remember, your users won't have to worry about as long
-as the install with RubyGems.
+as they installed it with RubyGems.
 
-Before we move on, let's look at the cucumber scenario that Methadone generated for us.  We're goingn to work "outside in" on our
+Before we move on, let's look at the cucumber scenario that Methadone generated for us.  We're going to work "outside in" on our
 app, so this will be a sneak peek at what we'll be doing next.
 
 ```sh
 $ cat features/fullstop.feature 
+```
+```cucumber
 Feature: My bootstrapped app kinda works
   In order to get going on coding my awesome app
   I want to have aruba and cucumber setup
@@ -156,8 +169,8 @@ Feature: My bootstrapped app kinda works
     And the banner should document that this app takes no arguments
 ```
 
-This scenario might not persist in this form, but it's a good demonstration of how we'll be testing the command-line executable.
-As you can see, we have cucumber steps for all the parts of the user interface for our app, from the exit status to the banner to
-the command-line options.
+We probably won't keep this exactly scenario around, but it's a good demonstration of Aruba and Cucumber, and will help to get us
+going.  Since this scenario passes, that means that we already have the cucumber steps defined somewhere.  As we'll see, the
+combination of Aruba and Methadone results in a lot of pre-defined steps that make acceptance testing a snap.
 
 In the next section, we'll expand this scenario to create the user interface we'll need to get our app going.

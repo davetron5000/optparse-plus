@@ -19,13 +19,13 @@ followed by symlinking the contents to our home directory.  There is, however, a
 
 Suppose we make this scenario pass.  This means that *every* time we run this scenario, our dotfiles in our *actual* home
 directory will be blown away.  Yikes!  We don't want that; we want our test as isolated as it can be.  What we'd like is to work
-in a home directory that, from the perspective of our cucumber tests, is faked out, but from the perspective of `fullstop`, is
-the user's bona-fide home directory.
+in a home directory that, from the perspective of our cucumber tests, is not our home directory and completely under the conrol
+of the tests but, from the perspective of the `fullstop` app, is the user's bona-fide home directory.
 
 We can easily fake this by changing the environment variable `$HOME` just for the tests.  As long as `bin/fullstop` uses this
-envrionment variable to access the user's home directory (which is perfectly valid), everything will be OK.
+environment variable to access the user's home directory (which is perfectly valid), everything will be OK.
 
-To do that, we need to modify some of cucumber's plumbing.  Methadone doesn't do this for you, since it's not applicable to every
+To do that, we need to modify some of cucumber's plumbing.  Methadone won't do this for you, since it's not applicable to every
 situation or app.  Open up `features/support/env.rb`.  It should look like this:
 
 ```ruby
@@ -49,7 +49,8 @@ end
 
 There's a lot in there already to make our tests work and, fortunately, it makes our job of faking the home directory a bit
 easier.  We need to save the original location in `Before`, and then change it there, setting it back to normal in `After`, just
-as we have done with the `$RUBYLIB` envrionment variable.
+as we have done with the `$RUBYLIB` environment variable (incidentally, this is how Aruba can run our app without using `bundle
+exec`).
 
 ```ruby
 require 'aruba/cucumber'
@@ -128,8 +129,13 @@ end
 ```
 
 As you can see there are three steps that cucumber doesn't know how to execute.  It provides boilerplate for doing so, so let's
-do that next.  As this is more about Aruba and Ruby, and less about Methadone, we'll go a bit fast here.  You can 
-explore this sort of technique in more detail in [my book][clibook], but here's how we'll implement these steps:
+do that next.  We're going to move a bit faster here, since the specifics of implementing cucumber steps is orthogonal to
+Methadone, and we don't want to stray too far from our goal of learning Methadone.  If you'd like
+to explore this in more detail, check out the testing chapter of [my book][clibook].
+
+[clibook]: http://www.awesomecommandlineapps.com
+
+Here's the code to implement these steps:
 
 ```ruby
 include FileUtils
@@ -140,8 +146,6 @@ Given /^a git repo with some dotfiles at "([^"]*)"$/ do |repo_dir|
   @repo_dir = repo_dir
   base_dir = File.dirname(repo_dir)
   dir = File.basename(repo_dir)
-  puts base_dir
-  puts dir
   Dir.chdir base_dir do
     rm_rf dir
     mkdir dir
@@ -177,9 +181,11 @@ Then /^the files in "([^"]*)" should be symlinked in my home directory$/ do |dot
 end
 ```
 
-In short, we set up a fake git repo in our first step definition, using the `FILES` constant to make things easier.  In our second step definition, we make sure to expand the "~" into `ENV['HOME']` before checking for the cloned repo, and in the last step we check that the files in `ENV['HOME']` are symlinks (being sure to use `lstat` instead of `stat`, as `stat` follows symlinks). Finally, you might not be familiar with the method `sh` that we're using to call `git`.  This is provided by Methadone and we'll explore it in more detail later.  For now, it functions similarly to `system`.
+In short, we set up a fake git repo in our first step definition, using the `FILES` constant so all steps know which files to expect. In our second step definition, we make sure to expand the "~" into `ENV['HOME']` before checking for the cloned repo.  In the last step we check that the files in `ENV['HOME']` are symlinks (being sure to use `lstat` instead of `stat`, as `stat` follows symlinks and will report the files as normal files). 
 
-Now, we should have a failing test:
+You won't be familiar with the method `sh` that we're using to call `git`.  This is provided by Methadone and we'll explore it in more detail later.  For now, it functions similarly to `system`.
+
+We should now have a failing test:
 
 ```sh
 $ rake features
@@ -201,7 +207,7 @@ Feature: Checkout dotfiles
   Scenario: Happy Path
     Given a git repo with some dotfiles at "/tmp/dotfiles.git"
     When I successfully run `fullstop file:///tmp/dotfiles.git`
-      Then the dotfiles should be checked out in the directory "~/dotfiles"
+    Then the dotfiles should be checked out in the directory "~/dotfiles"
       expected: true
            got: false (using ==) (RSpec::Expectations::ExpectationNotMetError)
       ./features/step_definitions/fullstop_steps.rb:29:in `/^the dotfiles should be checked out in the directory "([^"]*)"$/'
@@ -221,24 +227,43 @@ Tasks: TOP => features
 (See full trace by running task with --trace)
 ```
 
-The error is that the directory `~/dotfiles` (after replacing `~` with `ENV['HOME']` doesn't exist.  This shouldn't be surprising, since we haven't written any code.  Let's do so.
+This is the step that's failing:
 
-This is our first time adding logic unrelated to the UI, and it requires a slight detour on the organization of a
-Methadone-powered command-line app.
+```cucumber
+Then the dotfiles should be checked out in the directory "~/dotfiles"
+```
 
-Since a Ruby executable executes from top to bottom, we'd normally need to have all of our main logic at the end of the file.
-This is the most interest and relevant part of the file, and it woudl be nice if this were as close to the top as possible, so we
-see it when we open the file.
+It's a bit hard to understand *why* it's failing, but the error message and line number helps.  This is the line that's failing:
 
-Methadone provides the method `main`, which lives in `Methadone::Main`, and takes a block.  This block should be thought of as
-your *main* method of your program.  The block is given all of the arguments unparsed on the command-line, so it behaves very
-similarly to a true main method that you might see in C.
+```ruby
+File.exist?(dotfiles_dir).should == true
+```
 
-Given that, we'll do the followingn things to pass the currently-failing step:
+Since `dotfiles_dir` is `~/dotfiles` (or, more specifically, `File.join(ENV['HOME'],'dotfiles')`), and it doesn't exist, since we
+haven't written any code that might cause it to exist, the test fails.  Although it's outside the scope of this tutorial, you
+should consider writing some custom RSpec matchers for your assertions, since they can allow you to produce better failure
+messages.
 
-* Include `Methadone::SH`, which provides a nice way to call external commands (we'll explain more about it in a moment)
-* Change the `main` block so it takes and argument, the `repo_url`
-* Change to the user's home directory and clone the repo
+Now that we have a failing test, we can start writing some code.  This is the first bit of actual logic we'll write, and we need
+to revisit the canonical structure of a Methadone app to know where to put it.
+
+Recall that the second part of our app is the "main" block, and it's intended to hold the primary logic of your application.  Methadone provides the method `main`, which lives in `Methadone::Main`, and takes a block.  This block is where you put your logic.  Think of it like the `main` method of a C program.
+
+Now that we know where to put our code, we need to know *what* code we need to add.  To make this step pass, we need to clone the
+repo given to us on the command-line.  To do that we need:
+
+* The ability to execute `git`
+* The ability to change to the user's home directory
+* Access to the repo's URL from the command line
+
+Although we can use `system` or the backtick operator to call `git`, we're going to use `sh`, which is available by mixing in
+`Methadone::SH`.  We'll go into the advantages of why we might want to do that later in the tutorial, but for now, think of it as
+saving us a few characters over `system`.
+
+We can change to the user's home directory using the `chdir` method of `Dir`, which is built-in to Ruby.  To get the value of the
+URL the user provided on the command-line, we could certainly take it from `ARGV`, but Methadone allows you `main` block to take
+arguments, which it will populate with the contents of `ARGV`.  All we need to do is change our `main` block to accept `repo_url`
+as an argument.
 
 Here's the code:
 
@@ -279,8 +304,8 @@ class App
 end
 ```
 
-Again, think of `sh` as a shorter (and, as we'll see later on, better) version of `system`.  We now see that we get farther in
-our test:
+Note that all we're doing here is getting the currently-failing step to pass.  We *aren't* implementing the entire app.  We want
+to write only the code we need to, and we go one step at a time.  Let's re-run our scenario and see if we get farther:
 
 ```sh
 rake features
@@ -326,8 +351,16 @@ Tasks: TOP => features
 (See full trace by running task with --trace)
 ```
 
-Instead of complaining that `~/dotfiles` didn't exist, it's now complaining that `.vimrc` isn't symlinked in our home directory.
-That makes sense, since our app just does the `git clone`.  Let's symlink everything using `ln_s` from `FileUtils`:
+We're now failing at the next step:
+
+```cucumber
+And the files in "~/dotfiles" should be symlinked in my home directory
+```
+
+The error, "No such file or directory - .vimrc", is being raised from `File.lstat` (as opposed to an explicit test failure).
+This is enough to allow us to write some more code.  What we need to do know is iterate over the files in the cloned repo and
+symlink them to the user's home directory.  The tools to do this are already available to use via the built-in Ruby library
+`FileUtils`.  We'll require it and implement the symlinking logic:
 
 ```ruby
 #!/usr/bin/env ruby
@@ -370,7 +403,7 @@ class App
 end
 ```
 
-This is pretty straightfoward, and we can see that our scenario passes!
+Now, let's run our scenario again:
 
 ```sh
 $ rake features
@@ -400,4 +433,5 @@ Feature: Checkout dotfiles
 0m0.396s
 ```
 
-Now that we have the basics of our app running, we'll see how Methadone makes it easy to add new features.
+Everything passed!  Our app now works for the "happy path".  As long as the user starts from a clean home directory, `fullstop`
+will clone their dotfiles, and setup symlinks to them in their home directory.  Now that we have the basics of our app running, we'll see how Methadone makes it easy to add new features.

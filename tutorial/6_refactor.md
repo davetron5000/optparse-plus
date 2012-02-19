@@ -2,7 +2,8 @@
 
 Refactoring is an important step in TDD, and a Methadone-powered app works just as well with the code all jumbled inside our
 executable as it would with things nicely organized in classes.  Since we'll distribute our app with RubyGems, it will all work
-out at runtime.
+out at runtime.  This means that there's no additional complexity to organizing our code into classes that live inside the `lib`
+directory.
 
 Currently, our `main` block looks like this:
 
@@ -29,7 +30,8 @@ main do |repo_url|
 end
 ```
 
-Let's create some methods first to clean up this, and then see if any classes emerge.
+Let's use method extraction to clean this up before we worry about classes.  This exercise will help us identify classes we can
+create later.
 
 ```ruby
 main do |repo_url|
@@ -119,9 +121,7 @@ Feature: Checkout dotfiles
 ```
 
 Everything's still working, so our refactor was good.  We'd like to move a lot of the code out of our executable.  This will let
-us unit test it better, and generally make things a bit easier to organize and understand.  The objects of our app are
-"Repositories" and "Files".  Ruby already has a `File` class, so let's start with "Repository".  We'll make one in `lib` that can
-be cloned and whose files can be listed.
+us unit test it better, and generally make things a bit easier to organize and understand (as always, [my book][clibook] contains more in-depth discussion of why this is and how to do it).  The objects of our app are "Repositories" and "Files".  Ruby already has a `File` class, so let's start with "Repository".  We'll make one in `lib` that can be cloned and whose files can be listed.
 
 We'll create a class named `Repo` in `lib/fullstop/repo.rb` that has a factory method, `clone_from`, that will clone and create a
 `Repo` instance that has a method `repo_dir` exposing the dir where the repo was cloned, and `files` which iterates over each
@@ -210,11 +210,11 @@ end
 ```
 
 It's now a lot shorter, easier to understand and we have our code in classes, where they can be tested in a fast-running unit
-test.
+test (we'll leave those tests as an exercise to the reader).
 
 The point of all this is that *none of this matters to Methadone*.  When you distribute your app, the code will be available, and
 thus you can organize it however you'd like.
 
 You've noticed that we've been punting on a few things that we've seen, most recently, the module `Methadone::CLILogging`.  At
 this point, you know enough to effectively use Methadone to make awesome command-line apps.  In the next section, we'll take a
-closer look at how logging and debugging work with a Methadone app.
+closer look at how logging and debugging work with a Methadone app, which will clear up a few details that we've glossed over.

@@ -16,9 +16,9 @@ else
 end
 ```
 
-Because of the way `system` or the backtick operator work, this sort of debugging isn't terribly helpful.  It's alsl hard to turn
-off, you either delete the lines (possibly adding them back later when things go wrong again), or comment them out, which 
-leads to hard to follow code and potentially misleading messages.
+Because of the way `system` or the backtick operator work, this sort of debugging isn't terribly helpful.  It's also hard to turn
+off: you either delete the lines (possibly adding them back later when things go wrong again), or comment them out, which 
+leads to hard-to-follow code and potentially misleading messages.
 
 Instead, you should use logging, and Methadone bakes logging right in.
 
@@ -161,7 +161,7 @@ D, [2012-02-13T21:11:05.950968 #49986] DEBUG -- : Yielding .vimrc
 I, [2012-02-13T21:11:05.951086 #49986]  INFO -- : Dotfiles symlinked
 ```
 The format has changed.  Methadone reasons that if you are showing output to a terminal TTY, the user will not need or want to
-see the logging level of each message, or the time stamp.  However, if the user has redirected the output to a file, this
+see the logging level of each message nor the timestamp.  However, if the user has redirected the output to a file, this
 information becomes much more useful.
 
 Now, let's run the app again, but without "resetting" our fake home directory in `/tmp/fake-home`.
@@ -196,9 +196,9 @@ messages to potentially many places.  How does this work?
 
 ## Methadone's Special Logger
 
-The logger used by `Methadone::CLILogging` is a `Methadone::CLILogger`.  This
+The logger used by default in `Methadone::CLILogging` is a `Methadone::CLILogger`.  This
 is a special logger designed for command-line apps.  By default, any message logged at warn or higher will go to the standard
-error stream.  Messages logged at info and debug will go to the standard output stream.  This allows you to fluentky communicate
+error stream.  Messages logged at info and debug will go to the standard output stream.  This allows you to fluently communicate
 things to the user and have them go to the appropriate place.
 
 Further, when your app is run at a terminal, these messages are unformatted.   When your apps output is redirected somewhere, the
@@ -264,15 +264,14 @@ raise a `Methadone::Error`, but we could've just as easily raised a `StandardErr
 would be the same: Methadone would show the user just the error message and exit nonzero.
 
 Methadone traps all exceptions, so that users never see a backtrace.  Generally, this is what you want, because it allows you to
-write your code without complex exit logic.  In fact, the method `go!` that we've seen at the bottom of our executables handles
-this.
+write your code without complex exit logic and you don't need to worry about a bad user experience by letting stack traces leak
+through to the output.  In fact, the method `go!` that we've seen at the bottom of our executables handles this.
 
 There are times, however, when you want to see these traces.  When writing and debugging your app, the exception backtraces are
 crucial for identifying where things went wrong.
 
-All Methadone apps look for the environment variable `DEBUG` and, if it's set to "true", will show the stack trace.  Let's see it
-work with `bin/fullstop`.  We've restored it back to use a `Methadone::CLILogger`, and we can now see how `DEBUG` affects the
-output:
+All Methadone apps look for the environment variable `DEBUG` and, if it's set to "true", will show the stack trace on errors
+instead of hiding it.  Let's see it work with `bin/fullstop`.  We've restored it back to use a `Methadone::CLILogger`, and we can now see how `DEBUG` affects the output:
 
 ```sh
 $ HOME=/tmp/fake-home bundle exec bin/fullstop --log-level=debug file:///tmp/dotfiles.git
@@ -302,4 +301,4 @@ Error running 'git clone file:///tmp/dotfiles.git'
 
 Occasionally, you might *always* want the exceptions to leak through.  For example, if your app is being run as part of some
 other system that you don't have precise control over, such as [monit][monit], the backtrace will tell you what went wrong if the
-system can't properly start your app.  In this case, use the method `leak_exceptions` to permanently show the backtrace.  Note that this method will only leak excepetions that aren't of type `Methadone::Error`.
+system can't properly start your app.  In this case, use the method `leak_exceptions` to permanently show the backtrace.  Note that this method will only leak exceptions that *aren't* of type `Methadone::Error`.
