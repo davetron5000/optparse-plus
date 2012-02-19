@@ -334,17 +334,23 @@ class TestMain < BaseTest
 
   end
 
-  test_that "I can specify which arguments my app takes and if they are required" do
+  test_that "I can specify which arguments my app takes and if they are required as well as document them" do
     Given {
       main {}
+      @db_name_desc = any_string 
+      @user_desc = any_string
+      @password_desc = any_string
 
-      arg :db_name
-      arg :user, :required
-      arg :password, :optional
+      arg :db_name, @db_name_desc
+      arg :user, :required, @user_desc
+      arg :password, :optional, @password_desc
     }
-
+    When run_go_safely
     Then {
       opts.banner.should match /db_name user \[password\]$/
+      opts.to_s.should match /#{@db_name_desc}/
+      opts.to_s.should match /#{@user_desc}/
+      opts.to_s.should match /#{@password_desc}/
     }
   end
 

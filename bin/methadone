@@ -64,7 +64,7 @@ on("-l LICENSE","--license",licenses,"Specify the license for your project (#{li
 
 use_log_level_option
 
-arg :app_name, :required
+arg :app_name, :required, "Name of your app, which is used for the gem name and executable name"
 
 version Methadone::VERSION
 

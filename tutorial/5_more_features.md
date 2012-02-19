@@ -231,7 +231,7 @@ class App
   on("-d DIR","--checkout-dir","Where to clone the repo")
   # ^^^
 
-  arg :repo_url
+  arg :repo_url, "URL to the git repository containing your dotfiles"
 
   use_log_level_option
 
@@ -511,7 +511,7 @@ class App
   on("--force","Overwrite files if they exist")
   on("-d DIR","--checkout-dir","Where to clone the repo")
 
-  arg :repo_url
+  arg :repo_url, "URL to the git repository containing your dotfiles"
 
   use_log_level_option
 
@@ -617,7 +617,7 @@ class App
   on("--force","Overwrite files if they exist")
   on("-d DIR","--checkout-dir","Where to clone the repo")
 
-  arg :repo_url
+  arg :repo_url, "URL to the git repository containing your dotfiles"
 
   use_log_level_option
 

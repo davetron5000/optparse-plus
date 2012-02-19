@@ -119,7 +119,6 @@ module Methadone
       @env_var = env_var
       opts.separator ''
       opts.separator "Default values can be placed in the #{env_var} environment variable"
-      opts.separator ''
     end
 
     # Start your command-line app, exiting appropriately when
@@ -137,6 +136,7 @@ module Methadone
     #
     def go!
       normalize_defaults
+      opts.post_setup
       if @env_var
         String(ENV[@env_var]).split(/\s+/).each do |arg|
           ::ARGV.unshift(arg)
@@ -204,6 +204,7 @@ module Methadone
     #             <tt>:one</tt>:: only one of this arg should be supplied (default)
     #             <tt>:many</tt>::  many of this arg may be supplied, but at least one is required
     #             <tt>:any</tt>:: any number, include zero, may be supplied
+    #             A string:: if present, this will be documentation for the argument and appear in the help
     def arg(arg_name,*options)
       opts.arg(arg_name,*options)
     end
@@ -303,6 +304,7 @@ module Methadone
       @accept_options = false
       @args = []
       @arg_options = {}
+      @arg_documentation = {}
       @description = nil
       @version = nil
       set_banner
@@ -355,6 +357,9 @@ module Methadone
       options << :one unless options.include?(:any) || options.include?(:many)
       @args << arg_name
       @arg_options[arg_name] = options
+      options.select { |_| _.kind_of? ::String }.each do |doc|
+        @arg_documentation[arg_name] = doc + (options.include?(:optional) ? " (optional)" : "")
+      end
       set_banner
     end
 
@@ -378,6 +383,20 @@ module Methadone
     def version(version)
       @version = version
       set_banner
+    end
+
+    # We need some documentation to appear at the end, after all OptionParser setup
+    # has occured, but before we actually start.  This method serves that purpose
+    def post_setup
+      unless @arg_documentation.empty?
+        @option_parser.separator ''
+        @option_parser.separator "Arguments:"
+        @option_parser.separator ''
+        @args.each do |arg|
+          @option_parser.separator "    #{arg}"
+          @option_parser.separator "        #{@arg_documentation[arg]}"
+        end
+      end
     end
 
     private
