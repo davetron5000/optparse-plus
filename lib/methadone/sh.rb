@@ -106,10 +106,22 @@ module Methadone
     # Run a command, throwing an exception if the command exited nonzero.
     # Otherwise, behaves exactly like #sh.
     #
+    # options - options hash, responding to:
+    #           <tt>:on_fail</tt>:: a custom error message.  This allows you to have your
+    #                               app exit on shell command failures, but customize the error
+    #                               message that they see.
+    #
     # Raises Methadone::FailedCommandError if the command exited nonzero.
-    def sh!(command,&block)
+    #
+    # Examples:
+    #
+    #     sh!("rsync foo bar")
+    #     # => if command fails, app exits and user sees: "error: Command 'rsync foo bar' exited 12"
+    #     sh!("rsync foo bar", :on_fail => "Couldn't rsync, check log for details")
+    #     # => if command fails, app exits and user sees: "error: Couldn't rsync, check log for details
+    def sh!(command,options={},&block)
       sh(command,&block).tap do |exitstatus|
-        raise Methadone::FailedCommandError.new(exitstatus,command) if exitstatus != 0
+        raise Methadone::FailedCommandError.new(exitstatus,command,options[:on_fail]) if exitstatus != 0
       end
     end
 

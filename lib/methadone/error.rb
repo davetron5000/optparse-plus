@@ -16,8 +16,9 @@ module Methadone
     # The command that caused the failure
     attr_reader :command
 
-    def initialize(exit_code,command)
-      super(exit_code,"Command '#{command}' exited #{exit_code}")
+    def initialize(exit_code,command,custom_error_message = nil)
+      error_message = String(custom_error_message).empty? ?  "Command '#{command}' exited #{exit_code}" : custom_error_message
+      super(exit_code,error_message)
       @command = command
     end
   end

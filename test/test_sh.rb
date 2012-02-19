@@ -170,6 +170,23 @@ class TestSH < Clean::Test::TestCase
     }
   end
 
+  test_that "sh! runs a command that will fail and includes an error message that appears in the exception" do 
+    Given {
+      use_capturing_logger
+      @command = test_command("foo")
+      @custom_error_message = any_sentence
+    }
+    When {
+      @code = lambda { sh! @command, :on_fail => @custom_error_message }
+    }
+    Then {
+      exception = assert_raises(Methadone::FailedCommandError,&@code)
+      exception.command.should == @command
+      exception.message.should == @custom_error_message
+      assert_logger_output_for_failure(@logger,@command,test_command_stdout,test_command_stderr)
+    }
+  end
+
   class MyTestApp
     include Methadone::SH
     def initialize(logger)

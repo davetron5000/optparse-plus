@@ -566,6 +566,29 @@ Feature: Checkout dotfiles
 0m0.789s
 ```
 
+Note that there is a companion method to `sh`, called `sh!` that will throw an exception if the underlying command it calls
+fails.  In a Methadone app, any unhandled exception will trigger a nonzero exit from the app, and show the user the message of
+the exception that caused the exit.  We can customize the message of the exception thrown from `sh!`, and thus our change
+to our app could also be implemented like so:
+
+```ruby
+main do |repo_url|
+  
+  Dir.chdir options['checkout-dir'] do
+    # vvv
+    sh! git clone #{repo_url}", :on_fail => "checkout dir already exists, use --force to overwrite"
+    # ^^^
+    basedir = repo_url.split(/\//)[-1].gsub(/\.git$/,'')
+    Dir.entries(basedir).each do |file|
+      next if file == '.' || file == '..' || file == '.git'
+      FileUtils.ln_s file,'.'
+    end
+  end
+end
+```
+
+Which method to use is purely stylistic and up to you.
+
 NOW, we can get back to the `--force` flag.  We're going to change our scenario a bit, as well.  Instead of using "When I run `fullstop --force file:///tmp/dotfiles.git`" we'll use "When I successfully run `fullstop --force file:///tmp/dotfiles.git`", which will fail if the app exits nonzero.  This will cause our scenario to fail earlier.
 
 To fix this, we'll change the code in `bin/fullstop` so that if the user specified `--force`, we'll delete the directory before we
