@@ -70,7 +70,7 @@ Basically, this sets you up with all the boilerplate that you *should* be using 
 
 == DSL for your <tt>bin</tt> file
 
-A canonical <tt>OptionParser</tt> driven app has a few problems with it structurally that methadone can solve
+A canonical <tt>OptionParser</tt> driven app has a few problems with it structurally that Methadone can solve:
 
 * Backwards organization - main logic is at the bottom of the file, not the top
 * Verbose to use +opts.on+ just to set a value in a +Hash+

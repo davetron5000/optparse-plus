@@ -43,7 +43,10 @@ module Methadone
   #
   #       arg :needed
   #       arg :maybe, :optional
-  #       
+  #
+  #       defaults_from_env_var SOME_VAR
+  #       defaults_from_config_file '.my_app.rc'
+  #
   #       go!
   #     end
   #
@@ -53,6 +56,12 @@ module Methadone
   #     # => parse error: 'needed' is required
   #     $ our_app foo
   #     # => succeeds; "maybe" in main is nil
+  #     $ our_app --flag foo
+  #     # => options[:flag] has the value "foo"
+  #     $ SOME_VAR='--flag foo' our_app
+  #     # => options[:flag] has the value "foo"
+  #     $ SOME_VAR='--flag foo' our_app --flag bar
+  #     # => options[:flag] has the value "bar"
   #
   # Note that we've done all of this inside a class that we called +App+.  This isn't strictly
   # necessary, and you can just +include+ Methadone::Main and Methadone::CLILogging at the root
@@ -130,22 +139,6 @@ module Methadone
       @rc_file = File.join(ENV['HOME'],filename)
     end
 
-    def add_defaults_to_docs
-      if @env_var && @rc_file
-        opts.separator ''
-        opts.separator 'Default values can be placed in:'
-        opts.separator ''
-        opts.separator "    #{@env_var} environment variable, as a String of options"
-        opts.separator "    #{@rc_file} with contents either a String of options or a YAML-encoded Hash"
-      elsif @env_var
-        opts.separator ''
-        opts.separator "Default values can be placed in the #{@env_var} environment variable"
-      elsif @rc_file
-        opts.separator ''
-        opts.separator "Default values can be placed in #{@rc_file}"
-      end
-    end
-
     # Start your command-line app, exiting appropriately when
     # complete.
     #
@@ -158,17 +151,9 @@ module Methadone
     #
     # If a required argument (see #arg) is not found, this exits with
     # 64 and a message about that missing argument.
-    #
     def go!
-      add_defaults_to_docs
-      set_defaults_from_rc_file
-      normalize_defaults
+      setup_defaults
       opts.post_setup
-      if @env_var
-        String(ENV[@env_var]).split(/\s+/).each do |arg|
-          ::ARGV.unshift(arg)
-        end
-      end
       opts.parse!
       opts.check_args!
       result = call_main
@@ -281,6 +266,37 @@ module Methadone
     end
 
     private
+
+    def setup_defaults
+      add_defaults_to_docs
+      set_defaults_from_rc_file
+      normalize_defaults
+      set_defaults_from_env_var
+    end
+
+    def add_defaults_to_docs
+      if @env_var && @rc_file
+        opts.separator ''
+        opts.separator 'Default values can be placed in:'
+        opts.separator ''
+        opts.separator "    #{@env_var} environment variable, as a String of options"
+        opts.separator "    #{@rc_file} with contents either a String of options or a YAML-encoded Hash"
+      elsif @env_var
+        opts.separator ''
+        opts.separator "Default values can be placed in the #{@env_var} environment variable"
+      elsif @rc_file
+        opts.separator ''
+        opts.separator "Default values can be placed in #{@rc_file}"
+      end
+    end
+
+    def set_defaults_from_env_var
+      if @env_var
+        String(ENV[@env_var]).split(/\s+/).each do |arg|
+          ::ARGV.unshift(arg)
+        end
+      end
+    end
 
     def set_defaults_from_rc_file
       if @rc_file && File.exists?(@rc_file)
