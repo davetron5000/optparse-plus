@@ -1,4 +1,5 @@
 require 'optparse'
+require 'yaml'
 
 begin
   Module.const_get('BasicObject')
@@ -117,8 +118,32 @@ module Methadone
     # options for your app.  Omit this to disable the feature.
     def defaults_from_env_var(env_var)
       @env_var = env_var
-      opts.separator ''
-      opts.separator "Default values can be placed in the #{env_var} environment variable"
+    end
+
+    # Set the name of the file, in the user's home directory, where defaults can be configured.
+    # The format of this file can be either a simple string of options, like what goes
+    # in the environment variable (see #defaults_from_env_var), or YAML, in which case
+    # it should be a hash where keys are the option names, and values their defaults.
+    #
+    # filename:: name of the file, relative to the user's home directory
+    def defaults_from_config_file(filename,options={})
+      @rc_file = File.join(ENV['HOME'],filename)
+    end
+
+    def add_defaults_to_docs
+      if @env_var && @rc_file
+        opts.separator ''
+        opts.separator 'Default values can be placed in:'
+        opts.separator ''
+        opts.separator "    #{@env_var} environment variable, as a String of options"
+        opts.separator "    #{@rc_file} with contents either a String of options or a YAML-encoded Hash"
+      elsif @env_var
+        opts.separator ''
+        opts.separator "Default values can be placed in the #{@env_var} environment variable"
+      elsif @rc_file
+        opts.separator ''
+        opts.separator "Default values can be placed in #{@rc_file}"
+      end
     end
 
     # Start your command-line app, exiting appropriately when
@@ -135,6 +160,8 @@ module Methadone
     # 64 and a message about that missing argument.
     #
     def go!
+      add_defaults_to_docs
+      set_defaults_from_rc_file
       normalize_defaults
       opts.post_setup
       if @env_var
@@ -254,6 +281,26 @@ module Methadone
     end
 
     private
+
+    def set_defaults_from_rc_file
+      if @rc_file && File.exists?(@rc_file)
+        File.open(@rc_file) do |file| 
+          parsed = YAML::load(file)
+          if parsed.kind_of? String
+            String(parsed).split(/\s+/).each do |arg|
+              ::ARGV.unshift(arg)
+            end
+          elsif parsed.kind_of? Hash
+            parsed.each do |option,value|
+              options[option] = value
+            end
+          else
+            raise OptionParser::ParseError,
+              "rc file #{@rc_file} is not parseable, should be a string or YAML-encoded Hash"
+          end
+        end
+      end
+    end
 
     # Normalized all defaults to both string and symbol forms, so
     # the user can access them via either means just as they would for

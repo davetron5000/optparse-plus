@@ -1,6 +1,7 @@
 require 'base_test'
 require 'methadone'
 require 'stringio'
+require 'fileutils'
 
 class TestMain < BaseTest
   include Methadone::Main
@@ -12,6 +13,12 @@ class TestMain < BaseTest
     $stdout = StringIO.new
     @logged = StringIO.new
     @custom_logger = Logger.new(@logged)
+
+    @original_home = ENV['HOME']
+    fake_home = '/tmp/fake-home'
+    FileUtils.rm_rf(fake_home)
+    FileUtils.mkdir(fake_home)
+    ENV['HOME'] = fake_home
   end
 
   # Override the built-in logger so we can capture it
@@ -24,6 +31,7 @@ class TestMain < BaseTest
     ENV.delete('DEBUG')
     ENV.delete('APP_OPTS')
     $stdout = @old_stdout
+    ENV['HOME'] = @original_home
   end
 
   test_that "my main block gets called by run and has access to CLILogging" do
@@ -503,7 +511,8 @@ class TestMain < BaseTest
 
   test_that "when getting defaults from an environment variable, show it in the help output" do
     Given app_to_use_environment
-    When {
+    When run_go_safely
+    And {
       @help_string = opts.to_s
     }
     Then {
@@ -547,7 +556,103 @@ class TestMain < BaseTest
     }
   end
 
+  test_that "we can get defaults from a config file if it's specified" do
+    Given app_to_use_rc_file
+    And {
+      @flag_value = any_string
+      rc_file = File.join(ENV['HOME'],'.my_app.rc')
+      File.open(rc_file,'w') do |file|
+        file.puts ({
+          'switch' => true,
+          'flag' => @flag_value,
+        }.to_yaml)
+      end
+    }
+    When {
+      @code = lambda { go! }
+    }
+    Then {
+      assert_exits(0,&@code)
+      @switch.should == true
+      @flag.should == @flag_value
+    }
+
+  end
+
+  test_that "we can specify an rc file even if it doesn't exist" do
+    Given app_to_use_rc_file
+    And {
+      @flag_value = any_string
+      rc_file = File.join(ENV['HOME'],'.my_app.rc')
+      raise "Something's wrong, expection rc file not to exist" if File.exists?(rc_file)
+    }
+    When {
+      @code = lambda { go! }
+    }
+    Then {
+      assert_exits(0,&@code)
+      @switch.should == nil
+      @flag.should == nil
+    }
+  end
+
+  test_that "we can use a different format for the rc file" do
+    Given app_to_use_rc_file
+    And {
+      @flag_value = any_string
+      rc_file = File.join(ENV['HOME'],'.my_app.rc')
+      File.open(rc_file,'w') do |file|
+        file.puts "--switch --flag=#{@flag_value}"
+      end
+    }
+    When {
+      @code = lambda { go! }
+    }
+    Then {
+      assert_exits(0,&@code)
+      @switch.should == true
+      @flag.should == @flag_value
+    }
+
+  end
+
+  test_that "with an ill-formed rc file, we get a reasonable error message" do
+    Given app_to_use_rc_file
+    And {
+      @flag_value = any_string
+      rc_file = File.join(ENV['HOME'],'.my_app.rc')
+      File.open(rc_file,'w') do |file|
+        file.puts OpenStruct.new(:foo => :bar).to_yaml
+      end
+    }
+    When {
+      @code = lambda { go! }
+    }
+    Then {
+      assert_exits(64,&@code)
+    }
+
+  end
+
 private
+
+  def app_to_use_rc_file
+    lambda {
+      @switch = nil
+      @flag = nil
+      @args = nil
+      main do |*args|
+        @switch = options[:switch]
+        @flag = options[:flag]
+        @args = args
+      end
+
+      defaults_from_config_file '.my_app.rc'
+
+      on('--switch','Some Switch')
+      on('--flag FOO','Some Flag')
+    }
+  end
 
   def main_that_exits(exit_status)
     proc { main { exit_status } }

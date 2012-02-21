@@ -69,6 +69,7 @@ arg :app_name, :required, "Name of your app, which is used for the gem name and 
 version Methadone::VERSION
 
 defaults_from_env_var 'METHODONE_OPTS'
+defaults_from_config_file '.methadone.rc'
 
 go!
 
