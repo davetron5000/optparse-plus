@@ -1,4 +1,4 @@
-# UI
+# Tutorial: UI
 
 We're taking an [outside-in][outsidein] approach to our app.  This means that we start with the user interface, and work our way
 down to make that interface a reality.  I highly recommend this approach, since it forces you to focus on the user of your app
@@ -87,18 +87,11 @@ Tasks: TOP => features
 (See full trace by running task with --trace)
 ```
 
-We have a failing test!  Note that cucumber knows about all of these steps; between Aruba and Metahdone, they are all already
-defined.  We'll see some custom steps later, that are specific to our app, but for now, we haven't had to write any testing code,
-which is great!
+We have a failing test!  Note that cucumber knows about all of these steps; between Aruba and Metahdone, they are all already defined.  We'll see some custom steps later, that are specific to our app, but for now, we haven't had to write any testing code, which is great!
   
-You'll also notice that some steps are already passing, despite the fact that we've done no coding.  Also notice that
-cucumber didn't complain about unknown steps.  Methadone provides almost all of these cucumber steps for us.  The rest are
-provided by Aruba.  Since Methadone generated an executable for us when we ran the `methadone` command, it already provides the
-ability to get help, and exits with the correct exit status.
+You'll also notice that some steps are already passing, despite the fact that we've done no coding.  Also notice that cucumber didn't complain about unknown steps.  Methadone provides almost all of these cucumber steps for us.  The rest are provided by Aruba.  Since Methadone generated an executable for us when we ran the `methadone` command, it already provides the ability to get help, and exits with the correct exit status.
 
-Let's fix things one step at a time, so we can see exactly what we need to do.  The current scenario is failing because our app
-doesn't have a one line summary.  This summary is important so that we can remember what the app does later on (despite how
-clever our name is, it's likely we'll forget a few months from now and the description will jog our memory).
+Let's fix things one step at a time, so we can see exactly what we need to do.  The current scenario is failing because our app doesn't have a one line summary.  This summary is important so that we can remember what the app does later on (despite how clever our name is, it's likely we'll forget a few months from now and the description will jog our memory).
 
 Let's have a look at our executable.  A Methadone app is made up of four parts: the setup where we require necessary libraries, a "main" block containing the primary logic of our code, a block of code that declares the app's UI, and a call to `go!`, which runs our app.
 
@@ -230,9 +223,7 @@ We got farther this time.  Our step for checking that we have a one-line summary
 
 The call to Methadone's `version` method ensures that the version of our app appears in the online help.  The other step, "And the banner should document that this app takes options" passes because we are allowing Methadone to manage the banner.  Methadone knows that our app takes options (namely `--version`), and inserts the string `"[options]"` into the usage statement.
 
-The last step in our scenario is still failing, so let's fix that to finish up our user interface.
-What Methadone is looking for is for the string `repo_url` (the name of our only,
-required, argument) to be in the usage string, in other words, Methadone is expecting to see this:
+The last step in our scenario is still failing, so let's fix that to finish up our user interface.  What Methadone is looking for is for the string `repo_url` (the name of our only, required, argument) to be in the usage string, in other words, Methadone is expecting to see this:
 
 ```
 Usage: fullstop [option] repo_url
@@ -244,9 +235,7 @@ Right now, our app's usage string looks like this:
 Usage: fullstop [option]
 ```
 
-Again, if we were using `OptionParser`, we would need to modify the argument given to `banner` to include this string.  Methadone
-provides a method, `arg` that will do this automatically for us.  We'll add it right after the call to `description` in the
-"declare UI" section of our app:
+Again, if we were using `OptionParser`, we would need to modify the argument given to `banner` to include this string.  Methadone provides a method, `arg` that will do this automatically for us.  We'll add it right after the call to `description` in the "declare UI" section of our app:
 
 ```ruby
 #!/usr/bin/env ruby
@@ -340,9 +329,7 @@ $ echo $?
 
 We see an error message, and exited nonzero (64 is a somewhat standard exit code for errors in command-line invocation).
 
-It's also worth pointing out that Methadone is taking a very light touch.  We could completely re-implement `bin/fullstop` using
-`OptionParser` and still have our scenario pass.  As we'll see, few of Methadone's parts really rely on each other, and many can
-be used piecemeal, if that's what you want.
+It's also worth pointing out that Methadone is taking a very light touch.  We could completely re-implement `bin/fullstop` using `OptionParser` and still have our scenario pass.  As we'll see, few of Methadone's parts really rely on each other, and many can be used piecemeal, if that's what you want.
 
 Now that we have our UI, the next order of business is to actually implement something.
 

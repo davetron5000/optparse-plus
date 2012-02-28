@@ -17,7 +17,7 @@ Installing ri documentation for methadone-1.0.0...
 Installing RDoc documentation for methadone-1.0.0...
 ```
 
-Methadone comes bundled with a command-linen app that will do the bootstrapping:
+Methadone comes bundled with a command-line app that will do the bootstrapping:
 
 ```sh
 $ methadone --help
@@ -120,9 +120,7 @@ from bin/fullstop:5:in `<main>'
 
 Oops!  What happened?  
 
-Methadone is encouraging you to develop your app with best practices, and one such practice is to not have
-your executables mess with the load path.  In many Ruby command-line applications, you'll see code like this at the top of the
-file:
+Methadone is encouraging you to develop your app with best practices, and one such practice is to not have your executables mess with the load path.  In many Ruby command-line applications, you'll see code like this at the top of the file:
 
 ```ruby
 $: << File.join(File.dirname(__FILE__),'..','lib')

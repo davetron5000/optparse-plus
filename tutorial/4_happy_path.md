@@ -14,19 +14,13 @@ We'll append this to `features/fullstop.feature`:
     And the files in "~/dotfiles" should be symlinked in my home directory
 ```
 
-Basically, what we're doing is assuming a git repository in `/tmp/dotfiles.git`, which we then expect `fullstop` to clone,
-followed by symlinking the contents to our home directory.  There is, however, a slight problem.
+Basically, what we're doing is assuming a git repository in `/tmp/dotfiles.git`, which we then expect `fullstop` to clone, followed by symlinking the contents to our home directory.  There is, however, a slight problem.
 
-Suppose we make this scenario pass.  This means that *every* time we run this scenario, our dotfiles in our *actual* home
-directory will be blown away.  Yikes!  We don't want that; we want our test as isolated as it can be.  What we'd like is to work
-in a home directory that, from the perspective of our cucumber tests, is not our home directory and completely under the conrol
-of the tests but, from the perspective of the `fullstop` app, is the user's bona-fide home directory.
+Suppose we make this scenario pass.  This means that *every* time we run this scenario, our dotfiles in our *actual* home directory will be blown away.  Yikes!  We don't want that; we want our test as isolated as it can be.  What we'd like is to work in a home directory that, from the perspective of our cucumber tests, is not our home directory and completely under the conrol of the tests but, from the perspective of the `fullstop` app, is the user's bona-fide home directory.
 
-We can easily fake this by changing the environment variable `$HOME` just for the tests.  As long as `bin/fullstop` uses this
-environment variable to access the user's home directory (which is perfectly valid), everything will be OK.
+We can easily fake this by changing the environment variable `$HOME` just for the tests.  As long as `bin/fullstop` uses this environment variable to access the user's home directory (which is perfectly valid), everything will be OK.
 
-To do that, we need to modify some of cucumber's plumbing.  Methadone won't do this for you, since it's not applicable to every
-situation or app.  Open up `features/support/env.rb`.  It should look like this:
+To do that, we need to modify some of cucumber's plumbing.  Methadone won't do this for you, since it's not applicable to every situation or app.  Open up `features/support/env.rb`.  It should look like this:
 
 ```ruby
 require 'aruba/cucumber'
@@ -47,10 +41,7 @@ After do
 end
 ```
 
-There's a lot in there already to make our tests work and, fortunately, it makes our job of faking the home directory a bit
-easier.  We need to save the original location in `Before`, and then change it there, setting it back to normal in `After`, just
-as we have done with the `$RUBYLIB` environment variable (incidentally, this is how Aruba can run our app without using `bundle
-exec`).
+There's a lot in there already to make our tests work and, fortunately, it makes our job of faking the home directory a bit easier.  We need to save the original location in `Before`, and then change it there, setting it back to normal in `After`, just as we have done with the `$RUBYLIB` environment variable (incidentally, this is how Aruba can run our app without using `bundle exec`).
 
 ```ruby
 require 'aruba/cucumber'
@@ -128,10 +119,7 @@ Then /^the files in "([^"]*)" should be symlinked in my home directory$/ do |arg
 end
 ```
 
-As you can see there are three steps that cucumber doesn't know how to execute.  It provides boilerplate for doing so, so let's
-do that next.  We're going to move a bit faster here, since the specifics of implementing cucumber steps is orthogonal to
-Methadone, and we don't want to stray too far from our goal of learning Methadone.  If you'd like
-to explore this in more detail, check out the testing chapter of [my book][clibook].
+As you can see there are three steps that cucumber doesn't know how to execute.  It provides boilerplate for doing so, so let's do that next.  We're going to move a bit faster here, since the specifics of implementing cucumber steps is orthogonal to Methadone, and we don't want to stray too far from our goal of learning Methadone.  If you'd like to explore this in more detail, check out the testing chapter of [my book][clibook].
 
 [clibook]: http://www.awesomecommandlineapps.com
 
@@ -239,31 +227,16 @@ It's a bit hard to understand *why* it's failing, but the error message and line
 File.exist?(dotfiles_dir).should == true
 ```
 
-Since `dotfiles_dir` is `~/dotfiles` (or, more specifically, `File.join(ENV['HOME'],'dotfiles')`), and it doesn't exist, since we
-haven't written any code that might cause it to exist, the test fails.  Although it's outside the scope of this tutorial, you
-should consider writing some custom RSpec matchers for your assertions, since they can allow you to produce better failure
-messages.
-
-Now that we have a failing test, we can start writing some code.  This is the first bit of actual logic we'll write, and we need
-to revisit the canonical structure of a Methadone app to know where to put it.
-
+Since `dotfiles_dir` is `~/dotfiles` (or, more specifically, `File.join(ENV['HOME'],'dotfiles')`), and it doesn't exist, since we haven't written any code that might cause it to exist, the test fails.  Although it's outside the scope of this tutorial, you should consider writing some custom RSpec matchers for your assertions, since they can allow you to produce better failure messages.
+Now that we have a failing test, we can start writing some code.  This is the first bit of actual logic we'll write, and we need to revisit the canonical structure of a Methadone app to know where to put it.
 Recall that the second part of our app is the "main" block, and it's intended to hold the primary logic of your application.  Methadone provides the method `main`, which lives in `Methadone::Main`, and takes a block.  This block is where you put your logic.  Think of it like the `main` method of a C program.
-
-Now that we know where to put our code, we need to know *what* code we need to add.  To make this step pass, we need to clone the
-repo given to us on the command-line.  To do that we need:
-
+Now that we know where to put our code, we need to know *what* code we need to add.  To make this step pass, we need to clone the repo given to us on the command-line.  To do that we need:
 * The ability to execute `git`
 * The ability to change to the user's home directory
 * Access to the repo's URL from the command line
+Although we can use `system` or the backtick operator to call `git`, we're going to use `sh`, which is available by mixing in `Methadone::SH`.  We'll go into the advantages of why we might want to do that later in the tutorial, but for now, think of it as saving us a few characters over `system`.
 
-Although we can use `system` or the backtick operator to call `git`, we're going to use `sh`, which is available by mixing in
-`Methadone::SH`.  We'll go into the advantages of why we might want to do that later in the tutorial, but for now, think of it as
-saving us a few characters over `system`.
-
-We can change to the user's home directory using the `chdir` method of `Dir`, which is built-in to Ruby.  To get the value of the
-URL the user provided on the command-line, we could certainly take it from `ARGV`, but Methadone allows you `main` block to take
-arguments, which it will populate with the contents of `ARGV`.  All we need to do is change our `main` block to accept `repo_url`
-as an argument.
+We can change to the user's home directory using the `chdir` method of `Dir`, which is built-in to Ruby.  To get the value of the URL the user provided on the command-line, we could certainly take it from `ARGV`, but Methadone allows you `main` block to take arguments, which it will populate with the contents of `ARGV`.  All we need to do is change our `main` block to accept `repo_url` as an argument.
 
 Here's the code:
 
@@ -304,8 +277,7 @@ class App
 end
 ```
 
-Note that all we're doing here is getting the currently-failing step to pass.  We *aren't* implementing the entire app.  We want
-to write only the code we need to, and we go one step at a time.  Let's re-run our scenario and see if we get farther:
+Note that all we're doing here is getting the currently-failing step to pass.  We *aren't* implementing the entire app.  We want to write only the code we need to, and we go one step at a time.  Let's re-run our scenario and see if we get farther:
 
 ```sh
 rake features
@@ -357,10 +329,7 @@ We're now failing at the next step:
 And the files in "~/dotfiles" should be symlinked in my home directory
 ```
 
-The error, "No such file or directory - .vimrc", is being raised from `File.lstat` (as opposed to an explicit test failure).
-This is enough to allow us to write some more code.  What we need to do know is iterate over the files in the cloned repo and
-symlink them to the user's home directory.  The tools to do this are already available to use via the built-in Ruby library
-`FileUtils`.  We'll require it and implement the symlinking logic:
+The error, "No such file or directory - .vimrc", is being raised from `File.lstat` (as opposed to an explicit test failure).  This is enough to allow us to write some more code.  What we need to do know is iterate over the files in the cloned repo and symlink them to the user's home directory.  The tools to do this are already available to use via the built-in Ruby library `FileUtils`.  We'll require it and implement the symlinking logic:
 
 ```ruby
 #!/usr/bin/env ruby
@@ -433,5 +402,4 @@ Feature: Checkout dotfiles
 0m0.396s
 ```
 
-Everything passed!  Our app now works for the "happy path".  As long as the user starts from a clean home directory, `fullstop`
-will clone their dotfiles, and setup symlinks to them in their home directory.  Now that we have the basics of our app running, we'll see how Methadone makes it easy to add new features.
+Everything passed!  Our app now works for the "happy path".  As long as the user starts from a clean home directory, `fullstop` will clone their dotfiles, and setup symlinks to them in their home directory.  Now that we have the basics of our app running, we'll see how Methadone makes it easy to add new features.

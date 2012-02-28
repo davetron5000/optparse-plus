@@ -1,8 +1,9 @@
 # Adding Features
 
 Our command-line app isn't very interesting at this point; it's more of a glorified shell script.  Where Ruby and Methadone
-really shine is when things start getting complex.  There's a lot of features we can add and error cases we can handle, for
-example:
+really shine is when things start getting complex.  
+
+There's a lot of features we can add and error cases we can handle, for example:
 
 * The app will blow up if the git repo is already cloned
 * The app might blow up if the files are already symlinked
@@ -180,7 +181,8 @@ on("--force","Force overwriting of existing files")
 on("-d DIR","--checkout-dir","Set the location of the checkout dir")
 ```
 
-That's it!  14 lines become 3.  When `main` executes, the following keys in `options` will be available:
+That's it!  14 lines become 3.  
+When `main` executes, the following keys in `options` will be available:
 
 * `"force"` - true if the user specified `--force`
 * `:force` - the same
@@ -375,9 +377,7 @@ Tasks: TOP => features
 (See full trace by running task with --trace)
 ```
 
-We're failing because the new file we added to our repo after the initial clone can't be found.  It's likely that our second
-clone failed, but we didn't notice, because we aren't checking.  If we run our app manually, we can see that errors are flying,
-but we're ignoring them: 
+We're failing because the new file we added to our repo after the initial clone can't be found.  It's likely that our second clone failed, but we didn't notice, because we aren't checking.  If we run our app manually, we can see that errors are flying, but we're ignoring them: 
 
 ```sh
 $ HOME=/tmp/fake-home bundle exec bin/fullstop file:///tmp/dotfiles.git
@@ -390,10 +390,7 @@ $ echo $?
 70
 ```
 
-We can see that error output is being produced from `git`, but we're ignoring it.  `fullstop` fails later in the process when we
-ask it to symlink files that already exist.  This is actually a bug, so let's take a short detour and fix
-this problem.  When doing TDD, it's important to know how your app is failing, so you can be confident that the code you are
-about to write fixes the correct failing in the existing app.
+We can see that error output is being produced from `git`, but we're ignoring it.  `fullstop` fails later in the process when we ask it to symlink files that already exist.  This is actually a bug, so let's take a short detour and fix this problem.  When doing TDD, it's important to know how your app is failing, so you can be confident that the code you are about to write fixes the correct failing in the existing app.
 
 We'll write a scenario to reveal the bug:
 
@@ -465,9 +462,7 @@ Tasks: TOP => features
 (See full trace by running task with --trace)
 ```
 
-It looks like `fullstop` is writing log messages.  It is, and we'll talk about that more later, but right now, we need to focus
-on the fact that we aren't producing the error message we expect.  Let's modify `bin/fullstop` to check that the call to `git`
-succeeded.  `sh` returns the exit status of the command it calls, so we can use that to fix things.
+It looks like `fullstop` is writing log messages.  It is, and we'll talk about that more later, but right now, we need to focus on the fact that we aren't producing the error message we expect.  Let's modify `bin/fullstop` to check that the call to `git` succeeded.  `sh` returns the exit status of the command it calls, so we can use that to fix things.
 
 Here's the changes we'll make to `bin/fullstop` to check for this:
 
@@ -566,10 +561,7 @@ Feature: Checkout dotfiles
 0m0.789s
 ```
 
-Note that there is a companion method to `sh`, called `sh!` that will throw an exception if the underlying command it calls
-fails.  In a Methadone app, any unhandled exception will trigger a nonzero exit from the app, and show the user the message of
-the exception that caused the exit.  We can customize the message of the exception thrown from `sh!`, and thus our change
-to our app could also be implemented like so:
+Note that there is a companion method to `sh`, called `sh!` that will throw an exception if the underlying command it calls fails.  In a Methadone app, any unhandled exception will trigger a nonzero exit from the app, and show the user the message of the exception that caused the exit.  We can customize the message of the exception thrown from `sh!`, and thus our change to our app could also be implemented like so:
 
 ```ruby
 main do |repo_url|
@@ -591,8 +583,7 @@ Which method to use is purely stylistic and up to you.
 
 NOW, we can get back to the `--force` flag.  We're going to change our scenario a bit, as well.  Instead of using "When I run `fullstop --force file:///tmp/dotfiles.git`" we'll use "When I successfully run `fullstop --force file:///tmp/dotfiles.git`", which will fail if the app exits nonzero.  This will cause our scenario to fail earlier.
 
-To fix this, we'll change the code in `bin/fullstop` so that if the user specified `--force`, we'll delete the directory before we
-clone.  We'll also need to delete the files that were symlinked in the home directory as well.
+To fix this, we'll change the code in `bin/fullstop` so that if the user specified `--force`, we'll delete the directory before we clone.  We'll also need to delete the files that were symlinked in the home directory as well.
 
 ```ruby
 #!/usr/bin/env ruby
