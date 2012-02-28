@@ -84,7 +84,9 @@ module Methadone
     #     go!
     #
     def use_log_level_option
-      on("--log-level LEVEL",LOG_LEVELS,"Set the logging level (#{LOG_LEVELS.keys.join('|')})","(Default: info)") do |level|
+      on("--log-level LEVEL",LOG_LEVELS,'Set the logging level',
+                                        '(' + LOG_LEVELS.keys.join('|') + ')',
+                                        '(Default: info)') do |level|
         @log_level = level
         logger.level = level
       end

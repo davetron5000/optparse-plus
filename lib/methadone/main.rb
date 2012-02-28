@@ -280,7 +280,9 @@ module Methadone
         opts.separator 'Default values can be placed in:'
         opts.separator ''
         opts.separator "    #{@env_var} environment variable, as a String of options"
-        opts.separator "    #{@rc_file} with contents either a String of options or a YAML-encoded Hash"
+        opts.separator "    #{@rc_file} with contents either a String of options "
+        spaces = (0..@rc_file.length).reduce('') { |a,_| a << ' ' }
+        opts.separator "    #{spaces}or a YAML-encoded Hash"
       elsif @env_var
         opts.separator ''
         opts.separator "Default values can be placed in the #{@env_var} environment variable"
