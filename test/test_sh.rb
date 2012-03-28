@@ -115,7 +115,7 @@ class TestSH < Clean::Test::TestCase
       use_capturing_logger
       @command = test_command("foo")
       @block_called = false
-    }
+    } 
     When {
       @exit_code = sh @command do
         @block_called = true
@@ -219,7 +219,11 @@ class TestSH < Clean::Test::TestCase
 
     def run_command(command)
       @command = command
-      [any_string,any_string,OpenStruct.new(:exitstatus => @exit_code)]
+      if @exitcode.kind_of? Fixnum
+        [any_string,any_string,OpenStruct.new(:exitstatus => @exitcode)]
+      else
+        [any_string,any_string,@exitcode]
+      end
     end
 
     def exception_meaning_command_not_found
@@ -251,7 +255,35 @@ class TestSH < Clean::Test::TestCase
     }
     Then {
       @app.strategy.command.should == @command
-      @results.should == @exitstatus
+      @results.should == @exit_code
+    }
+  end
+
+  test_that "when the execution strategy returns a non-int, but truthy value, it gets coerced into a 0" do
+    Given {
+      @app = MyExecutionStrategyApp.new(true)
+      @command = "ls"
+    }
+    When {
+      @results = @app.sh(@command)
+    }
+    Then {
+      @app.strategy.command.should == @command
+      @results.should == 0
+    }
+  end
+
+  test_that "when the execution strategy returns a non-int, but falsey value, it gets coerced into a 1" do
+    Given {
+      @app = MyExecutionStrategyApp.new(false)
+      @command = "ls"
+    }
+    When {
+      @results = @app.sh(@command)
+    }
+    Then {
+      @app.strategy.command.should == @command
+      @results.should == 1
     }
   end
 

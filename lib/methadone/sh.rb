@@ -91,6 +91,7 @@ module Methadone
       sh_logger.debug("Executing '#{command}'")
 
       stdout,stderr,status = execution_strategy.run_command(command)
+      status = clean_status(status)
 
       sh_logger.warn("Error output of '#{command}': #{stderr}") unless stderr.strip.length == 0
 
@@ -155,6 +156,15 @@ module Methadone
     end
 
   private 
+
+    def clean_status(status)
+      # In wierd cases, we get a "true" back from run_command instead of a Process::Status
+      if status.respond_to? :exitstatus
+        status
+      else
+        OpenStruct.new(:exitstatus => status ? 0 : 1)
+      end
+    end
 
     def exception_meaning_command_not_found
       execution_strategy.exception_meaning_command_not_found
