@@ -2,7 +2,12 @@ if RUBY_PLATFORM == 'java'
   require 'java'
   require 'ostruct'
 elsif RUBY_VERSION =~ /^1.8/
+  begin
   require 'open4'
+  rescue LoadError
+    STDERR.puts "!! For Ruby #{RUBY_VERSION}, the open4 library must be installed"
+    raise
+  end
 else
   require 'open3'
 end
