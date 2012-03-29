@@ -12,6 +12,8 @@ else
   require 'open3'
 end
 
+require 'methadone/process_status'
+
 module Methadone
   # Module with various helper methods for executing external commands.
   # In most cases, you can use #sh to run commands and have decent logging
@@ -71,10 +73,15 @@ module Methadone
     # error output is logged at WARN.
     #
     # command:: the command to run
-    # block:: if provided, will be called if the command exited nonzero.  The block may take 0, 1, or 2 arguments.
-    #         The arguments provided are the standard output as a string and the standard error as a string,
+    # options:: options to control the call. Currently responds to:
+    #           +:expected+:: an Int or Array of Int representing error codes, <b>in addition to 0</b> that are
+    #                         expected and therefore constitute success.  Useful for commands that don't use
+    #                         exit codes the way you'd like
+    # block:: if provided, will be called if the command exited nonzero.  The block may take 0, 1, 2, or 3 arguments.
+    #         The arguments provided are the standard output as a string, standard error as a string, and
+    #         the exitstatus as an Int.
     #         You should be safe to pass in a lambda instead of a block, as long as your
-    #         lambda doesn't take more than two arguments
+    #         lambda doesn't take more than three arguments
     #
     # Example
     #
@@ -87,23 +94,23 @@ module Methadone
     #     end
     #
     # Returns the exit status of the command.  Note that if the command doesn't exist, this returns 127.
-    def sh(command,&block)
+    def sh(command,options={},&block)
       sh_logger.debug("Executing '#{command}'")
 
       stdout,stderr,status = execution_strategy.run_command(command)
-      status = clean_status(status)
+      process_status = Methadone::ProcessStatus.new(status,options[:expected])
 
       sh_logger.warn("Error output of '#{command}': #{stderr}") unless stderr.strip.length == 0
 
-      if status.exitstatus != 0
+      if process_status.success?
+        sh_logger.debug("Output of '#{command}': #{stdout}") unless stdout.strip.length == 0
+        call_block(block,stdout,stderr,process_status.exitstatus) unless block.nil?
+      else
         sh_logger.info("Output of '#{command}': #{stdout}") unless stdout.strip.length == 0
         sh_logger.warn("Error running '#{command}'")
-      else
-        sh_logger.debug("Output of '#{command}': #{stdout}") unless stdout.strip.length == 0
-        call_block(block,stdout,stderr) unless block.nil?
       end
 
-      status.exitstatus
+      process_status.exitstatus
     rescue exception_meaning_command_not_found => ex
       sh_logger.error("Error running '#{command}': #{ex.message}")
       127
@@ -113,6 +120,7 @@ module Methadone
     # Otherwise, behaves exactly like #sh.
     #
     # options - options hash, responding to:
+    #           <tt>:expected</tt>:: same as for #sh
     #           <tt>:on_fail</tt>:: a custom error message.  This allows you to have your
     #                               app exit on shell command failures, but customize the error
     #                               message that they see.
@@ -126,8 +134,11 @@ module Methadone
     #     sh!("rsync foo bar", :on_fail => "Couldn't rsync, check log for details")
     #     # => if command fails, app exits and user sees: "error: Couldn't rsync, check log for details
     def sh!(command,options={},&block)
-      sh(command,&block).tap do |exitstatus|
-        raise Methadone::FailedCommandError.new(exitstatus,command,options[:on_fail]) if exitstatus != 0
+      sh(command,options,&block).tap do |exitstatus|
+        process_status = Methadone::ProcessStatus.new(exitstatus,options[:expected])
+        unless process_status.success?
+          raise Methadone::FailedCommandError.new(exitstatus,command,options[:on_fail]) 
+        end
       end
     end
 
@@ -157,15 +168,6 @@ module Methadone
 
   private 
 
-    def clean_status(status)
-      # In wierd cases, we get a "true" back from run_command instead of a Process::Status
-      if status.respond_to? :exitstatus
-        status
-      else
-        OpenStruct.new(:exitstatus => status ? 0 : 1)
-      end
-    end
-
     def exception_meaning_command_not_found
       execution_strategy.exception_meaning_command_not_found
     end
@@ -191,15 +193,17 @@ module Methadone
     end
 
     # Safely call our block, even if the user passed in a lambda
-    def call_block(block,stdout,stderr)
+    def call_block(block,stdout,stderr,exitstatus)
       # blocks that take no arguments have arity -1.  Or 0.  Ugh.
       if block.arity > 0
         case block.arity
         when 1 
           block.call(stdout)
+        when 2
+          block.call(stdout,stderr)
         else
           # Let it fail for lambdas
-          block.call(stdout,stderr)
+          block.call(stdout,stderr,exitstatus)
         end
       else
         block.call

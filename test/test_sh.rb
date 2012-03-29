@@ -108,6 +108,30 @@ class TestSH < Clean::Test::TestCase
         assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout)
       }
     end
+
+    test_that "#{method}, when the command succeeds and given a block of three arguments, calls the block with the stdout, stderr, and exit code" do
+      Given {
+        use_capturing_logger
+        @command = test_command
+        @block_called = false
+        @stdout_received = nil
+        @stderr_received = nil
+        @exitstatus_received = nil
+      }
+      When {
+        @exit_code = self.send(method,@command) do |stdout,stderr,exitstatus|
+          @stdout_received = stdout
+          @stderr_received = stderr
+          @exitstatus_received = exitstatus
+        end
+      }
+      Then {
+        @stdout_received.should == test_command_stdout
+        @stderr_received.length.should == 0
+        @exitstatus_received.should == 0
+        assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout)
+      }
+    end
   end
 
   test_that "sh, when the command fails and given a block, doesn't call the block" do
@@ -125,6 +149,50 @@ class TestSH < Clean::Test::TestCase
       @exit_code.should == 1
       assert_logger_output_for_failure(@logger,@command,test_command_stdout,test_command_stderr)
     }
+  end
+
+  test_that "sh, when the command fails with an unexpected status, and given a block, doesn't call the block" do
+    Given {
+      use_capturing_logger
+      @command = test_command("foo")
+      @block_called = false
+    } 
+    When {
+      @exit_code = sh @command, :expected => [2] do
+        @block_called = true
+      end
+    }
+    Then {
+      @exit_code.should == 1
+      assert_logger_output_for_failure(@logger,@command,test_command_stdout,test_command_stderr)
+    }
+  end
+
+  [1,[1],[1,2]].each do |expected|
+    [:sh,:sh!].each do |method|
+      test_that "#{method}, when the command fails with an expected error code (using syntax #{expected}/#{expected.class}), treats it as success" do
+        Given {
+          use_capturing_logger
+          @command = test_command("foo")
+          @block_called = false
+          @exitstatus_received = nil
+        } 
+        When {
+          @exit_code = self.send(method,@command,:expected => expected) do |_,_,exitstatus|
+            @block_called = true
+            @exitstatus_received = exitstatus
+          end
+        }
+        Then {
+          @exit_code.should == 1
+          @block_called.should == true
+          @exitstatus_received.should == 1
+          @logger.debugs[0].should == "Executing '#{test_command}foo'"
+          @logger.debugs[1].should == "Output of '#{test_command}foo': #{test_command_stdout}"
+          @logger.warns[0].should == "Error output of '#{test_command}foo': #{test_command_stderr}"
+        }
+      end
+    end
   end
 
   test_that "sh runs a command that will fail and logs about it" do
@@ -308,6 +376,7 @@ private
     change_logger(@logger)
   end
 
+  # Runs the test command which exits with the length of ARGV/args
   def test_command(args='')
     File.join(File.dirname(__FILE__),'command_for_tests.rb') + ' ' + args
   end
