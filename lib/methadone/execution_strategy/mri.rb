@@ -1,5 +1,7 @@
 module Methadone
   module ExecutionStrategy
+    # <b>Methadone Internal - treat as private</b>
+    #
     # Base strategy for MRI rubies.
     class MRI < Base
       def run_command(command)

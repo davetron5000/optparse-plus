@@ -1,6 +1,8 @@
 require 'erb'
 
 module Methadone
+  # <b>Methadone Internal - treat as private</b>
+  #
   # Stuff to implement methadone's CLI app.  These
   # stuff isn't generally for your use and it's not
   # included when you require 'methadone'

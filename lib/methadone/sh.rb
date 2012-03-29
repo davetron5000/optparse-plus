@@ -36,23 +36,23 @@ module Methadone
   #    sh! 'cp non_existent_file.txt /nowhere_good'
   #    # => same as above, EXCEPT, raises a Methadone::FailedCommandError
   #
-  #     sh 'cp foo.txt /tmp' do
-  #       # Behaves exactly as before, but this block is called after
-  #     end
+  #    sh 'cp foo.txt /tmp' do
+  #      # Behaves exactly as before, but this block is called after
+  #    end
   #
-  #     sh 'cp non_existent_file.txt /nowhere_good' do
-  #       # This block isn't called, since the command failed
-  #     end
+  #    sh 'cp non_existent_file.txt /nowhere_good' do
+  #      # This block isn't called, since the command failed
+  #    end
   #
-  #     sh 'ls -l /tmp/' do |stdout|
-  #       # stdout contains the output of the command
+  #    sh 'ls -l /tmp/' do |stdout|
+  #      # stdout contains the output of the command
+  #    end
+  #    sh 'ls -l /tmp/ /non_existent_dir' do |stdout,stderr|
+  #      # stdout contains the output of the command,
+  #      # stderr contains the standard error output.
   #     end
-  #     sh 'ls -l /tmp/ /non_existent_dir' do |stdout,stderr|
-  #       # stdout contains the output of the command,
-  #       # stderr contains the standard error output.
-  #      end
   #    
-  # == Handling remote execution
+  # == Handling process execution
   #
   # In order to work on as many Rubies as possible, this class defers the actual execution
   # to an execution strategy.  See #set_execution_strategy if you think you'd like to override
@@ -74,7 +74,7 @@ module Methadone
     #
     # command:: the command to run
     # options:: options to control the call. Currently responds to:
-    #           +:expected+:: an Int or Array of Int representing error codes, <b>in addition to 0</b> that are
+    #           +:expected+:: an Int or Array of Int representing error codes, <b>in addition to 0</b>, that are
     #                         expected and therefore constitute success.  Useful for commands that don't use
     #                         exit codes the way you'd like
     # block:: if provided, will be called if the command exited nonzero.  The block may take 0, 1, 2, or 3 arguments.
@@ -119,7 +119,7 @@ module Methadone
     # Run a command, throwing an exception if the command exited nonzero.
     # Otherwise, behaves exactly like #sh.
     #
-    # options - options hash, responding to:
+    # options:: options hash, responding to:
     #           <tt>:expected</tt>:: same as for #sh
     #           <tt>:on_fail</tt>:: a custom error message.  This allows you to have your
     #                               app exit on shell command failures, but customize the error
@@ -155,8 +155,12 @@ module Methadone
     # Set the strategy to use for executing commands.  In general, you don't need to set this
     # since this module chooses an appropriate implementation based on your Ruby platform:
     #
-    # 1.8 Rubies, including 1.8, and REE:: Open4 is used via Methadone::ExecutionStrategy::Open_4
-    # Rubinius:: Open4 is used, but we handle things a bit differently; see Methadone::ExecutionStrategy::RBXOpen_4
+    # 1.8 Rubies, including 1.8, and REE:: Open4 is used via Methadone::ExecutionStrategy::Open_4. <b><tt>open4</tt> will not be
+    #                                      installed as a dependency</b>.  RubyGems doesn't allow conditional dependencies, 
+    #                                      so make sure that your app declares it as a dependency if you think you'll be 
+    #                                      running on 1.8 or REE.
+    # Rubinius:: Open4 is used, but we handle things a bit differently; see Methadone::ExecutionStrategy::RBXOpen_4.
+    #            Same warning on dependencies applies.
     # JRuby:: Use JVM calls to +Runtime+ via Methadone::ExecutionStrategy::JVM
     # Windows:: Currently no support for Windows
     # All others:: we use Open3 from the standard library, via Methadone::ExecutionStrategy::Open_3

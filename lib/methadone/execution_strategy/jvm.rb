@@ -1,5 +1,7 @@
 module Methadone
   module ExecutionStrategy
+    # <b>Methadone Internal - treat as private</b>
+    #
     # Methadone::ExecutionStrategy for the JVM that uses JVM classes to run the command and get its results.
     class JVM < Base
       def run_command(command)

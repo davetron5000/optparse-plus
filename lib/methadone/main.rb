@@ -105,6 +105,10 @@ module Methadone
     #
     # The block can accept any parameters, and unparsed arguments
     # from the command line will be passed.
+    #
+    # *Note*: #go! will modify +ARGV+ so any unparsed arguments that you do *not* declare as arguments
+    # to #main will essentially be unavailable.  I consider this a bug, and it should be changed/fixed in
+    # a future version.
     # 
     # To run this method, call #go!
     def main(&block)
@@ -116,7 +120,7 @@ module Methadone
     # Configure the auto-handling of StandardError exceptions caught
     # from calling go!.
     #
-    # leak - if true, go! will *not* catch StandardError exceptions, but instead
+    # leak:: if true, go! will *not* catch StandardError exceptions, but instead
     #        allow them to bubble up.  If false, they will be caught and handled as normal.
     #        This does *not* affect Methadone::Error exceptions; those will NOT leak through.
     def leak_exceptions(leak)
@@ -187,16 +191,33 @@ module Methadone
     #
     # Since, most of the time, this is all you want to do,
     # this makes it more expedient to do so.  The key that is
-    # is set in #options will be a symbol of the option name, without
-    # the dashes.  Note that if you use multiple option names, a key
+    # is set in #options will be a symbol <i>and string</i> of the option name, without
+    # the leading dashes.  Note that if you use multiple option names, a key
     # will be generated for each.  Further, if you use the negatable form,
     # only the positive key will be set, e.g. for <tt>--[no-]verbose</tt>,
     # only <tt>:verbose</tt> will be set (to true or false).
+    #
+    # As an example, this declaration:
+    #
+    #     opts.on("-f VALUE", "--flag")
+    #
+    # And this command-line invocation:
+    #
+    #     $ my_app -f foo
+    #
+    # Will result in all of these forms returning the String "foo":
+    # * <tt>options['f']</tt>
+    # * <tt>options[:f]</tt>
+    # * <tt>options['flag']</tt>
+    # * <tt>options[:flag]</tt>
+    #
+    # Further, any one of those keys can be used to determine the default value for the option.
     def opts
       @option_parser
     end
 
-    # Calls <tt>opts.on</tt> with the given arguments
+    # Calls the +on+ method of #opts with the given arguments (see RDoc for #opts for the additional
+    # help provided).
     def on(*args,&block)
       opts.on(*args,&block)
     end
@@ -231,6 +252,9 @@ module Methadone
     # parsed from the command line.  When you put values in here, if you do so
     # *before* you've declared your command-line interface via #on, the value
     # will be used in the docstring to indicate it is the default.
+    # You can use either a String or a Symbol and, after #go! is called and
+    # the command-line is parsed, the values will be available as both
+    # a String and a Symbol.
     #
     # Example
     #
@@ -253,10 +277,10 @@ module Methadone
     # banner.  This also adds --version as an option to your app which,
     # when used, will act just like --help
     #
-    # version - the current version of your app.  Should almost always be
+    # version:: the current version of your app.  Should almost always be
     #           YourApp::VERSION, where the module YourApp should've been generated
     #           by the bootstrap script
-    # custom_message - if provided, customized the message shown next to --version
+    # custom_message:: if provided, customized the message shown next to --version
     def version(version,custom_message='Show help/version info')
       opts.version(version)
       opts.on("--version",custom_message) do 
@@ -355,6 +379,8 @@ module Methadone
     end
   end
 
+  # <b>Methadone Internal - treat as private</b>
+  #
   # A proxy to OptionParser that intercepts #on
   # so that we can allow a simpler interface
   class OptionParserProxy < BasicObject

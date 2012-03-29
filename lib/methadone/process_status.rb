@@ -1,4 +1,6 @@
 module Methadone
+  # <b>Methadone Internal - treat as private</b>
+  #
   # A wrapper/enhancement of Process::Status that handles coersion and expected
   # nonzero statuses
   class ProcessStatus
@@ -18,6 +20,7 @@ module Methadone
       @success = ([0] + Array(expected)).include?(@exitstatus)
     end
 
+    # True if the exit status was a successul (i.e. expected) one.
     def success?
       @success
     end

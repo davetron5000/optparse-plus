@@ -22,6 +22,9 @@ module Methadone
   #         debug("Done doing it")
   #       end
   #     end
+  #
+  # Note that every class that mixes this in shares the *same logger instance*, so if you call #change_logger, this
+  # will change the logger for all classes that mix this in.  This is likely what you want.
   module CLILogging
 
     def self.included(k)
