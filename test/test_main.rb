@@ -209,6 +209,26 @@ class TestMain < BaseTest
     }
   end
 
+  test_that "when we help_now! we exit and show help" do
+    Given {
+      @message = any_sentence
+      main do
+        help_now!(@message)
+      end
+
+      opts.on("--switch") { options[:switch] = true }
+      opts.on("--flag FLAG") { |value| options[:flag] = value }
+
+      set_argv []
+    }
+
+    Then {
+      assert_exits(64) { When run_go! }
+      assert $stdout.string.include?(opts.to_s),"Expected #{$stdout.string} to contain #{opts.to_s}"
+      assert_logged_at_error @message
+    }
+  end
+
   test_that "opts allows us to more expediently set up OptionParser" do
     Given {
       @switch = nil

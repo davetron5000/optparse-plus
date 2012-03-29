@@ -21,5 +21,12 @@ module Methadone
         raise Methadone::Error.new(exit_code,message)
       end
     end
+
+    # Exit the program as if the user messed up the command-line invocation, providing
+    # them the message as well as printing the help.  This is useful if
+    # you have complex UI validation that can't be done by OptionParser.
+    def help_now!(message)
+      raise OptionParser::ParseError.new(message)
+    end
   end
 end

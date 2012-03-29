@@ -341,6 +341,8 @@ module Methadone
       raise ex if ENV['DEBUG']
       logger.error ex.message unless no_message? ex
       ex.exit_code
+    rescue OptionParser::ParseError
+      raise
     rescue => ex
       raise ex if ENV['DEBUG']
       raise ex if @leak_exceptions
