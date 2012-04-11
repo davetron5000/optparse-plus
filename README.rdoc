@@ -16,6 +16,12 @@ Toward that end, this gem provides:
 * Simplified zero-config logging that is a better-than-<tt>puts</tt> <tt>puts</tt>.
 * Cucumber Steps, built on Aruba, to allow you to test-drive your command-line app development.
 
+== Tutorial
+
+http://a1.mzstatic.com/us/r30/Publication/v4/2c/f7/90/2cf7902f-f709-9125-c73d-87311216527d/MethadoneTutorial.225x225-75.jpg
+
+{Tutorial for your iPad}[http://itunes.apple.com/us/book/kick-bash-habit-ruby-methadone/id515825242?ls=1] - This is a *free* iBooks interactive ebook that contains a step-by-step tutorial on making an awesome app with Methadone, including screencasts.
+
 == Links
 
 * {Source on Github}[http://github.com/davetron5000/methadone]
