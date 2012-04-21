@@ -89,7 +89,7 @@ module Methadone
     end
 
     def template_dirs_in(profile)
-      template_dir = template_dir(:full)
+      template_dir = template_dir(profile)
 
       Dir["#{template_dir}/**/*"].select { |x| 
         File.directory? x 
