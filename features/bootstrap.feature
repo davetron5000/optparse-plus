@@ -17,6 +17,8 @@ Feature: Bootstrap a new command-line app
       |tmp/newgem/features                  |
       |tmp/newgem/features/support          |
       |tmp/newgem/features/step_definitions |
+    Then the following directories should not exist:
+      |tmp/newgem/spec |
     And the following files should exist:
       |tmp/newgem/newgem.gemspec                            |
       |tmp/newgem/Rakefile                                  |

@@ -28,9 +28,19 @@ main do |app_name|
 
   template_dirs_in(:full).each  { |dir| mkdir_p dir }
 
-  ["Rakefile", ".gitignore", "test/tc_something.rb", "features/support/env.rb"].each do |file|
+  ["Rakefile", ".gitignore", "features/support/env.rb"].each do |file|
     copy_file file, :binding => binding
   end
+
+  if options[:rspec]
+    template_dirs_in(:rspec).each  { |dir| mkdir_p dir }
+    copy_file "spec/tc_something_spec.rb", :from => :rspec, :binding => binding
+
+  else
+    template_dirs_in(:test_unit).each  { |dir| mkdir_p dir }
+    copy_file "test/tc_something.rb", :from => :test_unit, :binding => binding
+  end
+
 
   license = options[:license]
   warn "warning: your app has no license" unless license
@@ -58,6 +68,7 @@ description "Kick the bash habit by bootstrapping your Ruby command-line apps"
 
 on("--force","Overwrite files if they exist")
 on("--[no-]readme","[Do not ]produce a README file")
+on("--rspec", "Generate RSpec unit tests instead of Test::Unit")
 
 licenses = %w(mit apache custom NONE)
 on("-l LICENSE","--license",licenses,"Specify the license for your project",'(' + licenses.join('|') + ')')
