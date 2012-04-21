@@ -26,3 +26,7 @@ Feature: Bootstrap a new command-line app using RSpec instead of Test::Unit
     """
     When I run `rake spec -I../../lib`
     Then the exit status should be 0
+    And the output should contain:
+    """
+    1 example, 0 failures
+    """
