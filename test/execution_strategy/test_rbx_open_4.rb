@@ -18,7 +18,7 @@ module ExecutionStrategy
         @klass = @strategy.exception_meaning_command_not_found
       }
       Then {
-        @klass.should == Errno::EINVAL
+        @klass.should == [Errno::EINVAL,Errno::ENOENT]
       }
     end
   end

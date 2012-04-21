@@ -111,7 +111,7 @@ module Methadone
       end
 
       process_status.exitstatus
-    rescue exception_meaning_command_not_found => ex
+    rescue *exception_meaning_command_not_found => ex
       sh_logger.error("Error running '#{command}': #{ex.message}")
       127
     end
