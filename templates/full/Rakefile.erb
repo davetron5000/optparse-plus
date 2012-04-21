@@ -1,6 +1,10 @@
 require 'bundler'
 require 'rake/clean'
+<% if rspec %>
+require 'rspec/core/rake_task'
+<% else %>
 require 'rake/testtask'
+<% end %>
 require 'cucumber'
 require 'cucumber/rake/task'
 gem 'rdoc' # we need the installed RDoc gem, not the system one
@@ -10,9 +14,16 @@ include Rake::DSL
 
 Bundler::GemHelper.install_tasks
 
+<% if rspec %>
+RSpec::Core::RakeTask.new do |t|
+  t.pattern = "./spec/*/_spec.rb" # don't need this, it's default.
+  # Put spec opts in a file named .rspec in root
+end
+<% else %>
 Rake::TestTask.new do |t|
   t.pattern = 'test/tc_*.rb'
 end
+<% end %>
 
 CUKE_RESULTS = 'results.html'
 CLEAN << CUKE_RESULTS
@@ -27,5 +38,8 @@ Rake::RDocTask.new do |rd|
   <% end %>
   rd.rdoc_files.include("README.rdoc","lib/**/*.rb","bin/**/*")
 end
-
+<% if rspec %>
+task :default => [:spec,:features]
+<% else %>
 task :default => [:test,:features]
+<% end %>

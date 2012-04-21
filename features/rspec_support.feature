@@ -14,3 +14,15 @@ Feature: Bootstrap a new command-line app using RSpec instead of Test::Unit
       |tmp/newgem/test                      |
     And the following files should exist:
       |tmp/newgem/spec/tc_something_spec.rb                 |
+    Given I cd to "tmp/newgem"
+    When I successfully run `rake -T -I../../lib`
+    Then the output should contain:
+    """
+    rake spec          # Run RSpec code examples
+    """
+    And the output should not contain:
+    """
+    rake test          # Run tests
+    """
+    When I run `rake spec -I../../lib`
+    Then the exit status should be 0
