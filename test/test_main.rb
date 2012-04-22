@@ -576,7 +576,40 @@ class TestMain < BaseTest
     }
   end
 
-  test_that "we can get defaults from a config file if it's specified" do
+  test_that "environment args correctly handle spaces" do
+    Given app_to_use_environment
+    And {
+      @flag_value = any_string + ' ' + any_string
+      ENV['APP_OPTS'] = "--switch --flag='#{@flag_value}'"
+    }
+    When {
+      @code = lambda { go! }
+    }
+    Then {
+      assert_exits(0,'',&@code)
+      @switch.should == true
+      @flag.should == @flag_value
+    }
+  end
+
+  test_that "environment args correctly handle spaces via backslash stuff" do
+    Given app_to_use_environment
+    And {
+      cli_flag_value = any_string(:max => 4) + "\\ " + any_string(:max => 4)
+      @flag_value = cli_flag_value.gsub("\\ "," ")
+      ENV['APP_OPTS'] = "--switch --flag=#{cli_flag_value}"
+    }
+    When {
+      @code = lambda { go! }
+    }
+    Then {
+      assert_exits(0,'',&@code)
+      @switch.should == true
+      @flag.should == @flag_value
+    }
+  end
+
+  test_that "we can get defaults from a YAML config file if it's specified" do
     Given app_to_use_rc_file
     And {
       @flag_value = any_string
@@ -616,7 +649,7 @@ class TestMain < BaseTest
     }
   end
 
-  test_that "we can use a different format for the rc file" do
+  test_that "we can use a simpler, text format for the rc file" do
     Given app_to_use_rc_file
     And {
       @flag_value = any_string
@@ -634,6 +667,25 @@ class TestMain < BaseTest
       @flag.should == @flag_value
     }
 
+  end
+
+  test_that "the text format for the rc file attempts to respect quoted arguments" do
+    Given app_to_use_rc_file
+    And {
+      @flag_value = any_string(:max => 10) + " " + any_string(:max => 10)
+      rc_file = File.join(ENV['HOME'],'.my_app.rc')
+      File.open(rc_file,'w') do |file|
+        file.puts "--switch --flag='#{@flag_value}'"
+      end
+    }
+    When {
+      @code = lambda { go! }
+    }
+    Then {
+      assert_exits(0,&@code)
+      @switch.should == true
+      @flag.should == @flag_value
+    }
   end
 
   test_that "with an ill-formed rc file, we get a reasonable error message" do

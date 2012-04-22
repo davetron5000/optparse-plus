@@ -72,6 +72,8 @@ module Methadone
   #
   module Main
     include Methadone::ExitNow
+    include Methadone::ARGVParser
+
     def self.included(k)
       k.extend(self)
     end
@@ -318,7 +320,7 @@ module Methadone
 
     def set_defaults_from_env_var
       if @env_var
-        String(ENV[@env_var]).split(/\s+/).each do |arg|
+        parse_string_for_argv(ENV[@env_var]).each do |arg|
           ::ARGV.unshift(arg)
         end
       end
@@ -329,7 +331,7 @@ module Methadone
         File.open(@rc_file) do |file| 
           parsed = YAML::load(file)
           if parsed.kind_of? String
-            String(parsed).split(/\s+/).each do |arg|
+            parse_string_for_argv(parsed).each do |arg|
               ::ARGV.unshift(arg)
             end
           elsif parsed.kind_of? Hash
@@ -343,6 +345,7 @@ module Methadone
         end
       end
     end
+
 
     # Normalized all defaults to both string and symbol forms, so
     # the user can access them via either means just as they would for
