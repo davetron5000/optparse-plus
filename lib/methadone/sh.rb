@@ -5,8 +5,7 @@ elsif RUBY_VERSION =~ /^1.8/
   begin
   require 'open4'
   rescue LoadError
-    STDERR.puts "!! For Ruby #{RUBY_VERSION}, the open4 library must be installed"
-    raise
+    warn "For Ruby #{RUBY_VERSION}, the open4 library must be installed or SH won't work"
   end
 else
   require 'open3'
