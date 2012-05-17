@@ -6,7 +6,11 @@ module Methadone
     # Open4 to get access to the standard output AND error.
     class Open_4 < MRI
       def run_command(command)
-        pid, stdin_io, stdout_io, stderr_io = Open4::popen4(command)
+        pid, stdin_io, stdout_io, stderr_io =
+          case command
+          when String then Open4::popen4(command)
+          else Open4::popen4(*command)
+          end
         stdin_io.close
         stdout = stdout_io.read
         stderr = stderr_io.read
