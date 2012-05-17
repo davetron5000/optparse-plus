@@ -39,6 +39,35 @@ module ExecutionStrategy
       }
     end
 
+    test_that "run_command handles array arguments properly" do
+      Given {
+        @command = [any_string, any_string, any_string]
+        @stdin_io = mock("IO")
+        @stdout = any_string
+        @stdout_io = StringIO.new(@stdout)
+        @stderr = any_string
+        @stderr_io = StringIO.new(@stderr)
+        @pid = any_int :min => 2, :max => 65536
+        @status = stub('Process::Status')
+      }
+      When the_test_runs
+      Then {
+        Open4.expects(:popen4).with(*@command).returns([@pid,@stdin_io,@stdout_io,@stderr_io])
+        @stdin_io.expects(:close)
+        Process.expects(:waitpid2).with(@pid).returns([any_string,@status])
+      }
+
+      Given new_open_4_strategy
+      When {
+        @results = @strategy.run_command(@command)
+      }
+      Then {
+        @results[0].should == @stdout
+        @results[1].should == @stderr
+        @results[2].should be @status
+      }
+    end
+
     test_that "exception_meaning_command_not_found returns Errno::ENOENT" do
       Given new_open_4_strategy
       When {

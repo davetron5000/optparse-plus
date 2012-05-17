@@ -3,11 +3,14 @@ module Methadone
     # Base for any ExecutionStrategy implementation.  Currently, this is nothing more than an interface
     # specification.
     class Base
-      # Executes the command and returns the results back.
-      # This should do no logging or other logic other than to execute the command
-      # and return the required results.
+      # Executes the command and returns the results back.  This
+      # should do no logging or other logic other than to execute the
+      # command and return the required results.  If command is an
+      # array, use exec directly bypassing any tokenization, shell or
+      # otherwise; otherwise use the normal shell interpretation of
+      # the command string.
       #
-      # command:: the command-line to run, as a String
+      # command:: the command-line to run, as an Array or a String
       #
       # Returns an array of size 3:
       # <tt>[0]</tt>:: The standard output of the command as a String, never nil

@@ -5,7 +5,12 @@ module Methadone
     # Methadone::ExecutionStrategy for the JVM that uses JVM classes to run the command and get its results.
     class JVM < Base
       def run_command(command)
-        process = java.lang.Runtime.get_runtime.exec(command)
+        process = case command
+                  when String then
+                    java.lang.Runtime.get_runtime.exec(command)
+                  else
+                    java.lang.Runtime.get_runtime.exec(*command)
+                  end
         process.get_output_stream.close
         stdout = input_stream_to_string(process.get_input_stream)
         stderr = input_stream_to_string(process.get_error_stream)
