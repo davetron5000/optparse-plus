@@ -64,7 +64,8 @@
 <span class="kp">include</span> <span class="no">Methadone</span><span class="o">::</span><span class="no">Main</span>
 <span class="kp">include</span> <span class="no">Methadone</span><span class="o">::</span><span class="no">CLILogging</span>
 
-<span class="n">main</span> <span class="k">do</span> 
+<span class="n">main</span> <span class="k">do |some_arg|</span> 
+  <span class="nb">puts</span> <span class="n">some_arg</span>
   <span class="nb">puts</span> <span class="n">options</span><span class="o">[</span><span class="s1">'ip-address'</span><span class="o">]</span> <span class="k">if</span> <span class="n">options</span><span class="o">[</span><span class="ss">:verbose</span><span class="o">]</span>
 <span class="k">end</span>
 
@@ -99,14 +100,18 @@ Options:
 
 <p>Woot!  Perfectly formatted help.  We also have easy access to the parsed options:</p>
 
-<pre lang="shell"><code>$ our_app -i 192.268.0.1
-$ our_app -i 192.268.0.1 --verbose
+<pre lang="shell"><code>$ our_app -i 192.268.0.1 foobar
+foobar
+$ our_app -i 192.268.0.1 --verbose foobar
+foobar
 192.168.1.0
-$ our_app -i localhost
+$ our_app -i localhost foobar
 invalid argument: -i localhost
+$ our_app
+parse error: 'some_arg' is required
 </code></pre>
 
-<p>Options are all parsed, and the regexp we passed to <code>on</code> is used to validate the arguments.</p>
+<p>Options are all parsed, and the regexp we passed to <code>on</code> is used to validate the argument to <code>-i</code>, and we also get checking for requiring <code>some_arg</code></p>
 
 <h1>Bootstrapping</h1>
 
