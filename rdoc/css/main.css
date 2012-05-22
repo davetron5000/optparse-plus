@@ -1,5 +1,6 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700);
 body {
-  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-family: Lato, "Helvetica Neue", Arial, sans-serif;
   background: #FFF;
   color: #000;
   margin: 0px;
@@ -140,6 +141,7 @@ ol li
 
 pre 
 {
+    font-family: Monaco, monospace;
     margin-bottom: 1em;
 }
 
@@ -215,7 +217,7 @@ tt {
 }
 
 .attr-value {
-  font-family: monospace;
+  font-family: Monaco, monospace;
   padding-left: 1em;
   font-size: 1.15em;
 }
