@@ -772,7 +772,7 @@ private
     block.call
     fail "Expected an exit of #{exit_code}, but we didn't even exit!"
   rescue SystemExit => ex
-    ex.status.should == exit_code
+    assert_equal exit_code,ex.status,@logged.string
   end
 
   def set_argv(args)

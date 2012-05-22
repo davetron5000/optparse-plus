@@ -18,7 +18,7 @@ module Methadone #:nodoc:
       last_char = nil         # the last character we saw
 
       while current < string.length
-        char = string[current]
+        char = string.chars.to_a[current]
         case char
         when /["']/
           if inside_quote.nil?         # eat the quote, but remember we are now "inside" one
