@@ -26,6 +26,12 @@ RDoc::Task.new do |rd|
   rd.title = 'Methadone - Power Up your Command Line Apps'
 end
 
+if RUBY_PLATFORM == 'java'
+task :features do
+  puts "Aruba doesn't work on JRuby; cannot run features"
+end
+task 'features:wip' => :features
+else
 CUKE_RESULTS = 'results.html'
 CLEAN << CUKE_RESULTS
 Cucumber::Rake::Task.new(:features) do |t|
@@ -40,6 +46,7 @@ Cucumber::Rake::Task.new('features:wip') do |t|
   tag_opts = ' --tags @wip'
   t.cucumber_opts = "features --format html -o #{CUKE_RESULTS} --format pretty -x -s#{tag_opts}"
   t.fork = false
+end
 end
 
 CLEAN << "coverage"
