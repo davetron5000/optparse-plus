@@ -8,3 +8,4 @@ tmp
 results.html
 coverage
 *.rbc
+.DS_Store
