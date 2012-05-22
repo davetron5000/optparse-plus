@@ -71,7 +71,11 @@ module Methadone
     # If not, its output as logged at INFO.  In either case, its
     # error output is logged at WARN.
     #
-    # command:: the command to run
+    # command:: the command to run as a String or Array of String.  The String form is simplest, but
+    #           is open to injection.  If you need to execute a command that is assembled from some portion
+    #           of user input, consider using an Array of String.  This form prevents tokenization that occurs
+    #           in the String form.  The first element is the command to execute,
+    #           and the remainder are the arguments. See Methadone::ExecutionStrategy::Base for more info.
     # options:: options to control the call. Currently responds to:
     #           +:expected+:: an Int or Array of Int representing error codes, <b>in addition to 0</b>, that are
     #                         expected and therefore constitute success.  Useful for commands that don't use
