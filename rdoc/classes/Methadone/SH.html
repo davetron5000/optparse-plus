@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Methadone::SH</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=ASCII-8BIT" />
+    <link rel="stylesheet" href="../../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../css/github.css" type="text/css" media="screen" />
+<script src="../../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/jquery-effect.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/highlight.pack.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+
+<body>     
+    <div class="banner">
+        
+        <h1>
+            <span class="type">Module</span> 
+            Methadone::SH 
+            
+        </h1>
+        <ul class="files">
+            
+            <li><a href="../../files/lib/methadone/sh_rb.html">lib/methadone/sh.rb</a></li>
+            
+        </ul>
+    </div>
+    <div id="bodyContent">
+        <div id="content">
+  
+    <div class="description">
+      
+<p>Module with various helper methods for executing external commands. In most
+cases, you can use <a href="SH.html#method-i-sh">#sh</a> to run commands
+and have decent logging done.  You will likely use this in a class that
+also mixes-in <a href="CLILogging.html">Methadone::CLILogging</a>
+(remembering that <a href="Main.html">Methadone::Main</a> mixes this in for
+you).</p>
+
+<p>If you <strong>don't</strong>, you must provide a logger via <a
+href="SH.html#method-i-set_sh_logger">#set_sh_logger</a>.</p>
+
+<h2 id="label-Examples">Examples</h2>
+
+<pre class="ruby"><span class="ruby-identifier">include</span> <span class="ruby-constant">Methadone</span><span class="ruby-operator">::</span><span class="ruby-constant">SH</span>
+
+<span class="ruby-identifier">sh</span> <span class="ruby-string">'cp foo.txt /tmp'</span>
+<span class="ruby-comment"># =&gt; logs the command to DEBUG, executes the command, logs its output to DEBUG and its</span>
+<span class="ruby-comment">#    error output to WARN, returns 0</span>
+
+<span class="ruby-identifier">sh</span> <span class="ruby-string">'cp non_existent_file.txt /nowhere_good'</span>
+<span class="ruby-comment"># =&gt; logs the command to DEBUG, executes the command, logs its output to INFO and</span>
+<span class="ruby-comment">#    its error output to WARN, returns the nonzero exit status of the underlying command</span>
+
+<span class="ruby-identifier">sh!</span> <span class="ruby-string">'cp non_existent_file.txt /nowhere_good'</span>
+<span class="ruby-comment"># =&gt; same as above, EXCEPT, raises a Methadone::FailedCommandError</span>
+
+<span class="ruby-identifier">sh</span> <span class="ruby-string">'cp foo.txt /tmp'</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-comment"># Behaves exactly as before, but this block is called after</span>
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-identifier">sh</span> <span class="ruby-string">'cp non_existent_file.txt /nowhere_good'</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-comment"># This block isn't called, since the command failed</span>
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-identifier">sh</span> <span class="ruby-string">'ls -l /tmp/'</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">stdout</span><span class="ruby-operator">|</span>
+  <span class="ruby-comment"># stdout contains the output of the command</span>
+<span class="ruby-keyword">end</span>
+<span class="ruby-identifier">sh</span> <span class="ruby-string">'ls -l /tmp/ /non_existent_dir'</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">stdout</span>,<span class="ruby-identifier">stderr</span><span class="ruby-operator">|</span>
+  <span class="ruby-comment"># stdout contains the output of the command,</span>
+  <span class="ruby-comment"># stderr contains the standard error output.</span>
+ <span class="ruby-keyword">end</span>
+</pre>
+
+<h2 id="label-Handling+process+execution">Handling process execution</h2>
+
+<p>In order to work on as many Rubies as possible, this class defers the
+actual execution to an execution strategy.  See <a
+href="SH.html#method-i-set_execution_strategy">#set_execution_strategy</a>
+if you think you'd like to override that, or just want to know how it
+works.</p>
+
+<h2 id="label-More+complex+execution+and+subprocess+management">More complex execution and subprocess management</h2>
+
+<p>This is not intended to be a complete replacement for Open3 or an enhanced
+means of managing subprocesses. This is to make it easy for you to
+shell-out to external commands and have your app be robust and easy to
+maintain.</p>
+
+    </div>
+  
+
+
+  
+
+
+  
+  
+
+
+  
+
+
+  
+    <!-- Method ref -->
+    <div class="sectiontitle">Methods</div>
+    <dl class="methods">
+      
+        <dt>I</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-c-included">included</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>S</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-set_execution_strategy">set_execution_strategy</a>,
+              </li>
+            
+              
+              <li>
+                <a href="#method-i-set_sh_logger">set_sh_logger</a>,
+              </li>
+            
+              
+              <li>
+                <a href="#method-i-sh">sh</a>,
+              </li>
+            
+              
+              <li>
+                <a href="#method-i-sh-21">sh!</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+    </dl>
+  
+
+  
+
+
+
+  
+
+    
+
+    
+
+    
+
+
+    
+
+
+    <!-- Methods -->
+    
+      <div class="sectiontitle">Class Public methods</div>
+      
+        <div class="method">
+          <div class="title method-title" id="method-c-included">
+            
+              <a name="method-c-included"></a><b>included</b>(k)
+            
+          </div>
+          
+          
+            <div class="description">
+              
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-c-included_source')" id="l_method-c-included_source">show</a>
+                
+              </p>
+              <div id="method-c-included_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/sh.rb, line 66</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">self</span>.<span class="ruby-identifier">included</span>(<span class="ruby-identifier">k</span>)
+  <span class="ruby-identifier">k</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-keyword">self</span>)
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+                  
+      <div class="sectiontitle">Instance Public methods</div>
+      
+        <div class="method">
+          <div class="title method-title" id="method-i-set_execution_strategy">
+            
+              <a name="method-i-set_execution_strategy"></a><b>set_execution_strategy</b>(strategy)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Set the strategy to use for executing commands.  In general, you don't need
+to set this since this module chooses an appropriate implementation based
+on your Ruby platform:</p>
+<dl class="rdoc-list note-list"><dt>1.8 Rubies, including 1.8, and REE
+<dd>
+<p>Open4 is used via <a
+href="ExecutionStrategy/Open_4.html">Methadone::ExecutionStrategy::Open_4</a>.
+<strong><code>open4</code> will not be installed as a dependency</strong>. 
+RubyGems doesn't allow conditional dependencies,  so make sure that your
+app declares it as a dependency if you think you'll be  running on 1.8 or
+REE.</p>
+</dd><dt>Rubinius
+<dd>
+<p>Open4 is used, but we handle things a bit differently; see <a
+href="ExecutionStrategy/RBXOpen_4.html">Methadone::ExecutionStrategy::RBXOpen_4</a>.
+Same warning on dependencies applies.</p>
+</dd><dt>JRuby
+<dd>
+<p>Use JVM calls to <code>Runtime</code> via <a
+href="ExecutionStrategy/JVM.html">Methadone::ExecutionStrategy::JVM</a></p>
+</dd><dt>Windows
+<dd>
+<p>Currently no support for Windows</p>
+</dd><dt>All others
+<dd>
+<p>we use Open3 from the standard library, via <a
+href="ExecutionStrategy/Open_3.html">Methadone::ExecutionStrategy::Open_3</a></p>
+</dd></dl>
+
+<p>See <a
+href="ExecutionStrategy/Base.html">Methadone::ExecutionStrategy::Base</a>
+for how to implement your own.</p>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-set_execution_strategy_source')" id="l_method-i-set_execution_strategy_source">show</a>
+                
+              </p>
+              <div id="method-i-set_execution_strategy_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/sh.rb, line 172</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">set_execution_strategy</span>(<span class="ruby-identifier">strategy</span>)
+  <span class="ruby-ivar">@execution_strategy</span> = <span class="ruby-identifier">strategy</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-set_sh_logger">
+            
+              <a name="method-i-set_sh_logger"></a><b>set_sh_logger</b>(logger)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Override the default logger (which is the one provided by <a
+href="CLILogging.html">CLILogging</a>). You would do this if you want a
+custom logger or you aren't mixing-in <a
+href="CLILogging.html">CLILogging</a>.</p>
+
+<p>Note that this method is <strong>not</strong> called
+<code>sh_logger=</code> to avoid annoying situations where Ruby thinks you
+are setting a local variable</p>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-set_sh_logger_source')" id="l_method-i-set_sh_logger_source">show</a>
+                
+              </p>
+              <div id="method-i-set_sh_logger_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/sh.rb, line 154</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">set_sh_logger</span>(<span class="ruby-identifier">logger</span>)
+  <span class="ruby-ivar">@sh_logger</span> = <span class="ruby-identifier">logger</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-sh">
+            
+              <a name="method-i-sh"></a><b>sh</b>(command,options={},&amp;block)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Run a shell command, capturing and logging its output. If the command
+completed successfully, it's output is logged at DEBUG. If not, its output
+as logged at INFO.  In either case, its error output is logged at WARN.</p>
+<dl class="rdoc-list note-list"><dt>command
+<dd>
+<p>the command to run as a String or Array of String.  The String form is
+simplest, but is open to injection.  If you need to execute a command that
+is assembled from some portion of user input, consider using an Array of
+String.  This form prevents tokenization that occurs in the String form. 
+The first element is the command to execute, and the remainder are the
+arguments. See <a
+href="ExecutionStrategy/Base.html">Methadone::ExecutionStrategy::Base</a>
+for more info.</p>
+</dd><dt>options
+<dd>
+<p>options to control the call. Currently responds to:</p>
+<dl class="rdoc-list note-list"><dt><code>:expected</code>
+<dd>
+<p>an Int or Array of Int representing error codes, <strong>in addition to
+0</strong>, that are expected and therefore constitute success.  Useful for
+commands that don't use exit codes the way you'd like</p>
+</dd></dl>
+</dd><dt>block
+<dd>
+<p>if provided, will be called if the command exited nonzero.  The block may
+take 0, 1, 2, or 3 arguments. The arguments provided are the standard
+output as a string, standard error as a string, and the exitstatus as an
+Int. You should be safe to pass in a lambda instead of a block, as long as
+your lambda doesn't take more than three arguments</p>
+</dd></dl>
+
+<p>Example</p>
+
+<pre class="ruby"><span class="ruby-identifier">sh</span> <span class="ruby-string">&quot;cp foo /tmp&quot;</span>
+<span class="ruby-identifier">sh</span> <span class="ruby-string">&quot;ls /tmp&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">stdout</span><span class="ruby-operator">|</span>
+  <span class="ruby-comment"># stdout contains the output of ls /tmp</span>
+<span class="ruby-keyword">end</span>
+<span class="ruby-identifier">sh</span> <span class="ruby-string">&quot;ls -l /tmp foobar&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">stdout</span>,<span class="ruby-identifier">stderr</span><span class="ruby-operator">|</span>
+  <span class="ruby-comment"># ...</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>Returns the exit status of the command.  Note that if the command doesn't
+exist, this returns 127.</p>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-sh_source')" id="l_method-i-sh_source">show</a>
+                
+              </p>
+              <div id="method-i-sh_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/sh.rb, line 100</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">sh</span>(<span class="ruby-identifier">command</span>,<span class="ruby-identifier">options</span>={},&amp;<span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">sh_logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-node">&quot;Executing '#{command}'&quot;</span>)
+
+  <span class="ruby-identifier">stdout</span>,<span class="ruby-identifier">stderr</span>,<span class="ruby-identifier">status</span> = <span class="ruby-identifier">execution_strategy</span>.<span class="ruby-identifier">run_command</span>(<span class="ruby-identifier">command</span>)
+  <span class="ruby-identifier">process_status</span> = <span class="ruby-constant">Methadone</span><span class="ruby-operator">::</span><span class="ruby-constant">ProcessStatus</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">status</span>,<span class="ruby-identifier">options</span>[<span class="ruby-value">:expected</span>])
+
+  <span class="ruby-identifier">sh_logger</span>.<span class="ruby-identifier">warn</span>(<span class="ruby-node">&quot;Error output of '#{command}': #{stderr}&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">stderr</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-number">0</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">process_status</span>.<span class="ruby-identifier">success?</span>
+    <span class="ruby-identifier">sh_logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-node">&quot;Output of '#{command}': #{stdout}&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">stdout</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-number">0</span>
+    <span class="ruby-identifier">call_block</span>(<span class="ruby-identifier">block</span>,<span class="ruby-identifier">stdout</span>,<span class="ruby-identifier">stderr</span>,<span class="ruby-identifier">process_status</span>.<span class="ruby-identifier">exitstatus</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">nil?</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">sh_logger</span>.<span class="ruby-identifier">info</span>(<span class="ruby-node">&quot;Output of '#{command}': #{stdout}&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">stdout</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-number">0</span>
+    <span class="ruby-identifier">sh_logger</span>.<span class="ruby-identifier">warn</span>(<span class="ruby-node">&quot;Error running '#{command}'&quot;</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">process_status</span>.<span class="ruby-identifier">exitstatus</span>
+<span class="ruby-keyword">rescue</span> *<span class="ruby-identifier">exception_meaning_command_not_found</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">ex</span>
+  <span class="ruby-identifier">sh_logger</span>.<span class="ruby-identifier">error</span>(<span class="ruby-node">&quot;Error running '#{command}': #{ex.message}&quot;</span>)
+  <span class="ruby-number">127</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-sh-21">
+            
+              <a name="method-i-sh-21"></a><b>sh!</b>(command,options={},&amp;block)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Run a command, throwing an exception if the command exited nonzero.
+Otherwise, behaves exactly like <a href="SH.html#method-i-sh">#sh</a>.</p>
+<dl class="rdoc-list note-list"><dt>options
+<dd>
+<p>options hash, responding to:</p>
+<dl class="rdoc-list note-list"><dt><code>:expected</code>
+<dd>
+<p>same as for <a href="SH.html#method-i-sh">#sh</a></p>
+</dd><dt><code>:on_fail</code>
+<dd>
+<p>a custom error message.  This allows you to have your app exit on shell
+command failures, but customize the error message that they see.</p>
+</dd></dl>
+</dd></dl>
+
+<p>Raises <a href="FailedCommandError.html">Methadone::FailedCommandError</a>
+if the command exited nonzero.</p>
+
+<p>Examples:</p>
+
+<pre class="ruby"><span class="ruby-identifier">sh!</span>(<span class="ruby-string">&quot;rsync foo bar&quot;</span>)
+<span class="ruby-comment"># =&gt; if command fails, app exits and user sees: &quot;error: Command 'rsync foo bar' exited 12&quot;</span>
+<span class="ruby-identifier">sh!</span>(<span class="ruby-string">&quot;rsync foo bar&quot;</span>, :<span class="ruby-identifier">on_fail</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;Couldn't rsync, check log for details&quot;</span>)
+<span class="ruby-comment"># =&gt; if command fails, app exits and user sees: &quot;error: Couldn't rsync, check log for details</span>
+</pre>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-sh-21_source')" id="l_method-i-sh-21_source">show</a>
+                
+              </p>
+              <div id="method-i-sh-21_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/sh.rb, line 139</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">sh!</span>(<span class="ruby-identifier">command</span>,<span class="ruby-identifier">options</span>={},&amp;<span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">sh</span>(<span class="ruby-identifier">command</span>,<span class="ruby-identifier">options</span>,&amp;<span class="ruby-identifier">block</span>).<span class="ruby-identifier">tap</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">exitstatus</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">process_status</span> = <span class="ruby-constant">Methadone</span><span class="ruby-operator">::</span><span class="ruby-constant">ProcessStatus</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">exitstatus</span>,<span class="ruby-identifier">options</span>[<span class="ruby-value">:expected</span>])
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">process_status</span>.<span class="ruby-identifier">success?</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">Methadone</span><span class="ruby-operator">::</span><span class="ruby-constant">FailedCommandError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">exitstatus</span>,<span class="ruby-identifier">command</span>,<span class="ruby-identifier">options</span>[<span class="ruby-value">:on_fail</span>]) 
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+                    </div>
+    </div>
+  </body>
+</html>    

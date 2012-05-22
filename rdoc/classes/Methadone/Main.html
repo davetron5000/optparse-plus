@@ -1,0 +1,889 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Methadone::Main</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=ASCII-8BIT" />
+    <link rel="stylesheet" href="../../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../css/github.css" type="text/css" media="screen" />
+<script src="../../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/jquery-effect.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/highlight.pack.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+
+<body>     
+    <div class="banner">
+        
+        <h1>
+            <span class="type">Module</span> 
+            Methadone::Main 
+            
+        </h1>
+        <ul class="files">
+            
+            <li><a href="../../files/lib/methadone/main_rb.html">lib/methadone/main.rb</a></li>
+            
+        </ul>
+    </div>
+    <div id="bodyContent">
+        <div id="content">
+  
+    <div class="description">
+      
+<p>Include this module to gain access to the "canonical command-line app
+structure" DSL.  This is a <strong>very</strong> lightweight layer on top
+of what you might normally write that gives you just a bit of help to keep
+your code structured in a sensible way.  You can use as much or as little
+as you want, though you must at least use <a
+href="Main.html#method-i-main">#main</a> to get any benefits.</p>
+
+<p>Further, you must provide access to a logger via a method named logger.  If
+you include <a href="CLILogging.html">Methadone::CLILogging</a>, this will
+be done for you</p>
+
+<p>You also get a more expedient interface to OptionParser as well as checking
+for required arguments to your app.  For example, if we want our app to
+accept a negatable switch named "switch", a flag named "flag", and two
+arguments "needed" (which is required)  and "maybe" which is optional, we
+can do the following:</p>
+
+<pre class="ruby"><span class="ruby-comment">#!/usr/bin/env ruby</span>
+
+<span class="ruby-identifier">require</span> <span class="ruby-string">'methadone'</span>
+
+<span class="ruby-keyword">class</span> <span class="ruby-constant">App</span>
+  <span class="ruby-identifier">include</span> <span class="ruby-constant">Methadone</span><span class="ruby-operator">::</span><span class="ruby-constant">Main</span>
+  <span class="ruby-identifier">include</span> <span class="ruby-constant">Methadone</span><span class="ruby-operator">::</span><span class="ruby-constant">CLILogging</span>
+
+  <span class="ruby-identifier">main</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">needed</span>, <span class="ruby-identifier">maybe</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">options</span>[:<span class="ruby-identifier">switch</span>] =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">or</span> <span class="ruby-keyword">false</span>, <span class="ruby-identifier">based</span> <span class="ruby-identifier">on</span> <span class="ruby-identifier">command</span> <span class="ruby-identifier">line</span>
+    <span class="ruby-identifier">options</span>[:<span class="ruby-identifier">flag</span>] =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">value</span> <span class="ruby-identifier">of</span> <span class="ruby-identifier">flag</span> <span class="ruby-identifier">passed</span> <span class="ruby-identifier">on</span> <span class="ruby-identifier">command</span> <span class="ruby-identifier">line</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># Proxy to an OptionParser instance's on method</span>
+  <span class="ruby-identifier">on</span>(<span class="ruby-string">&quot;--[no]-switch&quot;</span>)
+  <span class="ruby-identifier">on</span>(<span class="ruby-string">&quot;--flag VALUE&quot;</span>)
+
+  <span class="ruby-identifier">arg</span> :<span class="ruby-identifier">needed</span>
+  <span class="ruby-identifier">arg</span> :<span class="ruby-identifier">maybe</span>, :<span class="ruby-identifier">optional</span>
+
+  <span class="ruby-identifier">defaults_from_env_var</span> <span class="ruby-constant">SOME_VAR</span>
+  <span class="ruby-identifier">defaults_from_config_file</span> <span class="ruby-string">'.my_app.rc'</span>
+
+  <span class="ruby-identifier">go!</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>Our app then acts as follows:</p>
+
+<pre class="ruby">$ <span class="ruby-identifier">our_app</span> 
+<span class="ruby-comment"># =&gt; parse error: 'needed' is required</span>
+$ <span class="ruby-identifier">our_app</span> <span class="ruby-identifier">foo</span>
+<span class="ruby-comment"># =&gt; succeeds; &quot;maybe&quot; in main is nil</span>
+$ <span class="ruby-identifier">our_app</span> <span class="ruby-operator">-</span><span class="ruby-operator">-</span><span class="ruby-identifier">flag</span> <span class="ruby-identifier">foo</span>
+<span class="ruby-comment"># =&gt; options[:flag] has the value &quot;foo&quot;</span>
+$ <span class="ruby-constant">SOME_VAR</span>=<span class="ruby-string">'--flag foo'</span> <span class="ruby-identifier">our_app</span>
+<span class="ruby-comment"># =&gt; options[:flag] has the value &quot;foo&quot;</span>
+$ <span class="ruby-constant">SOME_VAR</span>=<span class="ruby-string">'--flag foo'</span> <span class="ruby-identifier">our_app</span> <span class="ruby-operator">-</span><span class="ruby-operator">-</span><span class="ruby-identifier">flag</span> <span class="ruby-identifier">bar</span>
+<span class="ruby-comment"># =&gt; options[:flag] has the value &quot;bar&quot;</span>
+</pre>
+
+<p>Note that we've done all of this inside a class that we called
+<code>App</code>.  This isn't strictly necessary, and you can just
+<code>include</code> <a href="Main.html">Methadone::Main</a> and <a
+href="CLILogging.html">Methadone::CLILogging</a> at the root of your
+<code>bin</code> file if you like.  This is somewhat unsafe, because
+<code>self</code> inside the <code>bin</code> file is <a
+href="../Object.html">Object</a>, and any methods you create (or cause to
+be created via <code>include</code>) will be present on
+<strong>every</strong> object.  This can cause odd problems, so it's
+recommended that you <strong>not</strong> do this.</p>
+
+    </div>
+  
+
+
+  
+
+
+  
+  
+
+
+  
+
+
+  
+    <!-- Method ref -->
+    <div class="sectiontitle">Methods</div>
+    <dl class="methods">
+      
+        <dt>A</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-arg">arg</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>D</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-defaults_from_config_file">defaults_from_config_file</a>,
+              </li>
+            
+              
+              <li>
+                <a href="#method-i-defaults_from_env_var">defaults_from_env_var</a>,
+              </li>
+            
+              
+              <li>
+                <a href="#method-i-description">description</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>G</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-go-21">go!</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>I</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-c-included">included</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>L</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-leak_exceptions">leak_exceptions</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>M</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-main">main</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>O</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-on">on</a>,
+              </li>
+            
+              
+              <li>
+                <a href="#method-i-options">options</a>,
+              </li>
+            
+              
+              <li>
+                <a href="#method-i-opts">opts</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>V</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-version">version</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+    </dl>
+  
+
+  
+    <!-- Includes -->
+    <div class="sectiontitle">Included Modules</div>
+    <ul>
+      
+        <li>
+          
+            <a href="ExitNow.html">
+              Methadone::ExitNow
+            </a>
+          
+        </li>
+      
+    </ul>
+  
+
+
+
+  
+
+    
+
+    
+
+    
+
+
+    
+
+
+    <!-- Methods -->
+    
+      <div class="sectiontitle">Class Public methods</div>
+      
+        <div class="method">
+          <div class="title method-title" id="method-c-included">
+            
+              <a name="method-c-included"></a><b>included</b>(k)
+            
+          </div>
+          
+          
+            <div class="description">
+              
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-c-included_source')" id="l_method-c-included_source">show</a>
+                
+              </p>
+              <div id="method-c-included_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 77</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">self</span>.<span class="ruby-identifier">included</span>(<span class="ruby-identifier">k</span>)
+  <span class="ruby-identifier">k</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-keyword">self</span>)
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+                  
+      <div class="sectiontitle">Instance Public methods</div>
+      
+        <div class="method">
+          <div class="title method-title" id="method-i-arg">
+            
+              <a name="method-i-arg"></a><b>arg</b>(arg_name,*options)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Sets the name of an arguments your app accepts.  Note that no sanity
+checking is done on the configuration of your arguments you create via
+multiple calls to this method. Namely, the last argument should be the only
+one that is a :many or a :any, but the system here won't sanity check that.</p>
+<dl class="rdoc-list note-list"><dt><code>arg_name</code>
+<dd>
+<p>name of the argument to appear in documentation This will be converted into
+a String and used to create the banner (unless you have overridden the
+banner)</p>
+</dd><dt><code>options</code>
+<dd>
+<p>list (not Hash) of options:</p>
+<dl class="rdoc-list note-list"><dt><code>:required</code>
+<dd>
+<p>this arg is required (this is the default)</p>
+</dd><dt><code>:optional</code>
+<dd>
+<p>this arg is optional</p>
+</dd><dt><code>:one</code>
+<dd>
+<p>only one of this arg should be supplied (default)</p>
+</dd><dt><code>:many</code>
+<dd>
+<p>many of this arg may be supplied, but at least one is required</p>
+</dd><dt><code>:any</code>
+<dd>
+<p>any number, include zero, may be supplied</p>
+</dd><dt>A string
+<dd>
+<p>if present, this will be documentation for the argument and appear in the
+help</p>
+</dd></dl>
+</dd></dl>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-arg_source')" id="l_method-i-arg_source">show</a>
+                
+              </p>
+              <div id="method-i-arg_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 243</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">arg</span>(<span class="ruby-identifier">arg_name</span>,*<span class="ruby-identifier">options</span>)
+  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">arg</span>(<span class="ruby-identifier">arg_name</span>,*<span class="ruby-identifier">options</span>)
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-defaults_from_config_file">
+            
+              <a name="method-i-defaults_from_config_file"></a><b>defaults_from_config_file</b>(filename,options={})
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Set the name of the file, in the user's home directory, where defaults can
+be configured. The format of this file can be either a simple string of
+options, like what goes in the environment variable (see <a
+href="Main.html#method-i-defaults_from_env_var">#defaults_from_env_var</a>),
+or YAML, in which case it should be a hash where keys are the option names,
+and values their defaults.</p>
+<dl class="rdoc-list note-list"><dt>filename
+<dd>
+<p>name of the file, relative to the user's home directory</p>
+</dd></dl>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-defaults_from_config_file_source')" id="l_method-i-defaults_from_config_file_source">show</a>
+                
+              </p>
+              <div id="method-i-defaults_from_config_file_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 144</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">defaults_from_config_file</span>(<span class="ruby-identifier">filename</span>,<span class="ruby-identifier">options</span>={})
+  <span class="ruby-ivar">@rc_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-string">'HOME'</span>],<span class="ruby-identifier">filename</span>)
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-defaults_from_env_var">
+            
+              <a name="method-i-defaults_from_env_var"></a><b>defaults_from_env_var</b>(env_var)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Set the name of the environment variable where users can place default
+options for your app.  Omit this to disable the feature.</p>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-defaults_from_env_var_source')" id="l_method-i-defaults_from_env_var_source">show</a>
+                
+              </p>
+              <div id="method-i-defaults_from_env_var_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 134</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">defaults_from_env_var</span>(<span class="ruby-identifier">env_var</span>)
+  <span class="ruby-ivar">@env_var</span> = <span class="ruby-identifier">env_var</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-description">
+            
+              <a name="method-i-description"></a><b>description</b>(desc)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Set the description of your app for inclusion in the help output.</p>
+<dl class="rdoc-list note-list"><dt>desc
+<dd>
+<p>a short, one-line description of your app</p>
+</dd></dl>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-description_source')" id="l_method-i-description_source">show</a>
+                
+              </p>
+              <div id="method-i-description_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 249</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">description</span>(<span class="ruby-identifier">desc</span>)
+  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">description</span>(<span class="ruby-identifier">desc</span>)
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-go-21">
+            
+              <a name="method-i-go-21"></a><b>go!</b>()
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Start your command-line app, exiting appropriately when complete.</p>
+
+<p>This <strong>will</strong> exit your program when it completes.  If your <a
+href="Main.html#method-i-main">#main</a> block evaluates to an integer,
+that value will be sent to Kernel#exit, otherwise, this will exit with 0</p>
+
+<p>If the command-line options couldn't be parsed, this will exit with 64 and
+whatever message OptionParser provided.</p>
+
+<p>If a required argument (see <a href="Main.html#method-i-arg">#arg</a>) is
+not found, this exits with 64 and a message about that missing argument.</p>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-go-21_source')" id="l_method-i-go-21_source">show</a>
+                
+              </p>
+              <div id="method-i-go-21_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 160</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">go!</span>
+  <span class="ruby-identifier">setup_defaults</span>
+  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">post_setup</span>
+  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">parse!</span>
+  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">check_args!</span>
+  <span class="ruby-identifier">result</span> = <span class="ruby-identifier">call_main</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">result</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">Fixnum</span>
+    <span class="ruby-identifier">exit</span> <span class="ruby-identifier">result</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">exit</span> <span class="ruby-number">0</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">rescue</span> <span class="ruby-constant">OptionParser</span><span class="ruby-operator">::</span><span class="ruby-constant">ParseError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">ex</span>
+  <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">error</span> <span class="ruby-identifier">ex</span>.<span class="ruby-identifier">message</span>
+  <span class="ruby-identifier">puts</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">help</span>
+  <span class="ruby-identifier">exit</span> <span class="ruby-number">64</span> <span class="ruby-comment"># Linux standard for bad command line</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-leak_exceptions">
+            
+              <a name="method-i-leak_exceptions"></a><b>leak_exceptions</b>(leak)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Configure the auto-handling of StandardError exceptions caught from calling
+go!.</p>
+<dl class="rdoc-list note-list"><dt>leak
+<dd>
+<p>if true, go! will <strong>not</strong> catch StandardError exceptions, but
+instead allow them to bubble up.  If false, they will be caught and handled
+as normal. This does <strong>not</strong> affect <a
+href="Error.html">Methadone::Error</a> exceptions; those will NOT leak
+through.</p>
+</dd></dl>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-leak_exceptions_source')" id="l_method-i-leak_exceptions_source">show</a>
+                
+              </p>
+              <div id="method-i-leak_exceptions_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 128</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">leak_exceptions</span>(<span class="ruby-identifier">leak</span>)
+  <span class="ruby-ivar">@leak_exceptions</span> = <span class="ruby-identifier">leak</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-main">
+            
+              <a name="method-i-main"></a><b>main</b>(&amp;block)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Declare the main method for your app. This allows you to specify the
+general logic of your app at the top of your bin file, but can rely on any
+methods or other code that you define later.</p>
+
+<p>For example, suppose you want to process a set of files, but wish to
+determine that list from another method to keep your code clean.</p>
+
+<pre class="ruby"><span class="ruby-comment">#!/usr/bin/env ruby -w</span>
+
+<span class="ruby-identifier">require</span> <span class="ruby-string">'methadone'</span>
+
+<span class="ruby-identifier">include</span> <span class="ruby-constant">Methadone</span><span class="ruby-operator">::</span><span class="ruby-constant">Main</span>
+
+<span class="ruby-identifier">main</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">files_to_process</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>
+    <span class="ruby-comment"># process file</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">files_to_process</span>
+  <span class="ruby-comment"># return list of files</span>
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-identifier">go!</span>
+</pre>
+
+<p>The block can accept any parameters, and unparsed arguments from the
+command line will be passed.</p>
+
+<p><strong>Note</strong>: <a href="Main.html#method-i-go-21">#go!</a> will
+modify <code>ARGV</code> so any unparsed arguments that you do
+<strong>not</strong> declare as arguments to <a
+href="Main.html#method-i-main">#main</a> will essentially be unavailable. 
+I consider this a bug, and it should be changed/fixed in a future version.</p>
+
+<p>To run this method, call <a href="Main.html#method-i-go-21">#go!</a></p>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-main_source')" id="l_method-i-main_source">show</a>
+                
+              </p>
+              <div id="method-i-main_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 116</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">main</span>(&amp;<span class="ruby-identifier">block</span>)
+  <span class="ruby-ivar">@main_block</span> = <span class="ruby-identifier">block</span>
+  <span class="ruby-ivar">@options</span> = {}
+  <span class="ruby-ivar">@option_parser</span> = <span class="ruby-constant">OptionParserProxy</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">OptionParser</span>.<span class="ruby-identifier">new</span>,<span class="ruby-ivar">@options</span>)
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-on">
+            
+              <a name="method-i-on"></a><b>on</b>(*args,&amp;block)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Calls the <code>on</code> method of <a
+href="Main.html#method-i-opts">#opts</a> with the given arguments (see RDoc
+for <a href="Main.html#method-i-opts">#opts</a> for the additional help
+provided).</p>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-on_source')" id="l_method-i-on_source">show</a>
+                
+              </p>
+              <div id="method-i-on_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 223</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">on</span>(*<span class="ruby-identifier">args</span>,&amp;<span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(*<span class="ruby-identifier">args</span>,&amp;<span class="ruby-identifier">block</span>)
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-options">
+            
+              <a name="method-i-options"></a><b>options</b>()
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Returns a Hash that you can use to store or retrieve options parsed from
+the command line.  When you put values in here, if you do so
+<strong>before</strong> you've declared your command-line interface via <a
+href="Main.html#method-i-on">#on</a>, the value will be used in the
+docstring to indicate it is the default. You can use either a String or a
+Symbol and, after <a href="Main.html#method-i-go-21">#go!</a> is called and
+the command-line is parsed, the values will be available as both a String
+and a Symbol.</p>
+
+<p>Example</p>
+
+<pre>main do
+  puts options[:foo] # put the value of --foo that the user provided
+end
+
+options[:foo] = &quot;bar&quot; # set &quot;bar&quot; as the default value for --foo, which
+                      # will cause us to include &quot;(default: bar)&quot; in the
+                      # docstring
+
+on(&quot;--foo FOO&quot;,&quot;Sets the foo&quot;)
+go!</pre>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-options_source')" id="l_method-i-options_source">show</a>
+                
+              </p>
+              <div id="method-i-options_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 274</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">options</span>
+  <span class="ruby-ivar">@options</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-opts">
+            
+              <a name="method-i-opts"></a><b>opts</b>()
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Returns an OptionParser that you can use to declare your command-line
+interface.  Generally, you won't use this and will use <a
+href="Main.html#method-i-on">#on</a> directly, but this allows you to have
+complete control of option parsing.</p>
+
+<p>The object returned has an additional feature that implements typical use
+of OptionParser.</p>
+
+<pre>opts.on(&quot;--flag VALUE&quot;)</pre>
+
+<p>Does this under the covers:</p>
+
+<pre class="ruby"><span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(<span class="ruby-string">&quot;--flag VALUE&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">options</span>[:<span class="ruby-identifier">flag</span>] = <span class="ruby-identifier">value</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>Since, most of the time, this is all you want to do, this makes it more
+expedient to do so.  The key that is is set in <a
+href="Main.html#method-i-options">#options</a> will be a symbol <em>and
+string</em> of the option name, without the leading dashes.  Note that if
+you use multiple option names, a key will be generated for each.  Further,
+if you use the negatable form, only the positive key will be set, e.g. for
+<code>--[no-]verbose</code>, only <code>:verbose</code> will be set (to
+true or false).</p>
+
+<p>As an example, this declaration:</p>
+
+<pre>opts.on(&quot;-f VALUE&quot;, &quot;--flag&quot;)</pre>
+
+<p>And this command-line invocation:</p>
+
+<pre>$ my_app -f foo</pre>
+
+<p>Will result in all of these forms returning the String "foo":</p>
+<ul><li>
+<p><code>options['f']</code></p>
+</li><li>
+<p><code>options[:f]</code></p>
+</li><li>
+<p><code>options['flag']</code></p>
+</li><li>
+<p><code>options[:flag]</code></p>
+</li></ul>
+
+<p>Further, any one of those keys can be used to determine the default value
+for the option.</p>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-opts_source')" id="l_method-i-opts_source">show</a>
+                
+              </p>
+              <div id="method-i-opts_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 217</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">opts</span>
+  <span class="ruby-ivar">@option_parser</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-version">
+            
+              <a name="method-i-version"></a><b>version</b>(version,custom_message='Show help/version info')
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Set the version of your app so it appears in the banner.  This also adds
+--version as an option to your app which, when used, will act just like
+--help</p>
+<dl class="rdoc-list note-list"><dt>version
+<dd>
+<p>the current version of your app.  Should almost always be YourApp::VERSION,
+where the module YourApp should've been generated by the bootstrap script</p>
+</dd><dt>custom_message
+<dd>
+<p>if provided, customized the message shown next to --version</p>
+</dd></dl>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-version_source')" id="l_method-i-version_source">show</a>
+                
+              </p>
+              <div id="method-i-version_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 286</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">version</span>(<span class="ruby-identifier">version</span>,<span class="ruby-identifier">custom_message</span>=<span class="ruby-string">'Show help/version info'</span>)
+  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">version</span>(<span class="ruby-identifier">version</span>)
+  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(<span class="ruby-string">&quot;--version&quot;</span>,<span class="ruby-identifier">custom_message</span>) <span class="ruby-keyword">do</span> 
+    <span class="ruby-identifier">puts</span> <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">to_s</span>
+    <span class="ruby-identifier">exit</span> <span class="ruby-number">0</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+                    </div>
+    </div>
+  </body>
+</html>    

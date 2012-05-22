@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Methadone::CLILogger</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=ASCII-8BIT" />
+    <link rel="stylesheet" href="../../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../css/github.css" type="text/css" media="screen" />
+<script src="../../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/jquery-effect.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/highlight.pack.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+
+<body>     
+    <div class="banner">
+        
+        <h1>
+            <span class="type">Class</span> 
+            Methadone::CLILogger 
+            
+                <span class="parent">&lt; 
+                    
+                    Logger
+                    
+                </span>
+            
+        </h1>
+        <ul class="files">
+            
+            <li><a href="../../files/lib/methadone/cli_logger_rb.html">lib/methadone/cli_logger.rb</a></li>
+            
+        </ul>
+    </div>
+    <div id="bodyContent">
+        <div id="content">
+  
+    <div class="description">
+      
+<p>A Logger instance that gives better control of messaging the user and
+logging app activity.  At it's most basic, you would use <code>info</code>
+as a replacement for <code>puts</code> and <code>error</code> as a
+replacement for <code>STDERR.puts</code>.  Since this is a logger, however,
+you can also use debug, warn, and fatal, and you can control the format and
+"logging level" as such.</p>
+
+<p>So, by default:</p>
+<ul><li>
+<p>debug messages do not appear anywhere</p>
+</li><li>
+<p>info messages appear on the standard output</p>
+</li><li>
+<p>warn, error, and fatal messagse appear on the standard error</p>
+</li><li>
+<p>The default format of messages is simply the message, no logging cruft,
+however if your output is redirected to a file, a better timestamped
+logging format is used</p>
+</li></ul>
+
+<p>You can customize this in several ways:</p>
+<ul><li>
+<p>You can override the devices used by passing different devices to the
+constructor</p>
+</li><li>
+<p>You can adjust the level of message that goes to the error logger via
+error_level=</p>
+</li><li>
+<p>You can adjust the format for messages to the error logger separately via
+error_formatter=</p>
+</li></ul>
+
+<h3 id="label-Example">Example</h3>
+
+<pre class="ruby"><span class="ruby-identifier">logger</span> = <span class="ruby-constant">CLILogger</span>.<span class="ruby-identifier">new</span>
+<span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-string">&quot;Starting up&quot;</span>) <span class="ruby-comment"># =&gt; only the standard output gets this</span>
+<span class="ruby-identifier">logger</span>.<span class="ruby-identifier">warn</span>(<span class="ruby-string">&quot;careful!&quot;</span>) <span class="ruby-comment"># =&gt; only the standard error gets this</span>
+<span class="ruby-identifier">logger</span>.<span class="ruby-identifier">error</span>(<span class="ruby-string">&quot;Something went wrong!&quot;</span>) <span class="ruby-comment"># =&gt; only the standard error gets this</span>
+
+<span class="ruby-identifier">logger</span> = <span class="ruby-constant">CLILogger</span>.<span class="ruby-identifier">new</span>
+<span class="ruby-identifier">logger</span>.<span class="ruby-identifier">error_level</span> = <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">ERROR</span>
+<span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-string">&quot;Starting up&quot;</span>) <span class="ruby-comment"># =&gt; only the standard output gets this</span>
+<span class="ruby-identifier">logger</span>.<span class="ruby-identifier">warn</span>(<span class="ruby-string">&quot;careful!&quot;</span>) <span class="ruby-comment"># =&gt; only the standard OUTPUT gets this</span>
+<span class="ruby-identifier">logger</span>.<span class="ruby-identifier">error</span>(<span class="ruby-string">&quot;Something went wrong!&quot;</span>) <span class="ruby-comment"># =&gt; only the standard error gets this</span>
+
+<span class="ruby-identifier">logger</span> = <span class="ruby-constant">CLILogger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">'logfile.txt'</span>)
+<span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-string">&quot;Starting up&quot;</span>) <span class="ruby-comment"># =&gt; logfile.txt gets this</span>
+<span class="ruby-identifier">logger</span>.<span class="ruby-identifier">error</span>(<span class="ruby-string">&quot;Something went wrong!&quot;</span>) <span class="ruby-comment"># =&gt; BOTH logfile.txt AND the standard error get this</span>
+</pre>
+
+    </div>
+  
+
+
+  
+
+
+  
+  
+
+
+  
+
+
+  
+    <!-- Method ref -->
+    <div class="sectiontitle">Methods</div>
+    <dl class="methods">
+      
+        <dt>E</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-error_formatter-3D">error_formatter=</a>,
+              </li>
+            
+              
+              <li>
+                <a href="#method-i-error_level-3D">error_level=</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>L</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-level-3D">level=</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>N</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-c-new">new</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+    </dl>
+  
+
+  
+
+
+
+  
+
+    
+
+    
+
+    
+      <!-- Section constants -->
+      <div class="sectiontitle">Constants</div>
+      <table border='0' cellpadding='5'>
+        
+          <tr valign='top'>
+            <td class="attr-name">BLANK_FORMAT</td>
+            <td>=</td>
+            <td class="attr-value">proc { |severity,datetime,progname,msg|
+msg + &quot;\n&quot;
+}</td>
+          </tr>
+          
+            <tr valign='top'>
+              <td>&nbsp;</td>
+              <td colspan="2" class="attr-desc"></td>
+            </tr>
+          
+        
+          <tr valign='top'>
+            <td class="attr-name">DEFAULT_ERROR_LEVEL</td>
+            <td>=</td>
+            <td class="attr-value">Logger::Severity::WARN</td>
+          </tr>
+          
+            <tr valign='top'>
+              <td>&nbsp;</td>
+              <td colspan="2" class="attr-desc"></td>
+            </tr>
+          
+        
+      </table>
+    
+
+
+    
+
+
+    <!-- Methods -->
+    
+      <div class="sectiontitle">Class Public methods</div>
+      
+        <div class="method">
+          <div class="title method-title" id="method-c-new">
+            
+              <a name="method-c-new"></a><b>new</b>(log_device=$stdout,error_device=$stderr)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>A logger that logs error-type messages to a second device; useful for
+ensuring that error messages go to standard error.  This should be pretty
+smart about doing the right thing.  If both log devices are ttys, e.g. one
+is going to standard error and the other to the standard output, messages
+only appear once in the overall output stream.  In other words, an ERROR
+logged will show up <strong>only</strong> in the standard error.  If either
+log device is NOT a tty, then all messages go to <code>log_device</code>
+and only errors go to <code>error_device</code></p>
+<dl class="rdoc-list note-list"><dt><code>log_device</code>
+<dd>
+<p>device where all log messages should go, based on level</p>
+</dd><dt><code>error_device</code>
+<dd>
+<p>device where all error messages should go.  By default, this is
+Logger::Severity::WARN</p>
+</dd></dl>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-c-new_source')" id="l_method-c-new_source">show</a>
+                
+              </p>
+              <div id="method-c-new_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/cli_logger.rb, line 84</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">initialize</span>(<span class="ruby-identifier">log_device</span>=<span class="ruby-identifier">$stdout</span>,<span class="ruby-identifier">error_device</span>=<span class="ruby-identifier">$stderr</span>)
+  <span class="ruby-keyword">super</span>(<span class="ruby-identifier">log_device</span>)
+  <span class="ruby-ivar">@stderr_logger</span> = <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">error_device</span>)
+
+  <span class="ruby-ivar">@split_logs</span> = <span class="ruby-identifier">log_device</span>.<span class="ruby-identifier">tty?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">error_device</span>.<span class="ruby-identifier">tty?</span>
+
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">level</span> = <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">Severity</span><span class="ruby-operator">::</span><span class="ruby-constant">INFO</span>
+  <span class="ruby-ivar">@stderr_logger</span>.<span class="ruby-identifier">level</span> = <span class="ruby-constant">DEFAULT_ERROR_LEVEL</span>
+
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">formatter</span> = <span class="ruby-constant">BLANK_FORMAT</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">log_device</span>.<span class="ruby-identifier">tty?</span>
+  <span class="ruby-ivar">@stderr_logger</span>.<span class="ruby-identifier">formatter</span> = <span class="ruby-constant">BLANK_FORMAT</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">error_device</span>.<span class="ruby-identifier">tty?</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+                  
+      <div class="sectiontitle">Instance Public methods</div>
+      
+        <div class="method">
+          <div class="title method-title" id="method-i-error_formatter-3D">
+            
+              <a name="method-i-error_formatter-3D"></a><b>error_formatter=</b>(formatter)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Overrides the formatter for the error logger.  A future call to formatter=
+will affect both, so the order of the calls matters.</p>
+<dl class="rdoc-list note-list"><dt><code>formatter</code>
+<dd>
+<p>Proc that handles the formatting, the same as for formatter=</p>
+</dd></dl>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-error_formatter-3D_source')" id="l_method-i-error_formatter-3D_source">show</a>
+                
+              </p>
+              <div id="method-i-error_formatter-3D_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/cli_logger.rb, line 118</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">error_formatter=</span>(<span class="ruby-identifier">formatter</span>)
+  <span class="ruby-ivar">@stderr_logger</span>.<span class="ruby-identifier">formatter</span>=<span class="ruby-identifier">formatter</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-error_level-3D">
+            
+              <a name="method-i-error_level-3D"></a><b>error_level=</b>(level)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Set the threshold for what messages go to the error device.  Note that
+calling <a href="CLILogger.html#method-i-level-3D">#level=</a> will
+<strong>not</strong> affect the error logger <strong>unless</strong> both
+devices are TTYs.</p>
+<dl class="rdoc-list note-list"><dt><code>level</code>
+<dd>
+<p>a constant from Logger::Severity for the level of messages that should go
+to the error logger</p>
+</dd></dl>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-error_level-3D_source')" id="l_method-i-error_level-3D_source">show</a>
+                
+              </p>
+              <div id="method-i-error_level-3D_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/cli_logger.rb, line 110</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">error_level=</span>(<span class="ruby-identifier">level</span>)
+  <span class="ruby-ivar">@stderr_logger</span>.<span class="ruby-identifier">level</span> = <span class="ruby-identifier">level</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-level-3D">
+            
+              <a name="method-i-level-3D"></a><b>level=</b>(level)
+            
+          </div>
+          
+          
+            <div class="description">
+              
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-level-3D_source')" id="l_method-i-level-3D_source">show</a>
+                
+              </p>
+              <div id="method-i-level-3D_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/methadone/cli_logger.rb, line 97</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">level=</span>(<span class="ruby-identifier">level</span>)
+  <span class="ruby-keyword">super</span>(<span class="ruby-identifier">level</span>)
+  <span class="ruby-identifier">current_error_level</span> = <span class="ruby-ivar">@stderr_logger</span>.<span class="ruby-identifier">level</span>
+  <span class="ruby-keyword">if</span> (<span class="ruby-identifier">level</span> <span class="ruby-operator">&gt;</span> <span class="ruby-constant">DEFAULT_ERROR_LEVEL</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@split_logs</span>
+    <span class="ruby-ivar">@stderr_logger</span>.<span class="ruby-identifier">level</span> = <span class="ruby-identifier">level</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+                    </div>
+    </div>
+  </body>
+</html>    

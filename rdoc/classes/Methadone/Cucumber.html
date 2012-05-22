@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Methadone::Cucumber</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=ASCII-8BIT" />
+    <link rel="stylesheet" href="../../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../css/github.css" type="text/css" media="screen" />
+<script src="../../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/jquery-effect.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/highlight.pack.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+
+<body>     
+    <div class="banner">
+        
+        <h1>
+            <span class="type">Module</span> 
+            Methadone::Cucumber 
+            
+        </h1>
+        <ul class="files">
+            
+            <li><a href="../../files/lib/methadone/cucumber_rb.html">lib/methadone/cucumber.rb</a></li>
+            
+        </ul>
+    </div>
+    <div id="bodyContent">
+        <div id="content">
+  
+    <div class="description">
+      
+<p>By <code>require</code>'ing <code>methadone/cucumber</code> in your <a
+href="Cucumber.html">Cucumber</a> setup (e.g. in <code>env.rb</code>), you
+gain access to the steps defined in this file.  They provide you with the
+following:</p>
+<ul><li>
+<p>Run <code>command_to_run --help</code> using aruba</p>
+
+<pre>When I get help for &quot;command_to_run&quot;</pre>
+</li><li>
+<p>Make sure that each option shows up in the help and has
+<strong>some</strong> sort of documentation</p>
+
+<pre>Then the following options should be documented:
+  |--force|
+  |-x     |</pre>
+</li><li>
+<p>Check an individual option for documentation:</p>
+
+<pre>Then the option &quot;--force&quot; should be documented</pre>
+</li><li>
+<p>Checks that the help has a proper usage banner</p>
+
+<pre>Then the banner should be present</pre>
+</li><li>
+<p>Checks that the banner includes the version</p>
+
+<pre>Then the banner should include the version</pre>
+</li><li>
+<p>Checks that the usage banner indicates it takes options via
+<code>[options]</code></p>
+
+<pre>Then the banner should document that this app takes options</pre>
+</li><li>
+<p>Do the opposite; check that you don't indicate options are accepted</p>
+
+<pre>Then the banner should document that this app takes no options</pre>
+</li><li>
+<p>Checks that the app's usage banner documents that its arguments are
+<code>args</code></p>
+
+<pre>Then the banner should document that this app's arguments are
+  |foo|which is optional|
+  |bar|which is required|</pre>
+</li><li>
+<p>Do the opposite; check that your app doesn't take any arguments</p>
+
+<pre>Then the banner should document that this app takes no arguments</pre>
+</li><li>
+<p>Check for a usage description which occurs after the banner and a blank
+line</p>
+
+<pre>Then there should be a one line summary of what the app does</pre>
+</li></ul>
+
+    </div>
+  
+
+
+  
+
+
+  
+  
+
+
+  
+
+
+  
+
+  
+
+
+
+  
+
+    
+
+    
+
+    
+
+
+    
+
+
+    <!-- Methods -->
+              </div>
+    </div>
+  </body>
+</html>    
