@@ -25,7 +25,7 @@ http://a1.mzstatic.com/us/r30/Publication/v4/2c/f7/90/2cf7902f-f709-9125-c73d-87
 == Links
 
 * {Source on Github}[http://github.com/davetron5000/methadone]
-* RDoc[http://rdoc.info/github/davetron5000/methadone/master/frames]
+* RDoc[http://davetron5000.github.com/methadone/rdoc]
 
 == Platforms
 
@@ -82,7 +82,7 @@ A canonical <tt>OptionParser</tt> driven app has a few problems with it structur
 * Verbose to use +opts.on+ just to set a value in a +Hash+
 * No exception handling - you have to explicitly call <tt>exit</tt> and/or let exceptions' stack traces leak through.
 
-Methadone provides Methadone::Main to help make a clean and easy-to-maintain <tt>bin</tt> file.  See the  {rdoc}[http://rubydoc.info/github/davetron5000/methadone/master/Methadone/Main] for an example, and see {my blog}[http://www.naildrivin5.com/blog/2011/12/19/methadone-the-awesome-cli-library.html] on the derivation of this module.
+Methadone provides Methadone::Main to help make a clean and easy-to-maintain <tt>bin</tt> file.  See the  {rdoc}[http://davetron5000.github.com/methadone/rdoc/classes/Methadone/Main.html] for an example, and see {my blog}[http://www.naildrivin5.com/blog/2011/12/19/methadone-the-awesome-cli-library.html] on the derivation of this module.
 
 == Wrapper for running external commands with good logging
 
@@ -106,7 +106,7 @@ Enter Methadone::SH
     #
     #        there's a LOT MORE
 
-See the {rdoc}[http://rubydoc.info/github/davetron5000/methadone/master/Methadone/SH] for more detailed examples and usage.
+See the {rdoc}[http://davetron5000.github.com/methadone/rdoc/classes/Methadone/SH.html] for more detailed examples and usage.
 
 This isn't a replacement for Open3 or ChildProcess, but a way to easily "do the right thing" for most cases.
 
@@ -122,7 +122,7 @@ Methadone::CLILogger is designed to handle this.  It's a proper subclass of Ruby
 * When these are redirected to a file, the log messages are properly date/time stamped as you'd expect
 * You can mix-in Methadone::CLILogging to get access to a global logger instances without resorting to an explicit global variable
 
-See {CLILogger's rdoc}[http://rubydoc.info/github/davetron5000/methadone/master/Methadone/CLILogger] and then {CLILogging's}[http://rubydoc.info/github/davetron5000/methadone/master/Methadone/CLILogging] for more.
+See {CLILogger's rdoc}[http://davetron5000.github.com/methadone/rdoc/classes/Methadone/CLILogger.html] and then {CLILogging's}[http://davetron5000.github.com/methadone/rdoc/classes/Methadone/CLILogging.html] for more.
 
 
 Currently, there are classes the assist in directing output logger-style to the right place; basically ensuring that errors go to +STDERR+ and everything else goes to +STDOUT+.  All of this is, of course, configurable
@@ -147,7 +147,7 @@ Here's an example from methadone's own tests:
         |app_name|which is required|
         |dir_name|which is optional|
 
-See Methadone::Cucumber or its {rdoc}[http://rubydoc.info/github/davetron5000/methadone/master/Methadone/Cucumber] for a list of all the steps provided.
+See Methadone::Cucumber or its {rdoc}[http://davetron5000.github.com/methadone/rdoc/classes/Methadone/Cucumber.html] for a list of all the steps provided.
 
 == Contributing
 
