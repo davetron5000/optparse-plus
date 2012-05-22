@@ -37,4 +37,5 @@ gem install open4
   s.add_development_dependency("simplecov", "~> 0.5")
   s.add_development_dependency("clean_test", "~> 0.10")
   s.add_development_dependency("mocha")
+  s.add_development_dependency("sdoc")
 end

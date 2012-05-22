@@ -1,8 +1,7 @@
+require 'sdoc'
 require 'bundler'
 require 'rake/clean'
 require 'rake/testtask'
-gem 'rdoc' # I need to use the installed RDoc gem, not what comes with the system
-require 'rdoc/task'
 require 'cucumber'
 require 'cucumber/rake/task'
 
@@ -21,10 +20,12 @@ end
 desc 'build rdoc'
 RDoc::Task.new do |rd|
   rd.main = "README.rdoc"
-  rd.generator = 'hanna'
+  rd.options << '-f' << 'sdoc'
+  rd.template = 'direct'
   rd.rdoc_files.include("README.rdoc","lib/**/*.rb","bin/**/*")
   rd.title = 'Methadone - Power Up your Command Line Apps'
 end
+CLOBBER << 'html'
 
 if RUBY_PLATFORM == 'java'
 task :features do
