@@ -27,7 +27,7 @@
         </ul>
       </header>
       <section>
-        <p>Methadone is the best way to create simple command-line applications in Ruby.  It sports an concise, readable set of helper methods, without sacrificing any of the power you can get from <code>OptionParser</code></p>
+        <p>Methadone is the best way to create simple command-line applications in Ruby.  It sports a concise, readable set of helper methods, without sacrificing any of the power you can get from <code>OptionParser</code></p>
 
 <h1>The simplest Methadone-powered app</h1>
 
@@ -70,6 +70,7 @@
 
 <span class="n">version</span>     <span class="s1">'0.0.1'</span>
 <span class="n">description</span> <span class="s1">'Show off how great Methadone is!'</span>
+<span class="n">arg</span>         <span class="s1">:some_arg, :required</span>
 
 <span class="n">on</span><span class="p">(</span><span class="s2">"--verbose"</span><span class="p">,</span><span class="s2">"Be verbose"</span><span class="p">)</span>
 <span class="n">options</span><span class="o">[</span><span class="s1">'ip-address'</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'127.0.0.1'</span>
@@ -83,7 +84,7 @@
 <p>Now, let's run our app:</p>
 
 <pre lang="shell"><code>$ our_app --help
-Usage: our_app [options]
+Usage: our_app [options] some_arg
 
 Show off how great Methadone is!
 
