@@ -2,3 +2,4 @@ Gemfile.lock
 pkg
 html
 tmp
+.DS_Store
