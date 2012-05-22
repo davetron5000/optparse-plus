@@ -3,3 +3,4 @@ pkg
 html
 tmp
 .DS_Store
+.*.sw?

@@ -1,10 +1,10 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700);
 body {
-  font-family: Lato, "Helvetica Neue", Arial, sans-serif;
+font-family: Lato, "Helvetica Neue", Arial, sans-serif;
   background: #FFF;
   color: #000;
   margin: 0px;
-  font-size: 0.82em;
+font-size: 16px;
   line-height: 1.25em;
 }
 
@@ -23,21 +23,21 @@ p {
 }
 
 h1 {
-    font-size: 2.1em;
+font-size: 38px;
     font-weight: normal;
     line-height: 1.2em;
     margin: 1.4em 0 0.7em 0;
 }
 
 h2 {
-    font-size: 1.6em;
+font-size: 32px;
     margin: 1.8em 0 0.8em 0;
     font-weight: normal;
     line-height: 1.2em;
 }
 
 h3 {
-    font-size: 1.4em;
+font-size: 24px;
     color:#555;
     margin: 1.4em 0 0.7em 0;
     font-weight: normal;
@@ -45,7 +45,7 @@ h3 {
 
 h4 {
     margin: 1.4em 0 0.5em 0;
-    font-size: 1em;
+font-size: 16px;
 }
 
 table
@@ -109,13 +109,13 @@ ol li
 }
 .banner h1
 {
-    font-size: 1.2em;
+font-size: 20px;
     margin: 0;
 }
 
 .banner h1 .type
 {
-    font-size: 0.833em;
+font-size: 16px;
     display:block;
 }
 
@@ -129,7 +129,7 @@ ol li
 {
     margin-top: 0.3em;
     margin-bottom: 0;
-    font-size: 0.85em;
+font-size: 16px;
 }
 
 .banner li
@@ -139,16 +139,19 @@ ol li
     margin-bottom: 0;
 }
 
-pre 
+pre {
+          font-family: Monaco, monospace;
+          margin-bottom: 1em;
+        }
+        pre.original
 {
-    font-family: Monaco, monospace;
     margin-bottom: 1em;
 }
 
 .methods dt
 {
     width: 1em;
-    font-size: 1.5em;
+font-size: 24px;
     color:#AAA;
     position: absolute;
     font-weight: normal;
@@ -183,7 +186,7 @@ pre
   margin-top: 2em;
   margin-bottom: 1.3em;
   margin-left: -1.2em;
-  font-size: 1.2em;
+font-size: 20px;
   padding: 0 0 0.25em 0;
   font-weight: bold;
   border-bottom: 1px solid #000;
@@ -193,7 +196,7 @@ pre
   margin-top: 4em;
   margin-bottom: 1.3em;
   margin-left: -0.9em;
-  font-size: 1.6em;
+font-size: 32px;
   padding: 0 0 0.25em 0;
   font-weight: bold;
 }
@@ -213,13 +216,13 @@ pre
 }
 
 tt {
-  font-size: 1.15em;
+font-size: 20px;
 }
 
 .attr-value {
-  font-family: Monaco, monospace;
+font-family: Monaco, monospace;
   padding-left: 1em;
-  font-size: 1.15em;
+font-size: 20px;
 }
 
 .dyn-source {
@@ -260,14 +263,14 @@ tt {
     border-bottom: 1px dotted #999;
     padding: 0 0 0.2em 0;
     margin-bottom: 0.8em;
-    font-size: 1.1em;
+font-size: 20px;
     color:#333;
 }
 .method .method-title {
     border-bottom: 1px dotted #666;
     padding: 0 0 0.15em 0;
     margin: 0 0 0.5em 0;
-    font-size: 1.2em;
+font-size: 20px;
     line-height: 1.25em;
 }
 
@@ -285,7 +288,7 @@ tt {
 
 .method .source-link
 {
-    font-size: 0.85em;
+font-size: 16px;
 }
 
 .ruby-constant {
