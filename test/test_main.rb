@@ -289,6 +289,25 @@ class TestMain < BaseTest
     }
   end
 
+  test_that "passing non-strings wont' break automagic stuff" do
+    Given {
+      @foo = nil
+      @bar = nil
+      main do
+        @foo = options[:foo]
+        @bar = options[:bar]
+      end
+      on("--foo ARG",OptionParser::DecimalInteger)
+      on("--bar ARG",/^\d/)
+      set_argv %w(--foo 88 --bar 4)
+    }
+    When run_go_safely
+    Then {
+      assert_equal 88,@foo,@logged.string + $stdout.string
+      assert_equal '4',@bar,@logged.string + $stdout.string
+    }
+  end
+
   test_that "omitting the block to opts simply sets the value in the options hash and returns itself" do
     Given {
       @switch = nil

@@ -453,7 +453,7 @@ module Methadone
       options << :one unless options.include?(:any) || options.include?(:many)
       @args << arg_name
       @arg_options[arg_name] = options
-      options.select { |_| _.kind_of? ::String }.each do |doc|
+      options.select(&STRINGS_ONLY).each do |doc|
         @arg_documentation[arg_name] = doc + (options.include?(:optional) ? " (optional)" : "")
       end
       set_banner
@@ -510,7 +510,11 @@ module Methadone
     end
 
     def option_names_from(args)
-      args.select { |_| _ =~ /^\-/ }.map { |_| _.gsub(/^\-+/,'').gsub(/\s.*$/,'') }
+      args.select(&STRINGS_ONLY).select { |_| 
+        _ =~ /^\-/ 
+      }.map { |_| 
+        _.gsub(/^\-+/,'').gsub(/\s.*$/,'') 
+      }
     end
 
     def set_banner
@@ -540,7 +544,7 @@ module Methadone
     end
 
     def option_names(*opts_on_args,&block)
-      opts_on_args.map { |arg|
+      opts_on_args.select(&STRINGS_ONLY).map { |arg|
         if arg =~ /^--\[no-\]([^-\s][^\s]*)/
           $1.to_sym
         elsif arg =~ /^--([^-\s][^\s]*)/
@@ -552,6 +556,8 @@ module Methadone
         end
       }.reject(&:nil?)
     end
+
+    STRINGS_ONLY = lambda { |o| o.kind_of?(::String) }
 
   end
 end
