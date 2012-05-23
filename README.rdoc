@@ -47,6 +47,7 @@ The +methadone+ command-line app will bootstrap a new command-line app, setting 
             --force                      Overwrite files if they exist
     $ methadone newgem
     $ cd newgem
+    $ bundle
     $ rake
     1 tests, 1 assertions, 0 failures, 0 errors, 0 skips
     1 scenario (1 passed)
