@@ -3,49 +3,49 @@ module Methadone
   # gain access to the steps defined in this file.  They provide you with the following:
   #
   # * Run <tt>command_to_run --help</tt> using aruba
-  # 
+  #
   #     When I get help for "command_to_run"
-  # 
+  #
   # * Make sure that each option shows up in the help and has *some* sort of documentation
-  # 
+  #
   #     Then the following options should be documented:
   #       |--force|
   #       |-x     |
-  # 
+  #
   # * Check an individual option for documentation:
-  # 
+  #
   #     Then the option "--force" should be documented
-  # 
+  #
   # * Checks that the help has a proper usage banner
-  # 
+  #
   #     Then the banner should be present
-  # 
+  #
   # * Checks that the banner includes the version
-  # 
+  #
   #     Then the banner should include the version
-  # 
+  #
   # * Checks that the usage banner indicates it takes options via <tt>[options]</tt>
-  # 
+  #
   #     Then the banner should document that this app takes options
-  # 
+  #
   # * Do the opposite; check that you don't indicate options are accepted
-  # 
+  #
   #     Then the banner should document that this app takes no options
-  # 
+  #
   # * Checks that the app's usage banner documents that its arguments are <tt>args</tt>
-  # 
+  #
   #     Then the banner should document that this app's arguments are
   #       |foo|which is optional|
   #       |bar|which is required|
-  # 
+  #
   # * Do the opposite; check that your app doesn't take any arguments
-  # 
+  #
   #     Then the banner should document that this app takes no arguments
-  # 
+  #
   # * Check for a usage description which occurs after the banner and a blank line
-  # 
+  #
   #     Then there should be a one line summary of what the app does
-  # 
+  #
   module Cucumber
   end
 end
@@ -100,5 +100,5 @@ Then /^there should be a one line summary of what the app does$/ do
   output_lines.should have_at_least(3).items
   # [0] is our banner, which we've checked for
   output_lines[1].should match(/^\s*$/)
-  output_lines[2].should match(/^\w\w+\s+\w\w+/)
+  output_lines[2].should match(/^\w+\s+\w+/)
 end
