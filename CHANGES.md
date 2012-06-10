@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.2.1 - Jun 10, 2012, 3:41 PM
+
+* Slightly loosen what passes for a one-line description of the app, courtesy @jredville
+
 ## v1.2.0 - May 21, 2012, 11:05 PM
 
 * Better handling of `open4` dependency when you don't install it and you don't use it.
