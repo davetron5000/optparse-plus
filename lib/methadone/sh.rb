@@ -103,13 +103,13 @@ module Methadone
       stdout,stderr,status = execution_strategy.run_command(command)
       process_status = Methadone::ProcessStatus.new(status,options[:expected])
 
-      sh_logger.warn("Error output of '#{command}': #{stderr}") unless stderr.strip.length == 0
+      sh_logger.warn("stderr output of '#{command}': #{stderr}") unless stderr.strip.length == 0
 
       if process_status.success?
-        sh_logger.debug("Output of '#{command}': #{stdout}") unless stdout.strip.length == 0
+        sh_logger.debug("stdout output of '#{command}': #{stdout}") unless stdout.strip.length == 0
         call_block(block,stdout,stderr,process_status.exitstatus) unless block.nil?
       else
-        sh_logger.info("Output of '#{command}': #{stdout}") unless stdout.strip.length == 0
+        sh_logger.info("stdout output of '#{command}': #{stdout}") unless stdout.strip.length == 0
         sh_logger.warn("Error running '#{command}'")
       end
 

@@ -188,8 +188,8 @@ class TestSH < Clean::Test::TestCase
           @block_called.should == true
           @exitstatus_received.should == 1
           @logger.debugs[0].should == "Executing '#{test_command}foo'"
-          @logger.debugs[1].should == "Output of '#{test_command}foo': #{test_command_stdout}"
-          @logger.warns[0].should == "Error output of '#{test_command}foo': #{test_command_stderr}"
+          @logger.debugs[1].should == "stdout output of '#{test_command}foo': #{test_command_stdout}"
+          @logger.warns[0].should == "stderr output of '#{test_command}foo': #{test_command_stderr}"
         }
       end
     end
@@ -360,14 +360,14 @@ private
   def assert_successful_command_execution(exit_code,logger,command,stdout)
     exit_code.should == 0
     logger.debugs[0].should == "Executing '#{command}'"
-    logger.debugs[1].should == "Output of '#{command}': #{stdout}"
+    logger.debugs[1].should == "stdout output of '#{command}': #{stdout}"
     logger.warns.length.should == 0
   end
 
   def assert_logger_output_for_failure(logger,command,stdout,stderr)
     logger.debugs[0].should == "Executing '#{command}'"
-    logger.infos[0].should == "Output of '#{command}': #{stdout}"
-    logger.warns[0].should == "Error output of '#{command}': #{stderr}"
+    logger.infos[0].should == "stdout output of '#{command}': #{stdout}"
+    logger.warns[0].should == "stderr output of '#{command}': #{stderr}"
     logger.warns[1].should == "Error running '#{command}'"
   end
 
