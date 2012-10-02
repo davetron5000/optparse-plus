@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.2.2 - Oct 2, 2012
+
+* Less scary stdout/stderr prefixing from SH, courtesy @yoni
+
 ## v1.2.1 - Jun 10, 2012, 3:41 PM
 
 * Slightly loosen what passes for a one-line description of the app, courtesy @jredville

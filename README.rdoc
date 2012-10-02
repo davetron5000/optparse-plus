@@ -4,6 +4,8 @@ Author::  Dave Copeland (mailto:davetron5000 at g mail dot com)
 Copyright:: Copyright (c) 2011 by Dave Copeland
 License:: Distributes under the Apache License, see LICENSE.txt in the source distro
 
+{<img src="https://secure.travis-ci.org/davetron5000/methadone.png" alt="Build Status" />}[http://travis-ci.org/davetron5000/methadone]
+
 A smattering of tools to make your command-line apps easily awesome; kick the bash habit without sacrificing any of the power.
 
 The goal of this project is to make it as easy as possible to write awesome and powerful command-line applications.
