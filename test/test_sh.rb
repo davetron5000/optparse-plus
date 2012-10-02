@@ -19,7 +19,11 @@ class TestSH < Clean::Test::TestCase
     def debug(msg); @debugs << msg; end
     def info(msg); @infos << msg; end
     def warn(msg); @warns << msg; end
-    def error(msg); @errors << msg; end
+    def error(msg)
+      # Try to figure out what's going on on Travis
+      STDERR.puts msg if RUBY_PLATFORM == 'java'
+      @errors << msg
+    end
     def fatal(msg); @fatals << msg; end
 
   end
