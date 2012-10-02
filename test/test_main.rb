@@ -634,7 +634,7 @@ class TestMain < BaseTest
       @flag_value = any_string
       rc_file = File.join(ENV['HOME'],'.my_app.rc')
       File.open(rc_file,'w') do |file|
-        file.puts ({
+        file.puts({
           'switch' => true,
           'flag' => @flag_value,
         }.to_yaml)
