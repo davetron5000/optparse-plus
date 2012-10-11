@@ -4,7 +4,7 @@ require 'stringio'
 
 class TestCLILogging < BaseTest
   include Methadone
-  
+
   def setup
     @blank_format = proc do |severity,datetime,progname,msg|
       msg + "\n"

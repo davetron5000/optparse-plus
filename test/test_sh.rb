@@ -1,5 +1,5 @@
-require 'test/unit'
-require 'clean_test/test_case'
+require 'base_test'
+require 'methadone'
 
 class TestSH < Clean::Test::TestCase
   include Methadone::SH
