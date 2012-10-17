@@ -27,20 +27,25 @@ main do |app_name|
   chdir gemname
 
   template_dirs_in(:full).each  { |dir| mkdir_p dir }
+  copy "lib/gemname", :from => :full, :as => gemname.to_s, :binding => binding
+  copy_file "lib/gemname.rb", :from => :full, :as => gemname.to_s, :binding => binding
+  copy_file "lib/gemname/error.rb", :from => :full, :binding => binding
 
   rspec = options[:rspec]
 
-  ["Rakefile", ".gitignore", "features/support/env.rb"].each do |file|
+  yard = options[:yard]
+
+  ["Rakefile", ".gitignore", ".rspec", ".rvmrc", ".travis.yml", "features/support/env.rb"].each do |file|
     copy_file file, :binding => binding
   end
 
   if rspec
     template_dirs_in(:rspec).each  { |dir| mkdir_p dir }
-    copy_file "spec/tc_something_spec.rb", :from => :rspec, :binding => binding
-
+    copy_file "spec/tc_something_spec.rb", :from => :rspec, :as => "#{gemname}_spec.rb", :binding => binding
+    copy "spec/gemname", :from => :rspec, :as => gemname.to_s, :binding => binding
   else
     template_dirs_in(:test_unit).each  { |dir| mkdir_p dir }
-    copy_file "test/tc_something.rb", :from => :test_unit, :binding => binding
+    copy_file "test/tc_something.rb", :from => :test_unit, :as => "#{gemname}_spec.rb", :binding => binding
   end
 
 
@@ -48,6 +53,8 @@ main do |app_name|
   warn "warning: your app has no license" unless license
   license = nil if license == 'NONE'
   copy_file "#{options[:license]}_LICENSE.txt", :as => "LICENSE.txt" if license
+
+  copy_file "features/executable.feature", :as => "#{gemname}.feature", :binding => binding
 
   copy_file "README.rdoc", :binding => binding if using_readme
 
@@ -61,7 +68,23 @@ main do |app_name|
     "  #{gem_variable}.add_development_dependency('aruba')",
     "  #{gem_variable}.add_development_dependency('rake','~> 0.9.2')",
     "  #{gem_variable}.add_dependency('methadone', '~>#{Methadone::VERSION}')",
+    "  #{gem_variable}.add_dependency('simplecov')",
   ], :before => /^end\s*$/
+
+  if rspec
+    gem_variable = File.open("#{gemname}.gemspec") { |x| x.read }.match(/(\w+)\.executables/)[1]
+    add_to_file "#{gemname}.gemspec", [
+      "  #{gem_variable}.add_dependency('rspec')",
+    ], :before => /^end\s*$/
+  end
+
+  if yard
+    gem_variable = File.open("#{gemname}.gemspec") { |x| x.read }.match(/(\w+)\.executables/)[1]
+    add_to_file "#{gemname}.gemspec", [
+      "  #{gem_variable}.add_dependency('yard')",
+    ], :before => /^end\s*$/
+  end
+
 end
 
 options[:readme] = true
@@ -71,6 +94,7 @@ description "Kick the bash habit by bootstrapping your Ruby command-line apps"
 on("--force","Overwrite files if they exist")
 on("--[no-]readme","[Do not ]produce a README file")
 on("--rspec", "Generate RSpec unit tests instead of Test::Unit")
+on("--yard", "Generate YARD doc instead of RDoc")
 
 licenses = %w(mit apache custom NONE)
 on("-l LICENSE","--license",licenses,"Specify the license for your project",'(' + licenses.join('|') + ')')

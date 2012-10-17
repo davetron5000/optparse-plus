@@ -14,7 +14,13 @@ include Rake::DSL
 
 Bundler::GemHelper.install_tasks
 
+desc 'Start an irb session with AppConfig loaded'
+task :console do
+  sh "irb -I ./lib -r 'app_config'"
+end
+
 <% if rspec %>
+#RSpec::Core::RakeTask.new(:spec)
 RSpec::Core::RakeTask.new do |t|
   # Put spec opts in a file named .rspec in root
 end
@@ -41,4 +47,24 @@ end
 task :default => [:spec,:features]
 <% else %>
 task :default => [:test,:features]
+<% end %>
+
+<% if yard %>
+task :doc => [ 'doc:clean', 'doc:api' ]
+
+namespace :doc do
+  require 'yard'
+  YARD::Rake::YardocTask.new(:api) do |t|
+    t.files = ['lib/**/*.rb']
+    t.options = [
+      '--output-dir', 'doc/api',
+      '--markup', 'markdown'
+    ]
+  end
+
+  desc 'Remove YARD Documentation'
+  task :clean do
+    system("rm -rf #{File.dirname(__FILE__)}/doc/api")
+  end
+end
 <% end %>
