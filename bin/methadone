@@ -26,10 +26,15 @@ main do |app_name|
 
   chdir gemname
 
-  template_dirs_in(:full).each  { |dir| mkdir_p dir }
-  copy "lib/gemname", :from => :full, :as => gemname.to_s, :binding => binding
-  copy_file "lib/gemname.rb", :from => :full, :as => gemname.to_s, :binding => binding
+  template_dirs_in(:full).each { |dir| mkdir_p dir }
+  copy_file "lib/gemname.rb", :from => :full, :as => "#{gemname}.rb", :binding => binding
   copy_file "lib/gemname/error.rb", :from => :full, :binding => binding
+  copy_file "lib/gemname/version.rb", :from => :full, :binding => binding
+  File.open("VERSION", 'w') { |file| file.puts "0.0.1" }
+  # Hack
+  Dir["lib/gemname/*"].each { |entry| mv entry, "lib/#{gemname}" }
+  rmdir "lib/gemname"
+  %w(core_ext util).each { |dir| mkdir_p "lib/#{gemname}/#{dir}" }
 
   rspec = options[:rspec]
 
@@ -47,12 +52,16 @@ main do |app_name|
   if rspec
     template_dirs_in(:rspec).each  { |dir| mkdir_p dir }
     copy_file "spec/tc_something_spec.rb", :from => :rspec, :as => "#{gemname}_spec.rb", :binding => binding
-    copy "spec/gemname", :from => :rspec, :as => gemname.to_s, :binding => binding
+    copy_file "spec/spec_helper.rb", :from => :rspec, :binding => binding
+    # Hack
+    Dir["spec/gemname/*"].each { |entry| mv entry, "spec/#{gemname}" }
+    rmdir "spec/gemname"
+    %w(core_ext util).each { |dir| mkdir_p "spec/#{gemname}/#{dir}" }
   else
     template_dirs_in(:test_unit).each  { |dir| mkdir_p dir }
     copy_file "test/tc_something.rb", :from => :test_unit, :as => "#{gemname}_spec.rb", :binding => binding
+    %w(core_ext util).each { |dir| mkdir_p "test/#{gemname}/#{dir}" }
   end
-
 
   license = options[:license]
   warn "warning: your app has no license" unless license
@@ -85,11 +94,13 @@ main do |app_name|
     add_to_file "#{gemname}.gemspec", [
       "  #{gem_variable}.add_dependency('rspec')",
     ], :before => /^end\s*$/
+  else
   end
 
   if yard
     add_to_file "#{gemname}.gemspec", [
       "  #{gem_variable}.add_dependency('yard')",
+      "  #{gem_variable}.add_dependency('redcarpet')",
     ], :before => /^end\s*$/
   end
 end
