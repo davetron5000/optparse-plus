@@ -49,6 +49,9 @@ task :default => [:spec,:features]
 task :default => [:test,:features]
 <% end %>
 
+require 'rake/version_task'
+Rake::VersionTask.new
+
 <% if yard %>
 task :doc => [ 'doc:clean', 'doc:api' ]
 
