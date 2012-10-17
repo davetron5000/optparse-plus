@@ -103,6 +103,10 @@ main do |app_name|
       "  #{gem_variable}.add_dependency('redcarpet')",
     ], :before => /^end\s*$/
   end
+
+  puts %x[git add .]
+  puts %x[git commit -m "Initial commit"]
+  puts %x[git checkout -b dev]
 end
 
 options[:readme] = true
