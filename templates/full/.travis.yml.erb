@@ -1,0 +1,20 @@
+language: ruby
+rvm:
+  - 1.9.2
+  - 1.9.3
+script: bundle exec rake spec
+#before_install:
+  #- gem update --system
+  #- gem --version
+env:
+  - USE_PLYMOUTH="no"
+branches:
+  only:
+    - master
+notifications:
+  email:
+    recipients:
+      - <%= FIX %>
+    on_succes: change
+    # [always|never|change]
+    on_failure: always
