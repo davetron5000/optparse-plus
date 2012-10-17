@@ -12,11 +12,12 @@ require 'rdoc/task'
 
 include Rake::DSL
 
+CLOBBER << "pkg"
 Bundler::GemHelper.install_tasks
 
 desc 'Start an irb session with AppConfig loaded'
 task :console do
-  sh "irb -I ./lib -r 'app_config'"
+  sh "irb -I ./lib -r '<%= gemname %>'"
 end
 
 <% if rspec %>
@@ -37,6 +38,7 @@ Cucumber::Rake::Task.new(:features) do |t|
   t.fork = false
 end
 
+CLOBBER << "coverage"
 Rake::RDocTask.new do |rd|
   <% if using_readme %>
   rd.main = "README.rdoc"
@@ -55,6 +57,8 @@ Rake::VersionTask.new
 <% if yard %>
 task :doc => [ 'doc:clean', 'doc:api' ]
 
+CLOBBER << "doc"
+CLEAN << "doc"
 namespace :doc do
   require 'yard'
   YARD::Rake::YardocTask.new(:api) do |t|
@@ -71,9 +75,6 @@ namespace :doc do
   end
 end
 <% end %>
-
-CLEAN << "coverage"
-CLEAN << "pkg"
 
 module Erb
   require 'erb'
