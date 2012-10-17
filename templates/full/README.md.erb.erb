@@ -1,0 +1,68 @@
+# <%= module_name %> [![Build Status](https://secure.travis-ci.org/DSIW/<%= gemname %>.png)](http://travis-ci.org/DSIW/<%= gemname %>) [![Dependency Status](https://gemnasium.com/DSIW/<%= gemname %>.png)](https://gemnasium.com/DSIW/<%= gemname %>)
+
+Version: <%%= require File.absolute_path("../lib/<%= gemname %>/version.rb", __FILE__); <%= module_name %>::VERSION %>
+
+SMALL DESCRIPTION
+
+Author:  YOUR NAME (YOUR EMAIL)
+Copyright: Copyright (c) <%= Time.now.year %> YOUR NAME
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+    gem '<%= gemname %>'
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install <%= gemname %>
+
+
+## Usage
+
+<%%= %x[bundle exec bin/<%= gemname %> --help] %>
+
+## Deprecation Note
+
+## <%= module_name %>::MODULE::CLASS
+
+DESCRIPTION WITH EXAMPLES
+
+## Examples
+<%%
+    def self.example(title, command);
+        title = "### #{title}"
+        input = "**Input:**\n\n    #{command.gsub("bundle exec bin/",'')}"
+        output = "**Output:**\n```\n#{%x[#{command}]}```"
+        [title, input, output].join("\n\n")
+    end
+%>
+
+<%%= example "Title of example", "bundle exec bin/<%= gemname %> PARAMS" %>
+
+<% if license %>
+##License
+
+<% if license == 'custom' %>
+INSERT LICENSE HERE
+<% else %>
+<%= license %>, see LICENSE.txt
+<% end %>
+<% end %>
+
+## Links
+
+* [Source on Github](https://github/DSIW/<%= gemname %>)
+* [RDoc](LINK TO RDOC.INFO)
+
+## Contributing
+
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Added some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request

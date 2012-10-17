@@ -12,9 +12,16 @@ require 'rdoc/task'
 
 include Rake::DSL
 
+CLOBBER << "pkg"
 Bundler::GemHelper.install_tasks
 
+desc 'Start an irb session with AppConfig loaded'
+task :console do
+  sh "irb -I ./lib -r '<%= gemname %>'"
+end
+
 <% if rspec %>
+#RSpec::Core::RakeTask.new(:spec)
 RSpec::Core::RakeTask.new do |t|
   # Put spec opts in a file named .rspec in root
 end
@@ -31,6 +38,7 @@ Cucumber::Rake::Task.new(:features) do |t|
   t.fork = false
 end
 
+CLOBBER << "coverage"
 Rake::RDocTask.new do |rd|
   <% if using_readme %>
   rd.main = "README.rdoc"
@@ -42,3 +50,57 @@ task :default => [:spec,:features]
 <% else %>
 task :default => [:test,:features]
 <% end %>
+
+require 'rake/version_task'
+Rake::VersionTask.new
+
+<% if yard %>
+task :doc => [ 'doc:clean', 'doc:api' ]
+
+CLOBBER << "doc"
+CLEAN << "doc"
+namespace :doc do
+  require 'yard'
+  YARD::Rake::YardocTask.new(:api) do |t|
+    t.files = ['lib/**/*.rb']
+    t.options = [
+      '--output-dir', 'doc/api',
+      '--markup', 'markdown'
+    ]
+  end
+
+  desc 'Remove YARD Documentation'
+  task :clean do
+    system("rm -rf #{File.dirname(__FILE__)}/doc/api")
+  end
+end
+<% end %>
+
+module Erb
+  require 'erb'
+
+  def self.rm_basename_ext file, extension
+    path = Pathname.new(file)
+    path.basename.sub(/\.#{extension}$/, '').to_s
+  end
+
+  def self.target_of file
+    rm_basename_ext(file, "erb")
+  end
+
+  def self.generate_file file, options={}
+    target = target_of file
+    puts "generating #{target}"
+    return if options[:noop]
+
+    File.open(target, 'w') do |new_file|
+      new_file.write ERB.new(File.read(file)).result(binding)
+    end
+  rescue Interrupt
+  end
+end
+
+desc "Generate README.md"
+task :gen_readme do
+  Erb::generate_file "README.md.erb"
+end
