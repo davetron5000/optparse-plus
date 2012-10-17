@@ -67,13 +67,8 @@ main do |app_name|
   copy_file "features/step_definitions/executable_steps.rb", :as => "#{gemname}_steps.rb"
   copy_file "bin/executable", :as => gemname, :executable => true, :binding => binding
 
-  add_to_file "#{gemname}.gemspec", [
-    "require File.absolute_path('../lib/#{gemname}/version', __FILE__)\n",
-  ], :before => /^Gem::Specification\s*$/
   gem_variable = File.open("#{gemname}.gemspec") { |x| x.read }.match(/(\w+)\.executables/)[1]
   add_to_file "#{gemname}.gemspec", [
-    "  #{gem_variable}.license = MIT",
-    "  #{gem_variable}.version = #{module_name}::VERSION",
     "  #{gem_variable}.post_install_message = \"Thanks for installing\"",
     "  #{gem_variable}.add_development_dependency('rdoc')",
     "  #{gem_variable}.add_development_dependency('aruba')",
@@ -99,7 +94,6 @@ main do |app_name|
       "  #{gem_variable}.add_dependency('yard')",
     ], :before => /^end\s*$/
   end
-
 end
 
 options[:readme] = true
