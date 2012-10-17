@@ -71,3 +71,32 @@ end
 
 CLEAN << "coverage"
 CLEAN << "pkg"
+
+module Erb
+  require 'erb'
+
+  def self.rm_basename_ext file, extension
+    path = Pathname.new(file)
+    path.basename.sub(/\.#{extension}$/, '').to_s
+  end
+
+  def self.target_of file
+    rm_basename_ext(file, "erb")
+  end
+
+  def self.generate_file file, options={}
+    target = target_of file
+    puts "generating #{target}"
+    return if options[:noop]
+
+    File.open(target, 'w') do |new_file|
+      new_file.write ERB.new(File.read(file)).result(binding)
+    end
+  rescue Interrupt
+  end
+end
+
+desc "Generate README.md"
+task :gen_readme do
+  Erb::generate_file "README.md.erb"
+end
