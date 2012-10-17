@@ -35,9 +35,14 @@ main do |app_name|
 
   yard = options[:yard]
 
-  ["Rakefile", ".gitignore", ".rspec", ".rvmrc", ".travis.yml", "features/support/env.rb"].each do |file|
-    copy_file file, :binding => binding
-  end
+  [
+    "Rakefile",
+    ".gitignore",
+    ".rspec",
+    ".rvmrc",
+    ".travis.yml",
+    "features/support/env.rb"
+  ].each { |file| copy_file file, :binding => binding }
 
   if rspec
     template_dirs_in(:rspec).each  { |dir| mkdir_p dir }
