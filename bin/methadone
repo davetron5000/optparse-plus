@@ -82,14 +82,12 @@ main do |app_name|
   ], :before => /^end\s*$/
 
   if rspec
-    gem_variable = File.open("#{gemname}.gemspec") { |x| x.read }.match(/(\w+)\.executables/)[1]
     add_to_file "#{gemname}.gemspec", [
       "  #{gem_variable}.add_dependency('rspec')",
     ], :before => /^end\s*$/
   end
 
   if yard
-    gem_variable = File.open("#{gemname}.gemspec") { |x| x.read }.match(/(\w+)\.executables/)[1]
     add_to_file "#{gemname}.gemspec", [
       "  #{gem_variable}.add_dependency('yard')",
     ], :before => /^end\s*$/
