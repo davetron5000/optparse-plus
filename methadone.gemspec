@@ -29,13 +29,13 @@ gem install open4
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
   s.add_dependency("bundler")
-  s.add_development_dependency("rspec-expectations", "~> 2.6")
   s.add_development_dependency("rake")
   s.add_development_dependency("rdoc","~> 3.9")
-  s.add_development_dependency("cucumber","~> 1.1.1")
+  s.add_development_dependency("cucumber")
   s.add_development_dependency("aruba")
   s.add_development_dependency("simplecov", "~> 0.5")
-  s.add_development_dependency("clean_test", "~> 0.10")
+  s.add_development_dependency("clean_test")
   s.add_development_dependency("mocha")
   s.add_development_dependency("sdoc")
+  s.add_development_dependency("rspec") # needed so that rspec-bootstrapped app test can run
 end
