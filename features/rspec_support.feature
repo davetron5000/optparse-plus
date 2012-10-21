@@ -6,6 +6,7 @@ Feature: Bootstrap a new command-line app using RSpec instead of Test::Unit
   Background:
     Given the directory "tmp/newgem" does not exist
 
+    @announce
   Scenario: Bootstrap a new app from scratch
     When I successfully run `methadone --rspec tmp/newgem`
     Then the following directories should exist:
