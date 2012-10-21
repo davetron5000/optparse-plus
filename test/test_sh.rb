@@ -382,7 +382,7 @@ private
 
   # Runs the test command which exits with the length of ARGV/args
   def test_command(args='')
-    File.join(File.expand_path(File.dirname(__FILE__)),'command_for_tests.rb') + ' ' + args
+    File.join(File.expand_path(File.dirname(__FILE__)),'command_for_tests.sh') + ' ' + args
   end
 
   def test_command_stdout; "standard output"; end
