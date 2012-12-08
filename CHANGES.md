@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming Version
+## v.1.2.3 - Dec 8, 2012
 
 * Can create an app with a dash in its name (See [55])
 * Help switches, `-h`, and `--help` are documented in help output (See [51])
@@ -10,17 +10,14 @@
 [51]: http://github.com/davetron5000/methadone/issues/51
 [55]: http://github.com/davetron5000/methadone/issues/55
 
-## v1.2.3 - Oct 21, 2012
+## v1.2.2 - Oct 21, 2012
 
 * Generated Rakefile has better formatted code (See [57])
 * Error output preface now says "stderr is" instead of "error output", which is less confusing (See [53])
+* Less scary stdout/stderr prefixing from SH, courtesy @yoni
 
 [57]: http://github.com/davetron5000/methadone/issues/57
 [53]: http://github.com/davetron5000/methadone/issues/53
-
-## v1.2.2 - Oct 2, 2012
-
-* Less scary stdout/stderr prefixing from SH, courtesy @yoni
 
 ## v1.2.1 - Jun 10, 2012, 3:41 PM
 

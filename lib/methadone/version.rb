@@ -1,3 +1,3 @@
 module Methadone #:nodoc:
-  VERSION = "1.2.2" #:nodoc:
+  VERSION = "1.2.3" #:nodoc:
 end
