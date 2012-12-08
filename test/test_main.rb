@@ -359,7 +359,7 @@ class TestMain < BaseTest
     }
   end
 
-  test_that "without specifying options, [options] doesn't show up in our banner" do
+  test_that "without specifying options, options in brackets doesn't show up in our banner" do
     Given {
       main {}
     }
