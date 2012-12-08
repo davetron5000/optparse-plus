@@ -35,14 +35,13 @@
     <div class="description">
       
 <p>Module with various helper methods for executing external commands. In most
-cases, you can use <a href="SH.html#method-i-sh">#sh</a> to run commands
-and have decent logging done.  You will likely use this in a class that
-also mixes-in <a href="CLILogging.html">Methadone::CLILogging</a>
-(remembering that <a href="Main.html">Methadone::Main</a> mixes this in for
-you).</p>
+cases, you can use <a href="SH.html#method-i-sh">sh</a> to run commands and
+have decent logging done.  You will likely use this in a class that also
+mixes-in <a href="CLILogging.html">Methadone::CLILogging</a> (remembering
+that <a href="Main.html">Methadone::Main</a> mixes this in for you).</p>
 
 <p>If you <strong>don't</strong>, you must provide a logger via <a
-href="SH.html#method-i-set_sh_logger">#set_sh_logger</a>.</p>
+href="SH.html#method-i-set_sh_logger">set_sh_logger</a>.</p>
 
 <h2 id="label-Examples">Examples</h2>
 
@@ -80,7 +79,7 @@ href="SH.html#method-i-set_sh_logger">#set_sh_logger</a>.</p>
 
 <p>In order to work on as many Rubies as possible, this class defers the
 actual execution to an execution strategy.  See <a
-href="SH.html#method-i-set_execution_strategy">#set_execution_strategy</a>
+href="SH.html#method-i-set_execution_strategy">set_execution_strategy</a>
 if you think you'd like to override that, or just want to know how it
 works.</p>
 
@@ -389,13 +388,13 @@ exist, this returns 127.</p>
   <span class="ruby-identifier">stdout</span>,<span class="ruby-identifier">stderr</span>,<span class="ruby-identifier">status</span> = <span class="ruby-identifier">execution_strategy</span>.<span class="ruby-identifier">run_command</span>(<span class="ruby-identifier">command</span>)
   <span class="ruby-identifier">process_status</span> = <span class="ruby-constant">Methadone</span><span class="ruby-operator">::</span><span class="ruby-constant">ProcessStatus</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">status</span>,<span class="ruby-identifier">options</span>[<span class="ruby-value">:expected</span>])
 
-  <span class="ruby-identifier">sh_logger</span>.<span class="ruby-identifier">warn</span>(<span class="ruby-node">&quot;Error output of '#{command}': #{stderr}&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">stderr</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-number">0</span>
+  <span class="ruby-identifier">sh_logger</span>.<span class="ruby-identifier">warn</span>(<span class="ruby-node">&quot;stderr output of '#{command}': #{stderr}&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">stderr</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-number">0</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">process_status</span>.<span class="ruby-identifier">success?</span>
-    <span class="ruby-identifier">sh_logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-node">&quot;Output of '#{command}': #{stdout}&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">stdout</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-number">0</span>
+    <span class="ruby-identifier">sh_logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-node">&quot;stdout output of '#{command}': #{stdout}&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">stdout</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-number">0</span>
     <span class="ruby-identifier">call_block</span>(<span class="ruby-identifier">block</span>,<span class="ruby-identifier">stdout</span>,<span class="ruby-identifier">stderr</span>,<span class="ruby-identifier">process_status</span>.<span class="ruby-identifier">exitstatus</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">nil?</span>
   <span class="ruby-keyword">else</span>
-    <span class="ruby-identifier">sh_logger</span>.<span class="ruby-identifier">info</span>(<span class="ruby-node">&quot;Output of '#{command}': #{stdout}&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">stdout</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-number">0</span>
+    <span class="ruby-identifier">sh_logger</span>.<span class="ruby-identifier">info</span>(<span class="ruby-node">&quot;stdout output of '#{command}': #{stdout}&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">stdout</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-number">0</span>
     <span class="ruby-identifier">sh_logger</span>.<span class="ruby-identifier">warn</span>(<span class="ruby-node">&quot;Error running '#{command}'&quot;</span>)
   <span class="ruby-keyword">end</span>
 
@@ -419,13 +418,13 @@ exist, this returns 127.</p>
           
             <div class="description">
               <p>Run a command, throwing an exception if the command exited nonzero.
-Otherwise, behaves exactly like <a href="SH.html#method-i-sh">#sh</a>.</p>
+Otherwise, behaves exactly like <a href="SH.html#method-i-sh">sh</a>.</p>
 <dl class="rdoc-list note-list"><dt>options
 <dd>
 <p>options hash, responding to:</p>
 <dl class="rdoc-list note-list"><dt><code>:expected</code>
 <dd>
-<p>same as for <a href="SH.html#method-i-sh">#sh</a></p>
+<p>same as for <a href="SH.html#method-i-sh">sh</a></p>
 </dd><dt><code>:on_fail</code>
 <dd>
 <p>a custom error message.  This allows you to have your app exit on shell

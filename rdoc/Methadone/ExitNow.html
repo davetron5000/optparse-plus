@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=ASCII-8BIT" http-equiv="Content-Type">
+
+<title>module Methadone::ExitNow - Methadone - Power Up your Command Line Apps</title>
+
+<link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/darkfish.js"></script>
+
+
+<body id="top" class="module">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="../index.html">Home</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>lib/methadone/exit_now.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-c-included">::included</a>
+    
+    <li><a href="#method-i-exit_now-21">#exit_now!</a>
+    
+    <li><a href="#method-i-help_now-21">#help_now!</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="../README_rdoc.html">README</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../Methadone.html">Methadone</a>
+  
+    <li><a href="../Methadone/CLI.html">Methadone::CLI</a>
+  
+    <li><a href="../Methadone/CLILogger.html">Methadone::CLILogger</a>
+  
+    <li><a href="../Methadone/CLILogging.html">Methadone::CLILogging</a>
+  
+    <li><a href="../Methadone/Cucumber.html">Methadone::Cucumber</a>
+  
+    <li><a href="../Methadone/Error.html">Methadone::Error</a>
+  
+    <li><a href="../Methadone/ExecutionStrategy.html">Methadone::ExecutionStrategy</a>
+  
+    <li><a href="../Methadone/ExecutionStrategy/Base.html">Methadone::ExecutionStrategy::Base</a>
+  
+    <li><a href="../Methadone/ExecutionStrategy/JVM.html">Methadone::ExecutionStrategy::JVM</a>
+  
+    <li><a href="../Methadone/ExecutionStrategy/MRI.html">Methadone::ExecutionStrategy::MRI</a>
+  
+    <li><a href="../Methadone/ExecutionStrategy/Open_3.html">Methadone::ExecutionStrategy::Open_3</a>
+  
+    <li><a href="../Methadone/ExecutionStrategy/Open_4.html">Methadone::ExecutionStrategy::Open_4</a>
+  
+    <li><a href="../Methadone/ExecutionStrategy/RBXOpen_4.html">Methadone::ExecutionStrategy::RBXOpen_4</a>
+  
+    <li><a href="../Methadone/ExitNow.html">Methadone::ExitNow</a>
+  
+    <li><a href="../Methadone/FailedCommandError.html">Methadone::FailedCommandError</a>
+  
+    <li><a href="../Methadone/Main.html">Methadone::Main</a>
+  
+    <li><a href="../Methadone/OptionParserProxy.html">Methadone::OptionParserProxy</a>
+  
+    <li><a href="../Methadone/ProcessStatus.html">Methadone::ProcessStatus</a>
+  
+    <li><a href="../Methadone/SH.html">Methadone::SH</a>
+  
+    <li><a href="../Object.html">Object</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="module">module Methadone::ExitNow</h1>
+
+  <div id="description" class="description">
+    
+<p>Provides <a href="ExitNow.html#method-i-exit_now-21">exit_now!</a> and <a
+href="ExitNow.html#method-i-help_now-21">help_now!</a>.  You might mix this
+into your business logic classes if they will need to exit the program with
+a human-readable error message.</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-included" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">included</span><span
+            class="method-args">(k)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="included-source">
+            <pre><span class="ruby-comment"># File lib/methadone/exit_now.rb, line 5</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">included</span>(<span class="ruby-identifier">k</span>)
+  <span class="ruby-identifier">k</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-keyword">self</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- included-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- included-method -->
+
+    
+    </section><!-- public-class-method-details -->
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-exit_now-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">exit_now!</span><span
+            class="method-args">(exit_code,message=nil)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Call this to exit the program immediately with the given error code and
+message.</p>
+<dl class="rdoc-list note-list"><dt><code>exit_code</code>
+<dd>
+<p>exit status you'd like to exit with</p>
+</dd><dt><code>message</code>
+<dd>
+<p>message to display to the user explaining the problem</p>
+</dd></dl>
+
+<p>If <code>exit_code</code> is a String and <code>message</code> is omitted,
+<code>exit_code</code> will be used as the message and the actual exit code
+will be 1.</p>
+
+<h3 id="method-i-exit_now-21-label-Examples">Examples</h3>
+
+<pre class="ruby"><span class="ruby-identifier">exit_now!</span>(<span class="ruby-value">4</span>,<span class="ruby-string">&quot;Oh noes!&quot;</span>) 
+  <span class="ruby-comment"># =&gt; exit app with status 4 and show the user &quot;Oh noes!&quot; on stderr</span>
+<span class="ruby-identifier">exit_now!</span>(<span class="ruby-string">&quot;Oh noes!&quot;</span>)   
+  <span class="ruby-comment"># =&gt; exit app with status 1 and show the user &quot;Oh noes!&quot; on stderr</span>
+<span class="ruby-identifier">exit_now!</span>(<span class="ruby-value">4</span>)            
+  <span class="ruby-comment"># =&gt; exit app with status 4 and dont' give the user a message (how rude of you)</span>
+</pre>
+          
+
+          
+          <div class="method-source-code" id="exit_now-21-source">
+            <pre><span class="ruby-comment"># File lib/methadone/exit_now.rb, line 25</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">exit_now!</span>(<span class="ruby-identifier">exit_code</span>,<span class="ruby-identifier">message</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">exit_code</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">String</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">message</span>.<span class="ruby-identifier">nil?</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">Methadone</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>,<span class="ruby-identifier">exit_code</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">Methadone</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">exit_code</span>,<span class="ruby-identifier">message</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- exit_now-21-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- exit_now-21-method -->
+
+    
+      <div id="method-i-help_now-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">help_now!</span><span
+            class="method-args">(message)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Exit the program as if the user made an error invoking your app, providing
+them the message as well as printing the help.  This is useful if you have
+complex UI validation that can't be done by OptionParser.</p>
+          
+
+          
+          <div class="method-source-code" id="help_now-21-source">
+            <pre><span class="ruby-comment"># File lib/methadone/exit_now.rb, line 36</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">help_now!</span>(<span class="ruby-identifier">message</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">OptionParser</span><span class="ruby-operator">::</span><span class="ruby-constant">ParseError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">message</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- help_now-21-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- help_now-21-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

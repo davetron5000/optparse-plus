@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=ASCII-8BIT" http-equiv="Content-Type">
+
+<title>README - Methadone - Power Up your Command Line Apps</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body class="file">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./README_rdoc.html">README</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./Methadone.html">Methadone</a>
+  
+    <li><a href="./Methadone/CLI.html">Methadone::CLI</a>
+  
+    <li><a href="./Methadone/CLILogger.html">Methadone::CLILogger</a>
+  
+    <li><a href="./Methadone/CLILogging.html">Methadone::CLILogging</a>
+  
+    <li><a href="./Methadone/Cucumber.html">Methadone::Cucumber</a>
+  
+    <li><a href="./Methadone/Error.html">Methadone::Error</a>
+  
+    <li><a href="./Methadone/ExecutionStrategy.html">Methadone::ExecutionStrategy</a>
+  
+    <li><a href="./Methadone/ExecutionStrategy/Base.html">Methadone::ExecutionStrategy::Base</a>
+  
+    <li><a href="./Methadone/ExecutionStrategy/JVM.html">Methadone::ExecutionStrategy::JVM</a>
+  
+    <li><a href="./Methadone/ExecutionStrategy/MRI.html">Methadone::ExecutionStrategy::MRI</a>
+  
+    <li><a href="./Methadone/ExecutionStrategy/Open_3.html">Methadone::ExecutionStrategy::Open_3</a>
+  
+    <li><a href="./Methadone/ExecutionStrategy/Open_4.html">Methadone::ExecutionStrategy::Open_4</a>
+  
+    <li><a href="./Methadone/ExecutionStrategy/RBXOpen_4.html">Methadone::ExecutionStrategy::RBXOpen_4</a>
+  
+    <li><a href="./Methadone/ExitNow.html">Methadone::ExitNow</a>
+  
+    <li><a href="./Methadone/FailedCommandError.html">Methadone::FailedCommandError</a>
+  
+    <li><a href="./Methadone/Main.html">Methadone::Main</a>
+  
+    <li><a href="./Methadone/OptionParserProxy.html">Methadone::OptionParserProxy</a>
+  
+    <li><a href="./Methadone/ProcessStatus.html">Methadone::ProcessStatus</a>
+  
+    <li><a href="./Methadone/SH.html">Methadone::SH</a>
+  
+    <li><a href="./Object.html">Object</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation" class="description">
+  
+<h1 id="label-Methadone+-+kick+the+bash+habit+and+start+your+command+line+apps+off+right"><a href="Methadone.html">Methadone</a> - kick the bash habit and start your command line apps off right</h1>
+<dl class="rdoc-list note-list"><dt>Author
+<dd>
+<p>Dave Copeland (<a href="mailto:davetron5000">davetron5000</a> at g mail dot
+com)</p>
+</dd><dt>Copyright
+<dd>
+<p>Copyright (c) 2011 by Dave Copeland</p>
+</dd><dt>License
+<dd>
+<p>Distributes under the Apache License, see LICENSE.txt in the source distro</p>
+</dd></dl>
+
+<p>A smattering of tools to make your command-line apps easily awesome; kick
+the bash habit without sacrificing any of the power.</p>
+
+<p>The goal of this project is to make it as easy as possible to write awesome
+and powerful command-line applications.</p>
+
+<p>Toward that end, this gem provides:</p>
+<ul><li>
+<p>A command-line app to bootstrap a new command-line app.</p>
+</li><li>
+<p>A lightweight DSL to create your command-line interface, that loses none of
+<code>OptionParser</code>'s power.</p>
+</li><li>
+<p>A simplified means of running external commands that has better error
+handling and diagnostics.</p>
+</li><li>
+<p>Simplified zero-config logging that is a better-than-<code>puts</code>
+<code>puts</code>.</p>
+</li><li>
+<p>Cucumber Steps, built on Aruba, to allow you to test-drive your
+command-line app development.</p>
+</li></ul>
+
+<h2 id="label-Tutorial">Tutorial</h2>
+
+<p><img
+src="http://a1.mzstatic.com/us/r30/Publication/v4/2c/f7/90/2cf7902f-f709-9125-c73d-87311216527d/MethadoneTutorial.225x225-75.jpg"
+/></p>
+
+<p><a
+href="http://itunes.apple.com/us/book/kick-bash-habit-ruby-methadone/id515825242?ls=1">Tutorial
+for your iPad</a> - This is a <strong>free</strong> iBooks interactive
+ebook that contains a step-by-step tutorial on making an awesome app with
+<a href="Methadone.html">Methadone</a>, including screencasts.</p>
+
+<h2 id="label-Links">Links</h2>
+<ul><li>
+<p><a href="http://github.com/davetron5000/methadone">Source on Github</a></p>
+</li><li>
+<p><a
+href="http://rdoc.info/github/davetron5000/methadone/master/frames">RDoc</a></p>
+</li></ul>
+
+<h2 id="label-Platforms">Platforms</h2>
+<ul><li>
+<p>Works completely on:</p>
+<ul><li>
+<p>MRI Ruby 1.8.7</p>
+</li><li>
+<p>MRI Ruby 1.9.2</p>
+</li><li>
+<p>MRI Ruby 1.9.3</p>
+</li><li>
+<p>MRI Ruby Head</p>
+</li><li>
+<p>RBX</p>
+</li><li>
+<p>REE</p>
+</li></ul>
+</li><li>
+<p>For JRuby, everything works but Aruba; Aruba just doesn't work on JRuby for
+some reason, though this library <strong>is</strong> being used in
+production under JRuby 1.6.6</p>
+</li></ul>
+
+<h2 id="label-Bootstrapping+a+new+CLI+App">Bootstrapping a new CLI App</h2>
+
+<p>The <code>methadone</code> command-line app will bootstrap a new
+command-line app, setting up a proper gem structure, unit tests, and
+cucumber-based tests with aruba:</p>
+
+<pre>$ methadone --help
+Usage: methadone [options] app_name
+        --force                      Overwrite files if they exist
+$ methadone newgem
+$ cd newgem
+$ rake
+1 tests, 1 assertions, 0 failures, 0 errors, 0 skips
+1 scenario (1 passed)
+3 steps (3 passed)
+$ cat features/newgem.feature
+Feature: My bootstrapped app kinda works
+  In order to get going on coding my awesome app
+  I want to have aruba and cucumber setup
+  So I don't have to do it myself
+
+  Scenario: App just runs
+    When I run `newgem --help`
+    Then the exit status should be 0
+    And the output should contain:
+    &quot;&quot;&quot;
+    Usage: newgem [options]
+    &quot;&quot;&quot;</pre>
+
+<p>Basically, this sets you up with all the boilerplate that you
+<strong>should</strong> be using to write a command-line app. 
+Specifically, you get:</p>
+<ul><li>
+<p>Gemified project (based on <code>bundle gem</code>)</p>
+</li><li>
+<p>An executable using <a href="Methadone/Main.html">Methadone::Main</a> to
+outline your new app</p>
+</li><li>
+<p><code>Test::Unit</code> test task set up and an empty unit test.</p>
+</li><li>
+<p>Aruba/Cucumber set up with a basic feature that exercise your executable</p>
+</li><li>
+<p>The outline of a <a href="README_rdoc.html">README</a></p>
+</li><li>
+<p>An optional license included</p>
+</li></ul>
+
+<h2 id="label-DSL+for+your+bin+file">DSL for your bin file</h2>
+
+<p>A canonical <code>OptionParser</code> driven app has a few problems with it
+structurally that <a href="Methadone.html">Methadone</a> can solve:</p>
+<ul><li>
+<p>Backwards organization - main logic is at the bottom of the file, not the
+top</p>
+</li><li>
+<p>Verbose to use <code>opts.on</code> just to set a value in a
+<code>Hash</code></p>
+</li><li>
+<p>No exception handling - you have to explicitly call <code>exit</code>
+and/or let exceptions' stack traces leak through.</p>
+</li></ul>
+
+<p><a href="Methadone.html">Methadone</a> provides <a
+href="Methadone/Main.html">Methadone::Main</a> to help make a clean and
+easy-to-maintain <code>bin</code> file.  See the  <a
+href="http://rubydoc.info/github/davetron5000/methadone/master/Methadone/Main">rdoc</a>
+for an example, and see <a
+href="http://www.naildrivin5.com/blog/2011/12/19/methadone-the-awesome-cli-library.html">my
+blog</a> on the derivation of this module.</p>
+
+<h2 id="label-Wrapper+for+running+external+commands+with+good+logging">Wrapper for running external commands with good logging</h2>
+
+<p>While backtick and <code>%x[]</code> are nice for compact, bash-like
+scripting, they have some failings:</p>
+<ul><li>
+<p>You have to check the return value via <code>$?</code></p>
+</li><li>
+<p>You have no access to the standard error</p>
+</li><li>
+<p>You really want to log: the command, the output, and the error so that for
+cron-like tasks, you can sort out what happened</p>
+</li></ul>
+
+<p>Enter <a href="Methadone/SH.html">Methadone::SH</a></p>
+
+<pre class="ruby"><span class="ruby-identifier">sh</span> <span class="ruby-string">&quot;cp foo.txt /tmp&quot;</span>
+<span class="ruby-comment"># =&gt; logs command at DEBUG level</span>
+<span class="ruby-comment">#    if the command exited zero:</span>
+<span class="ruby-comment">#        logs the standard output at DEBUG</span>
+<span class="ruby-comment">#        logs the standard error at WARN</span>
+<span class="ruby-comment">#    if the command exited nonzero:</span>
+<span class="ruby-comment">#        logs the standard output at INFO</span>
+<span class="ruby-comment">#        logs the standard error at WARN</span>
+<span class="ruby-comment">#        returns the exit code for your examination</span>
+<span class="ruby-comment">#</span>
+<span class="ruby-comment">#        there's a LOT MORE</span>
+</pre>
+
+<p>See the <a
+href="http://rubydoc.info/github/davetron5000/methadone/master/Methadone/SH">rdoc</a>
+for more detailed examples and usage.</p>
+
+<p>This isn't a replacement for Open3 or ChildProcess, but a way to easily "do
+the right thing" for most cases.</p>
+
+<h2 id="label-Zero-Config+Logging">Zero-Config Logging</h2>
+
+<p>Chances are, your code is littered with <code>STDERR.puts</code> on a good
+day, and nothing on a bad day.  You probably also have a bunch of debug
+<code>puts</code> calls that you have commented out.  Logging is extremely
+helpful in understand how your app is behaving (or how it behaved in the
+past).  Logging can be a pain to set up, and can also make it hard to give
+the user at the command-prompt a good experience.</p>
+
+<p><a href="Methadone/CLILogger.html">Methadone::CLILogger</a> is designed to
+handle this.  It's a proper subclass of Ruby's built-in <code>Logger</code>
+with a few enhancements:</p>
+<ul><li>
+<p>Messages don't get formatting if they are destined for a TTY (e.g. the user
+sitting at her terminal)</p>
+</li><li>
+<p>Errors and warnings go to the standard error.</p>
+</li><li>
+<p>Debug and info messages go to the standard output.</p>
+</li><li>
+<p>When these are redirected to a file, the log messages are properly
+date/time stamped as you'd expect</p>
+</li><li>
+<p>You can mix-in <a
+href="Methadone/CLILogging.html">Methadone::CLILogging</a> to get access to
+a global logger instances without resorting to an explicit global variable</p>
+</li></ul>
+
+<p>See <a
+href="http://rubydoc.info/github/davetron5000/methadone/master/Methadone/CLILogger">CLILogger's
+rdoc</a> and then <a
+href="http://rubydoc.info/github/davetron5000/methadone/master/Methadone/CLILogging">CLILogging's</a>
+for more.</p>
+
+<p>Currently, there are classes the assist in directing output logger-style to
+the right place; basically ensuring that errors go to <code>STDERR</code>
+and everything else goes to <code>STDOUT</code>.  All of this is, of
+course, configurable</p>
+
+<h2 id="label-Cucumber+Steps">Cucumber Steps</h2>
+
+<p><a href="Methadone.html">Methadone</a> uses <a
+href="http://www.github.com/cucumber/aruba">aruba</a> for BDD-style testing
+with cucumber. This library has some awesome steps, and <a
+href="Methadone.html">Methadone</a> provides additional, more opinionated,
+steps.</p>
+
+<h3 id="label-Example">Example</h3>
+
+<p>Here's an example from methadone's own tests:</p>
+
+<pre>Scenario: Help is properly documented
+  When I get help for &quot;methadone&quot;
+  Then the exit status should be 0
+  And the following options should be documented:
+    |--force|
+  And the banner should be present
+  And the banner should include the version
+  And the banner should document that this app takes options
+  And the banner should document that this app's arguments are:
+    |app_name|which is required|
+    |dir_name|which is optional|</pre>
+
+<p>See <a href="Methadone/Cucumber.html">Methadone::Cucumber</a> or its <a
+href="http://rubydoc.info/github/davetron5000/methadone/master/Methadone/Cucumber">rdoc</a>
+for a list of all the steps provided.</p>
+
+<h2 id="label-Contributing">Contributing</h2>
+<ul><li>
+<p>Feel free to file an issue, even if you don't have time to submit a patch</p>
+</li><li>
+<p>Please try to include a test for any patch you submit.  If you don't
+include a test, I'll have to write one, and it'll take longer to get your
+code in.</p>
+</li></ul>
+
+</div>
+
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

@@ -296,7 +296,7 @@ making the ultimate path OS independent.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">copy_file</span>(<span class="ruby-identifier">relative_path</span>,<span class="ruby-identifier">options</span> = {})
   <span class="ruby-identifier">options</span>[<span class="ruby-value">:from</span>] <span class="ruby-operator">||=</span> <span class="ruby-value">:full</span>
 
-  <span class="ruby-identifier">relative_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">relative_path</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/\//</span>))
+  <span class="ruby-identifier">relative_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">relative_path</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">%r\//</span>))
 
   <span class="ruby-identifier">template_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">template_dir</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:from</span>]),<span class="ruby-identifier">relative_path</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;.erb&quot;</span>)
   <span class="ruby-identifier">template</span> = <span class="ruby-constant">ERB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">template_path</span>).<span class="ruby-identifier">readlines</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">''</span>))
@@ -382,7 +382,7 @@ making the ultimate path OS independent.</p>
   <span class="ruby-constant">Dir</span>[<span class="ruby-node">&quot;#{template_dir}/**/*&quot;</span>].<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> 
     <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-identifier">x</span> 
   }.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dir</span><span class="ruby-operator">|</span> 
-    <span class="ruby-identifier">dir</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-node">/^#{template_dir}\//</span>,<span class="ruby-string">''</span>)
+    <span class="ruby-identifier">dir</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-node">%r^#{template_dir}\//</span>,<span class="ruby-string">''</span>)
   }
 <span class="ruby-keyword">end</span></pre>
               </div>

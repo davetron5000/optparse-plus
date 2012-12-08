@@ -23,7 +23,7 @@
         </h1>
         <ul class="files">
             <li>README.rdoc</li>
-            <li>Last modified: 2012-05-22 11:02:23 -0400</li>
+            <li>Last modified: 2012-12-08 16:51:41 -0500</li>
         </ul>
     </div>
 
@@ -44,6 +44,10 @@ com)</p>
 <dd>
 <p>Distributes under the Apache License, see LICENSE.txt in the source distro</p>
 </dd></dl>
+
+<p><a href="http://travis-ci.org/davetron5000/methadone"><img
+src="https://secure.travis-ci.org/davetron5000/methadone.png" alt="Build
+Status" /></a></p>
 
 <p>A smattering of tools to make your command-line apps easily awesome; kick
 the bash habit without sacrificing any of the power.</p>
@@ -89,7 +93,7 @@ ebook that contains a step-by-step tutorial on making an awesome app with
 
 <h2 id="label-Platforms">Platforms</h2>
 <ul><li>
-<p>Works completely on:</p>
+<p>The build runs on Travis for:</p>
 <ul><li>
 <p>MRI Ruby 1.8.7</p>
 </li><li>
@@ -97,17 +101,16 @@ ebook that contains a step-by-step tutorial on making an awesome app with
 </li><li>
 <p>MRI Ruby 1.9.3</p>
 </li><li>
-<p>MRI Ruby Head</p>
-</li><li>
 <p>RBX</p>
 </li><li>
 <p>REE</p>
-</li></ul>
 </li><li>
-<p>For JRuby, everything works but Aruba; Aruba just doesn't work on JRuby for
-some reason, though this library <strong>is</strong> being used in
-production under JRuby 1.6.6</p>
+<p>JRuby in both 1.8 and 1.9 mode</p>
 </li></ul>
+</li></ul>
+
+<p>It should work on 2.0.0 but there's a weird bundler issue where some of the
+aruba tests fail in odd ways.</p>
 
 <h2 id="label-Bootstrapping+a+new+CLI+App">Bootstrapping a new CLI App</h2>
 
@@ -120,6 +123,7 @@ Usage: methadone [options] app_name
         --force                      Overwrite files if they exist
 $ methadone newgem
 $ cd newgem
+$ bundle
 $ rake
 1 tests, 1 assertions, 0 failures, 0 errors, 0 skips
 1 scenario (1 passed)

@@ -44,15 +44,21 @@ following:</p>
 <pre>When I get help for &quot;command_to_run&quot;</pre>
 </li><li>
 <p>Make sure that each option shows up in the help and has
-<strong>some</strong> sort of documentation</p>
+<strong>some</strong> sort of documentation.  By default, the options won't
+be re2quired to be negatable.</p>
 
 <pre>Then the following options should be documented:
   |--force|
-  |-x     |</pre>
+  |-x     |
+
+Then the following options should be documented:
+  |--force| which is negatable     |
+  |-x     | which is not negatable |</pre>
 </li><li>
 <p>Check an individual option for documentation:</p>
 
-<pre>Then the option &quot;--force&quot; should be documented</pre>
+<pre>Then the option &quot;--force&quot; should be documented
+Then the option &quot;--force&quot; should be documented which is negatable</pre>
 </li><li>
 <p>Checks that the help has a proper usage banner</p>
 

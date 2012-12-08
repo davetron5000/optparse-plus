@@ -39,7 +39,7 @@ structure" DSL.  This is a <strong>very</strong> lightweight layer on top
 of what you might normally write that gives you just a bit of help to keep
 your code structured in a sensible way.  You can use as much or as little
 as you want, though you must at least use <a
-href="Main.html#method-i-main">#main</a> to get any benefits.</p>
+href="Main.html#method-i-main">main</a> to get any benefits.</p>
 
 <p>Further, you must provide access to a logger via a method named logger.  If
 you include <a href="CLILogging.html">Methadone::CLILogging</a>, this will
@@ -389,7 +389,7 @@ help</p>
               <p>Set the name of the file, in the user's home directory, where defaults can
 be configured. The format of this file can be either a simple string of
 options, like what goes in the environment variable (see <a
-href="Main.html#method-i-defaults_from_env_var">#defaults_from_env_var</a>),
+href="Main.html#method-i-defaults_from_env_var">defaults_from_env_var</a>),
 or YAML, in which case it should be a hash where keys are the option names,
 and values their defaults.</p>
 <dl class="rdoc-list note-list"><dt>filename
@@ -505,13 +505,13 @@ options for your app.  Omit this to disable the feature.</p>
               <p>Start your command-line app, exiting appropriately when complete.</p>
 
 <p>This <strong>will</strong> exit your program when it completes.  If your <a
-href="Main.html#method-i-main">#main</a> block evaluates to an integer,
-that value will be sent to Kernel#exit, otherwise, this will exit with 0</p>
+href="Main.html#method-i-main">main</a> block evaluates to an integer, that
+value will be sent to Kernel#exit, otherwise, this will exit with 0</p>
 
 <p>If the command-line options couldn't be parsed, this will exit with 64 and
 whatever message OptionParser provided.</p>
 
-<p>If a required argument (see <a href="Main.html#method-i-arg">#arg</a>) is
+<p>If a required argument (see <a href="Main.html#method-i-arg">arg</a>) is
 not found, this exits with 64 and a message about that missing argument.</p>
             </div>
           
@@ -632,13 +632,13 @@ determine that list from another method to keep your code clean.</p>
 <p>The block can accept any parameters, and unparsed arguments from the
 command line will be passed.</p>
 
-<p><strong>Note</strong>: <a href="Main.html#method-i-go-21">#go!</a> will
+<p><strong>Note</strong>: <a href="Main.html#method-i-go-21">go!</a> will
 modify <code>ARGV</code> so any unparsed arguments that you do
 <strong>not</strong> declare as arguments to <a
-href="Main.html#method-i-main">#main</a> will essentially be unavailable. 
-I consider this a bug, and it should be changed/fixed in a future version.</p>
+href="Main.html#method-i-main">main</a> will essentially be unavailable.  I
+consider this a bug, and it should be changed/fixed in a future version.</p>
 
-<p>To run this method, call <a href="Main.html#method-i-go-21">#go!</a></p>
+<p>To run this method, call <a href="Main.html#method-i-go-21">go!</a></p>
             </div>
           
           
@@ -675,8 +675,8 @@ I consider this a bug, and it should be changed/fixed in a future version.</p>
           
             <div class="description">
               <p>Calls the <code>on</code> method of <a
-href="Main.html#method-i-opts">#opts</a> with the given arguments (see RDoc
-for <a href="Main.html#method-i-opts">#opts</a> for the additional help
+href="Main.html#method-i-opts">opts</a> with the given arguments (see RDoc
+for <a href="Main.html#method-i-opts">opts</a> for the additional help
 provided).</p>
             </div>
           
@@ -714,9 +714,9 @@ provided).</p>
               <p>Returns a Hash that you can use to store or retrieve options parsed from
 the command line.  When you put values in here, if you do so
 <strong>before</strong> you've declared your command-line interface via <a
-href="Main.html#method-i-on">#on</a>, the value will be used in the
+href="Main.html#method-i-on">on</a>, the value will be used in the
 docstring to indicate it is the default. You can use either a String or a
-Symbol and, after <a href="Main.html#method-i-go-21">#go!</a> is called and
+Symbol and, after <a href="Main.html#method-i-go-21">go!</a> is called and
 the command-line is parsed, the values will be available as both a String
 and a Symbol.</p>
 
@@ -767,7 +767,7 @@ go!</pre>
             <div class="description">
               <p>Returns an OptionParser that you can use to declare your command-line
 interface.  Generally, you won't use this and will use <a
-href="Main.html#method-i-on">#on</a> directly, but this allows you to have
+href="Main.html#method-i-on">on</a> directly, but this allows you to have
 complete control of option parsing.</p>
 
 <p>The object returned has an additional feature that implements typical use
@@ -784,7 +784,7 @@ of OptionParser.</p>
 
 <p>Since, most of the time, this is all you want to do, this makes it more
 expedient to do so.  The key that is is set in <a
-href="Main.html#method-i-options">#options</a> will be a symbol <em>and
+href="Main.html#method-i-options">options</a> will be a symbol <em>and
 string</em> of the option name, without the leading dashes.  Note that if
 you use multiple option names, a key will be generated for each.  Further,
 if you use the negatable form, only the positive key will be set, e.g. for
