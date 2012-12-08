@@ -5,6 +5,7 @@ Feature: Bootstrap a new command-line app
 
   Background:
     Given the directory "tmp/newgem" does not exist
+    And the directory "tmp/new-gem" does not exist
 
   Scenario: Bootstrap a new app from scratch
     When I successfully run `methadone tmp/newgem`
@@ -61,6 +62,26 @@ Feature: Bootstrap a new command-line app
     rake rerdoc        # Rebuild RDoc HTML files
     rake test          # Run tests
     """    
+    When I run `rake -I../../../../lib`
+    Then the exit status should be 0
+    And the output should match /1 tests, 1 assertions, 0 failures, 0 errors/
+    And the output should contain:
+    """
+    1 scenario (1 passed)
+    6 steps (6 passed)
+    """
+
+  Scenario: Bootstrap a new app with a dash is OK
+    Given I successfully run `methadone tmp/new-gem`
+    And I cd to "tmp/new-gem"
+    And my app's name is "new-gem"
+    When I successfully run `bin/new-gem --help` with "lib" in the library path
+    Then the banner should be present
+    And the banner should document that this app takes options
+    And the following options should be documented:
+      |--version|
+      |--log-level|
+    And the banner should document that this app takes no arguments
     When I run `rake -I../../../../lib`
     Then the exit status should be 0
     And the output should match /1 tests, 1 assertions, 0 failures, 0 errors/

@@ -16,7 +16,7 @@ main do |app_name|
   using_readme = options[:readme]
 
   gemname = File.basename(app_name)
-  module_name = gemname.split(/_/).map(&:capitalize).join('')
+  module_name = gemname.split(/_/).map(&:capitalize).join('').split(/-/).map(&:capitalize).join("::")
 
   debug "Creating project for gem #{gemname}"
 
@@ -37,7 +37,6 @@ main do |app_name|
   if rspec
     template_dirs_in(:rspec).each  { |dir| mkdir_p dir }
     copy_file "spec/tc_something_spec.rb", :from => :rspec, :binding => binding
-
   else
     template_dirs_in(:test_unit).each  { |dir| mkdir_p dir }
     copy_file "test/tc_something.rb", :from => :test_unit, :binding => binding

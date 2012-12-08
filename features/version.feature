@@ -5,7 +5,8 @@ Feature: The version should show up in the banner by default
   And so users can easily see the version from the app itself
 
   Scenario Outline: Show the gem version
-    Given I successfully run `methadone tmp/newgem`
+    Given my app's name is "newgem"
+    And I successfully run `methadone tmp/newgem`
     When I cd to "tmp/newgem"
     And I successfully run `bin/newgem <flag>` with "lib" in the library path
     Then the banner should include the version
