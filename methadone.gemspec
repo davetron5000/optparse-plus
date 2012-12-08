@@ -11,17 +11,6 @@ Gem::Specification.new do |s|
   s.homepage    = "http://github.com/davetron5000/methadone"
   s.summary     = %q{Kick the bash habit and start your command-line apps off right}
   s.description = %q{Methadone provides a lot of small but useful features for developing a command-line app, including an opinionated bootstrapping process, some helpful cucumber steps, and some classes to bridge logging and output into a simple, unified, interface}
-  s.post_install_message = "
-
-!!!!!!!!!!!!!!!!!!!!!!
-
-If you are on Ruby 1.8 or REE, you MUST
-
-gem install open4
-
-!!!!!!!!!!!!!!!!!!!!!!
-  "
-
   s.rubyforge_project = "methadone"
 
   s.files         = `git ls-files`.split("\n")
