@@ -115,7 +115,10 @@ Feature: Bootstrap a new command-line app
     When I get help for "methadone"
     Then the exit status should be 0
     And the following options should be documented:
-      |--force|
+      | --force       | |
+      | --readme      | which is negatable       |
+      | -l, --license | which is not negatable   |
+      | --log-level   | |
     And the banner should be present
     And the banner should document that this app takes options
     And the banner should document that this app's arguments are:

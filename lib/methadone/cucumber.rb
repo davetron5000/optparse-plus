@@ -6,15 +6,21 @@ module Methadone
   #
   #     When I get help for "command_to_run"
   #
-  # * Make sure that each option shows up in the help and has *some* sort of documentation
+  # * Make sure that each option shows up in the help and has *some* sort of documentation.  By default,
+  #   the options won't be re2quired to be negatable.
   #
   #     Then the following options should be documented:
   #       |--force|
   #       |-x     |
   #
+  #     Then the following options should be documented:
+  #       |--force| which is negatable     |
+  #       |-x     | which is not negatable |
+  #
   # * Check an individual option for documentation:
   #
   #     Then the option "--force" should be documented
+  #     Then the option "--force" should be documented which is negatable
   #
   # * Checks that the help has a proper usage banner
   #
@@ -56,12 +62,17 @@ end
 
 Then /^the following options should be documented:$/ do |options|
   options.raw.each do |option|
-    step %(the option "#{option[0]}" should be documented)
+    step %(the option "#{option[0]}" should be documented #{option[1]})
   end
 end
 
-Then /^the option "([^"]*)" should be documented$/ do |option|
-  step %(the output should match /\\s*#{Regexp.escape(option)}[\\s\\W]+\\w\\w\\w+/)
+Then /^the option "([^"]*)" should be documented(.*)$/ do |options,qualifiers|
+  options.split(',').map(&:strip).each do |option|
+    if qualifiers.strip == "which is negatable"
+      option = option.gsub(/^--/,"--[no-]")
+    end
+    step %(the output should match /\\s*#{Regexp.escape(option)}[\\s\\W]+\\w[\\s\\w][\\s\\w]+/)
+  end
 end
 
 Then /^the banner should be present$/ do
