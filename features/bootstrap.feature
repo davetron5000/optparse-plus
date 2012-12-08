@@ -46,6 +46,7 @@ Feature: Bootstrap a new command-line app
     And the banner should document that this app takes options
     And the following options should be documented:
       |--version|
+      |--help|
       |--log-level|
     And the banner should document that this app takes no arguments
     When I successfully run `rake -T -I../../lib`

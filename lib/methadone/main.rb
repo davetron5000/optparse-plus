@@ -404,6 +404,7 @@ module Methadone
       @description = nil
       @version = nil
       set_banner
+      document_help
     end
 
     def check_args!
@@ -496,6 +497,13 @@ module Methadone
     end
 
     private
+
+    def document_help
+      @option_parser.on("-h","--help","Show command line help") do 
+        puts @option_parser.to_s
+        exit 0
+      end
+    end
 
     def add_default_value_to_docstring(*args)
       default_value = nil
