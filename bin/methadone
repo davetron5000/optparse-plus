@@ -16,7 +16,7 @@ main do |app_name|
   using_readme = options[:readme]
 
   gemname = File.basename(app_name)
-  module_name = gemname.split(/_/).map(&:capitalize).join('').split(/-/).map(&:capitalize).join("::")
+  module_name = gemname.split(/-/).map(&:capitalize).collect{ |segment| segment.split(/_/).map(&:capitalize).join('') }.join('::')
 
   debug "Creating project for gem #{gemname}"
 
