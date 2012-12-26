@@ -1,5 +1,12 @@
 # Changelog
 
+## v.1.2.4 - Dec 26, 2012
+
+* Fix for my fix on apps with dashes in their name (see [59], thanks to [@terryfinn]
+
+[@terryfinn]: https://github.com/terryfinn
+[59]: https://github.com/davetron5000/methadone/pull/59
+
 ## v.1.2.3 - Dec 8, 2012
 
 * Can create an app with a dash in its name (See [55])
