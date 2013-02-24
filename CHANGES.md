@@ -1,5 +1,9 @@
 # Changelog
 
+## v.1.2.5 - Feb 24, 2012
+
+* Compatibility Bundler 1.3 - Bundler 1.3 bootstraps files differently than 1.2, and methadone's generated binfile ends up requiring a non-existent file.  This verison works with both 1.2 and 1.3 of bundler by parsing its output to figure out which file to include.
+
 ## v.1.2.4 - Dec 26, 2012
 
 * Fix for my fix on apps with dashes in their name (see [59], thanks to [@terryfinn]
