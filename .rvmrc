@@ -1,1 +1,1 @@
-rvm use 1.9.3@methadone-dev --create
+rvm use 1.9.3-p286@methadone-dev --create
