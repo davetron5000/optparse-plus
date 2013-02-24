@@ -1,5 +1,5 @@
 require 'base_test'
-require 'mocha'
+require 'mocha/setup'
 require 'open3'
 
 module ExecutionStrategy

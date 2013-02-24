@@ -1,8 +1,8 @@
 require 'base_test'
-require 'mocha'
+require 'mocha/setup'
 
 # Define this symbol without requiring the library;
-# all we're goingn to do is mock calls to it
+# all we're going to do is mock calls to it
 module Open4
 end
 

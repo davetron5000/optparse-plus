@@ -22,7 +22,14 @@ main do |app_name|
 
   chdir File.dirname(app_name)
 
-  sh! "bundle gem #{gemname}"
+  require_file = nil
+  sh! "bundle gem #{gemname} --no-color" do |stdout|
+    require_file = stdout.split(/\n/).select { |file|
+      file =~ /\.rb$/ && file !~ /version.rb$/
+    }.first
+  end
+  require_file = gemname if require_file.nil?
+  require_file.gsub!(/^.*lib\//,'')
 
   chdir gemname
 
