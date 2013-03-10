@@ -43,7 +43,7 @@ main do |app_name|
 
   if rspec
     template_dirs_in(:rspec).each  { |dir| mkdir_p dir }
-    copy_file "spec/tc_something_spec.rb", :from => :rspec, :binding => binding
+    copy_file "spec/something_spec.rb", :from => :rspec, :binding => binding
   else
     template_dirs_in(:test_unit).each  { |dir| mkdir_p dir }
     copy_file "test/tc_something.rb", :from => :test_unit, :binding => binding
@@ -61,13 +61,20 @@ main do |app_name|
   copy_file "features/step_definitions/executable_steps.rb", :as => "#{gemname}_steps.rb"
   copy_file "bin/executable", :as => gemname, :executable => true, :binding => binding
 
-  gem_variable = File.open("#{gemname}.gemspec") { |x| x.read }.match(/(\w+)\.executables/)[1]
-  add_to_file "#{gemname}.gemspec", [
+  gemspec = "#{gemname}.gemspec"
+  gem_variable = File.open(gemspec) { |x| x.read }.match(/(\w+)\.executables/)[1]
+  add_to_file gemspec, [
     "  #{gem_variable}.add_development_dependency('rdoc')",
     "  #{gem_variable}.add_development_dependency('aruba')",
     "  #{gem_variable}.add_development_dependency('rake', '~> 0.9.2')",
     "  #{gem_variable}.add_dependency('methadone', '~> #{Methadone::VERSION}')",
   ], :before => /^end\s*$/
+
+  if rspec
+    add_to_file gemspec, [
+    "  #{gem_variable}.add_development_dependency('rspec')",
+    ], :before => /^end\s*$/
+  end
 end
 
 options[:readme] = true

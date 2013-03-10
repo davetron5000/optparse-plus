@@ -6,7 +6,6 @@ Feature: Bootstrap a new command-line app using RSpec instead of Test::Unit
   Background:
     Given the directory "tmp/newgem" does not exist
 
-    @announce
   Scenario: Bootstrap a new app from scratch
     When I successfully run `methadone --rspec tmp/newgem`
     Then the following directories should exist:
@@ -14,9 +13,10 @@ Feature: Bootstrap a new command-line app using RSpec instead of Test::Unit
     And the following directories should not exist:
       |tmp/newgem/test                      |
     And the following files should exist:
-      |tmp/newgem/spec/tc_something_spec.rb                 |
-    Given I cd to "tmp/newgem"
-    When I successfully run `rake -T -I../../lib`
+      |tmp/newgem/spec/something_spec.rb                 |
+    And the file "tmp/newgem/newgem.gemspec" should match /add_development_dependency\('rspec'/
+    When I cd to "tmp/newgem"
+    And I successfully run `rake -T -I../../lib`
     Then the output should contain:
     """
     rake spec          # Run RSpec code examples
