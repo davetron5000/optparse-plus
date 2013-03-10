@@ -1,6 +1,12 @@
 # Changelog
 
-## v.1.2.5 - Feb 24, 2012
+## v.1.2.6 - Mar 10, 2013
+
+* Need `rspec` as a real dev dependency since it's not part of Aruba any longer.  See [61].
+
+[61]: https://github.com/davetron5000/methadone/issues/61
+
+## v.1.2.5 - Feb 24, 2013
 
 * Compatibility Bundler 1.3 - Bundler 1.3 bootstraps files differently than 1.2, and methadone's generated binfile ends up requiring a non-existent file.  This verison works with both 1.2 and 1.3 of bundler by parsing its output to figure out which file to include.
 
