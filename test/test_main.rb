@@ -273,6 +273,7 @@ class TestMain < BaseTest
     Given {
       @flag_with_string_key_defalt = nil
       @flag_with_symbol_key_defalt = nil
+      reset!
       main do
         @flag_with_string_key_defalt = options[:foo]
         @flag_with_symbol_key_defalt = options['bar']
@@ -725,10 +726,23 @@ class TestMain < BaseTest
 
   end
 
+  test_that "we can call methods prior to calling main without a problem" do
+    Given {
+      description "An app of total awesome"
+      opts.on("--switch") { options[:switch] = true }
+      main {}
+    }
+    Then {
+      opts.banner.should match /^An app of total awesome$/
+      opts.to_s.should match /--switch/
+    }
+  end
+
 private
 
   def app_to_use_rc_file
     lambda {
+      reset!
       @switch = nil
       @flag = nil
       @args = nil

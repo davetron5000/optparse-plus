@@ -115,8 +115,6 @@ module Methadone
     # To run this method, call #go!
     def main(&block)
       @main_block = block
-      @options = {}
-      @option_parser = OptionParserProxy.new(OptionParser.new,@options)
     end
 
     # Configure the auto-handling of StandardError exceptions caught
@@ -215,7 +213,7 @@ module Methadone
     #
     # Further, any one of those keys can be used to determine the default value for the option.
     def opts
-      @option_parser
+      @option_parser ||= OptionParserProxy.new(OptionParser.new,options)
     end
 
     # Calls the +on+ method of #opts with the given arguments (see RDoc for #opts for the additional
@@ -272,7 +270,7 @@ module Methadone
     #     go!
     #
     def options
-      @options
+      @options ||= {}
     end
 
     # Set the version of your app so it appears in the
@@ -308,6 +306,12 @@ module Methadone
     end
 
     private
+
+    # Reset internal state - mostly useful for tests
+    def reset!
+      @options = nil
+      @option_parser = nil
+    end
 
     def setup_defaults
       add_defaults_to_docs
