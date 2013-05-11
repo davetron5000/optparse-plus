@@ -1,5 +1,14 @@
 # Changelog
 
+## v.1.3.0 - May 11, 2013
+
+* Enhance `version` to allow for a compact form, e.g. ``version MyAPP::VERSION, :compact => true`` so that doing `--version` only shows the
+  app name and version, not the entire help screen.  See [64].
+* Allow using DSL methods before the call to `main`, even though you really shouldn't.  See [65]
+
+[64]: https://github.com/davetron5000/methadone/issues/64
+[65]: https://github.com/davetron5000/methadone/issues/65
+
 ## v.1.2.6 - Mar 10, 2013
 
 * Need `rspec` as a real dev dependency since it's not part of Aruba any longer.  See [61].
