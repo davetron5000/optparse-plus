@@ -277,16 +277,32 @@ module Methadone
 
     # Set the version of your app so it appears in the
     # banner.  This also adds --version as an option to your app which,
-    # when used, will act just like --help
+    # when used, will act just like --help (see version_options to control this)
     #
     # version:: the current version of your app.  Should almost always be
     #           YourApp::VERSION, where the module YourApp should've been generated
     #           by the bootstrap script
-    # custom_message:: if provided, customized the message shown next to --version
-    def version(version,custom_message='Show help/version info')
+    # version_options:: controls how the version option behaves.  If this is a string,
+    #                   then the string will be used as documentation for the --version flag.
+    #                   If a Hash, more configuration is available:
+    #                   custom_docs:: the string to document the --version flag if you don't like the default
+    #                   compact:: if true, --version will just show the app name and version - no help
+    #                   format:: if provided, this can give limited control over the format of the compact
+    #                            version string.  It should be a printf-style string and will be given
+    #                            two options: the first is the CLI app name, and the second is the version string
+    def version(version,version_options={})
       opts.version(version)
-      opts.on("--version",custom_message) do 
-        puts opts.to_s
+      if version_options.kind_of?(String)
+        version_options = { :custom_docs => version_options }
+      end
+      version_options[:custom_docs] ||= "Show help/version info"
+      version_options[:format] ||= "%s version %s"
+      opts.on("--version",version_options[:custom_docs]) do 
+        if version_options[:compact]
+          puts version_options[:format] % [::File.basename($0),version]
+        else
+          puts opts.to_s
+        end
         exit 0
       end
     end

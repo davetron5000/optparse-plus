@@ -75,11 +75,11 @@ Feature: Bootstrap a new command-line app
     6 steps (6 passed)
     """
 
-  Scenario: Bootstrap a new app with a dash is OK
+  Scenario Outline: Bootstrap a new app with a dash is OK
     Given I successfully run `methadone tmp/new-gem`
     And I cd to "tmp/new-gem"
     And my app's name is "new-gem"
-    When I successfully run `bin/new-gem --help` with "lib" in the library path
+    When I successfully run `bin/new-gem <help>` with "lib" in the library path
     Then the banner should be present
     And the banner should document that this app takes options
     And the following options should be documented:
@@ -93,6 +93,34 @@ Feature: Bootstrap a new command-line app
     """
     1 scenario (1 passed)
     6 steps (6 passed)
+    """
+    Examples:
+      | help      |
+      | -h        |
+      | --help    |
+      | --version |
+
+  Scenario: Version flag can be used to only show the app version
+    Given I successfully run `methadone tmp/new-gem`
+    And "bin/new-gem" has configured version to show only the version and not help
+    And I cd to "tmp/new-gem"
+    And my app's name is "new-gem"
+    When I successfully run `bin/new-gem --version` with "lib" in the library path
+    Then the output should contain:
+    """
+    new-gem version 0.0.1
+    """
+
+    @wip
+  Scenario: Version flag can be used to only show the app version with a custom format
+    Given I successfully run `methadone tmp/new-gem`
+    And "bin/new-gem" has configured version to show only the version with a custom format and not help
+    And I cd to "tmp/new-gem"
+    And my app's name is "new-gem"
+    When I successfully run `bin/new-gem --version` with "lib" in the library path
+    Then the output should contain:
+    """
+    new-gem V0.0.1
     """
 
   Scenario: Won't squash an existing dir

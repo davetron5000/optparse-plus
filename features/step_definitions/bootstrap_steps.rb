@@ -23,3 +23,19 @@ Then /^the stderr should match \/([^\/]*)\/$/ do |expected|
   assert_matching_output(expected, all_stderr)
 end
 
+Given /^"(.*?)" has configured version to show only the version (.*)and not help$/ do |gemname,extras|
+  lines = File.read("tmp/aruba/tmp/new-gem/#{gemname}").split(/\n/)
+  File.open("tmp/aruba/tmp/new-gem/#{gemname}","w") do |file|
+    lines.each do |line|
+      if line =~ /^\s*version New::Gem::VERSION/
+        if extras =~ /with a custom format/
+          file.puts line + ", :compact => true, :format => '%s V%s'"
+        else
+          file.puts line + ", :compact => true"
+        end
+      else
+        file.puts line
+      end
+    end
+  end
+end
