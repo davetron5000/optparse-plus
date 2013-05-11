@@ -368,7 +368,7 @@ help</p>
                 
               </p>
               <div id="method-i-arg_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 243</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 241</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">arg</span>(<span class="ruby-identifier">arg_name</span>,*<span class="ruby-identifier">options</span>)
   <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">arg</span>(<span class="ruby-identifier">arg_name</span>,*<span class="ruby-identifier">options</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -411,7 +411,7 @@ and values their defaults.</p>
                 
               </p>
               <div id="method-i-defaults_from_config_file_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 144</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 142</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">defaults_from_config_file</span>(<span class="ruby-identifier">filename</span>,<span class="ruby-identifier">options</span>={})
   <span class="ruby-ivar">@rc_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-string">'HOME'</span>],<span class="ruby-identifier">filename</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -446,7 +446,7 @@ options for your app.  Omit this to disable the feature.</p>
                 
               </p>
               <div id="method-i-defaults_from_env_var_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 134</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 132</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">defaults_from_env_var</span>(<span class="ruby-identifier">env_var</span>)
   <span class="ruby-ivar">@env_var</span> = <span class="ruby-identifier">env_var</span>
 <span class="ruby-keyword">end</span></pre>
@@ -484,7 +484,7 @@ options for your app.  Omit this to disable the feature.</p>
                 
               </p>
               <div id="method-i-description_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 249</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 247</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">description</span>(<span class="ruby-identifier">desc</span>)
   <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">description</span>(<span class="ruby-identifier">desc</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -528,7 +528,7 @@ not found, this exits with 64 and a message about that missing argument.</p>
                 
               </p>
               <div id="method-i-go-21_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 160</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 158</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">go!</span>
   <span class="ruby-identifier">setup_defaults</span>
   <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">post_setup</span>
@@ -585,7 +585,7 @@ through.</p>
                 
               </p>
               <div id="method-i-leak_exceptions_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 128</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 126</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">leak_exceptions</span>(<span class="ruby-identifier">leak</span>)
   <span class="ruby-ivar">@leak_exceptions</span> = <span class="ruby-identifier">leak</span>
 <span class="ruby-keyword">end</span></pre>
@@ -657,8 +657,6 @@ consider this a bug, and it should be changed/fixed in a future version.</p>
                 <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 116</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">main</span>(&amp;<span class="ruby-identifier">block</span>)
   <span class="ruby-ivar">@main_block</span> = <span class="ruby-identifier">block</span>
-  <span class="ruby-ivar">@options</span> = {}
-  <span class="ruby-ivar">@option_parser</span> = <span class="ruby-constant">OptionParserProxy</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">OptionParser</span>.<span class="ruby-identifier">new</span>,<span class="ruby-ivar">@options</span>)
 <span class="ruby-keyword">end</span></pre>
               </div>
             </div>
@@ -693,7 +691,7 @@ provided).</p>
                 
               </p>
               <div id="method-i-on_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 223</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 221</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">on</span>(*<span class="ruby-identifier">args</span>,&amp;<span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(*<span class="ruby-identifier">args</span>,&amp;<span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -747,9 +745,9 @@ go!</pre>
                 
               </p>
               <div id="method-i-options_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 274</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 272</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">options</span>
-  <span class="ruby-ivar">@options</span>
+  <span class="ruby-ivar">@options</span> <span class="ruby-operator">||=</span> {}
 <span class="ruby-keyword">end</span></pre>
               </div>
             </div>
@@ -827,9 +825,9 @@ for the option.</p>
                 
               </p>
               <div id="method-i-opts_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 217</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 215</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">opts</span>
-  <span class="ruby-ivar">@option_parser</span>
+  <span class="ruby-ivar">@option_parser</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">OptionParserProxy</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">OptionParser</span>.<span class="ruby-identifier">new</span>,<span class="ruby-identifier">options</span>)
 <span class="ruby-keyword">end</span></pre>
               </div>
             </div>
@@ -839,7 +837,7 @@ for the option.</p>
         <div class="method">
           <div class="title method-title" id="method-i-version">
             
-              <a name="method-i-version"></a><b>version</b>(version,custom_message='Show help/version info')
+              <a name="method-i-version"></a><b>version</b>(version,version_options={})
             
           </div>
           
@@ -847,14 +845,29 @@ for the option.</p>
             <div class="description">
               <p>Set the version of your app so it appears in the banner.  This also adds
 --version as an option to your app which, when used, will act just like
---help</p>
+--help (see version_options to control this)</p>
 <dl class="rdoc-list note-list"><dt>version
 <dd>
 <p>the current version of your app.  Should almost always be YourApp::VERSION,
 where the module YourApp should've been generated by the bootstrap script</p>
-</dd><dt>custom_message
+</dd><dt>version_options
 <dd>
-<p>if provided, customized the message shown next to --version</p>
+<p>controls how the version option behaves.  If this is a string, then the
+string will be used as documentation for the --version flag. If a Hash,
+more configuration is available:</p>
+<dl class="rdoc-list note-list"><dt>custom_docs
+<dd>
+<p>the string to document the --version flag if you don't like the default</p>
+</dd><dt>compact
+<dd>
+<p>if true, --version will just show the app name and version - no help</p>
+</dd><dt>format
+<dd>
+<p>if provided, this can give limited control over the format of the compact
+version string.  It should be a printf-style string and will be given two
+options: the first is the <a href="CLI.html">CLI</a> app name, and the
+second is the version string</p>
+</dd></dl>
 </dd></dl>
             </div>
           
@@ -871,11 +884,20 @@ where the module YourApp should've been generated by the bootstrap script</p>
                 
               </p>
               <div id="method-i-version_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 286</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">version</span>(<span class="ruby-identifier">version</span>,<span class="ruby-identifier">custom_message</span>=<span class="ruby-string">'Show help/version info'</span>)
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 291</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">version</span>(<span class="ruby-identifier">version</span>,<span class="ruby-identifier">version_options</span>={})
   <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">version</span>(<span class="ruby-identifier">version</span>)
-  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(<span class="ruby-string">&quot;--version&quot;</span>,<span class="ruby-identifier">custom_message</span>) <span class="ruby-keyword">do</span> 
-    <span class="ruby-identifier">puts</span> <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">to_s</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">version_options</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">String</span>)
+    <span class="ruby-identifier">version_options</span> = { <span class="ruby-value">:custom_docs</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">version_options</span> }
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">version_options</span>[<span class="ruby-value">:custom_docs</span>] <span class="ruby-operator">||=</span> <span class="ruby-string">&quot;Show help/version info&quot;</span>
+  <span class="ruby-identifier">version_options</span>[<span class="ruby-value">:format</span>] <span class="ruby-operator">||=</span> <span class="ruby-string">&quot;%s version %s&quot;</span>
+  <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(<span class="ruby-string">&quot;--version&quot;</span>,<span class="ruby-identifier">version_options</span>[<span class="ruby-value">:custom_docs</span>]) <span class="ruby-keyword">do</span> 
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">version_options</span>[<span class="ruby-value">:compact</span>]
+      <span class="ruby-identifier">puts</span> <span class="ruby-identifier">version_options</span>[<span class="ruby-value">:format</span>] <span class="ruby-operator">%</span> [<span class="ruby-operator">::</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-identifier">$0</span>),<span class="ruby-identifier">version</span>]
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">to_s</span>
+    <span class="ruby-keyword">end</span>
     <span class="ruby-identifier">exit</span> <span class="ruby-number">0</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
