@@ -7,7 +7,7 @@ module Methadone
   #     When I get help for "command_to_run"
   #
   # * Make sure that each option shows up in the help and has *some* sort of documentation.  By default,
-  #   the options won't be re2quired to be negatable.
+  #   the options won't be required to be negatable.
   #
   #     Then the following options should be documented:
   #       |--force|
