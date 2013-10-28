@@ -52,8 +52,8 @@ Feature: Bootstrap a new command-line app
     When I successfully run `rake -T -I../../lib`
     Then the output should contain:
     """
-    rake clean         # Remove any temporary products.
-    rake clobber       # Remove any generated file.
+    rake clean         # Remove any temporary products
+    rake clobber       # Remove any generated file
     rake clobber_rdoc  # Remove RDoc HTML files
     rake features      # Run Cucumber features
     """
