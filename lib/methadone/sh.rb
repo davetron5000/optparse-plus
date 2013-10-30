@@ -196,7 +196,10 @@ module Methadone
     end
 
     def sh_logger
-      @sh_logger ||= self.logger
+      @sh_logger ||= begin
+        raise StandardError, "No logger set! Please include Methadone::CLILogging or provide your own via #set_sh_logger." unless self.respond_to?(:logger)
+        self.logger
+      end
     end
 
     # Safely call our block, even if the user passed in a lambda

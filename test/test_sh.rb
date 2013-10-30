@@ -261,8 +261,8 @@ class TestSH < Clean::Test::TestCase
 
   class MyTestApp
     include Methadone::SH
-    def initialize(logger)
-      set_sh_logger(logger)
+    def initialize(logger=nil)
+      set_sh_logger(logger) if logger
     end
   end
 
@@ -277,6 +277,19 @@ class TestSH < Clean::Test::TestCase
     }
     Then {
       assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout)
+    }
+  end
+
+  test_that "when we don't have CLILogging included and fail to provide a logger, an exception is thrown" do
+    Given {
+      @test_app = MyTestApp.new
+      @command = test_command
+    }
+    When {
+      @code = lambda { @test_app.sh @command }
+    }
+    Then {
+      exception = assert_raises(StandardError,&@code)
     }
   end
 
