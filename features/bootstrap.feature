@@ -50,20 +50,14 @@ Feature: Bootstrap a new command-line app
       |--log-level|
     And the banner should document that this app takes no arguments
     When I successfully run `rake -T -I../../lib`
-    Then the output should contain:
-    """
-    rake clean         # Remove any temporary products
-    rake clobber       # Remove any generated file
-    rake clobber_rdoc  # Remove RDoc HTML files
-    rake features      # Run Cucumber features
-    """
-    And the output should contain:
-    """
-    rake rdoc          # Build RDoc HTML files
-    rake release       # Create tag v0.0.1 and build and push newgem-0.0.1.gem to Rubygems
-    rake rerdoc        # Rebuild RDoc HTML files
-    rake test          # Run tests
-    """
+    Then the output should match /rake clean/
+    Then the output should match /rake clobber/
+    Then the output should match /rake clobber_rdoc/
+    Then the output should match /rake features/
+    Then the output should match /rake rdoc/
+    Then the output should match /rake release/
+    Then the output should match /rake rerdoc/
+    Then the output should match /rake test/
     And the output should match /rake install       # Build and install newgem-0.0.1.gem into system gems/
     And the output should match /rake build         # Build newgem-0.0.1.gem into the pkg directory/
     When I run `rake -I../../../../lib`
@@ -111,7 +105,6 @@ Feature: Bootstrap a new command-line app
     new-gem version 0.0.1
     """
 
-    @wip
   Scenario: Version flag can be used to only show the app version with a custom format
     Given I successfully run `methadone tmp/new-gem`
     And "bin/new-gem" has configured version to show only the version with a custom format and not help
