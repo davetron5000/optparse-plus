@@ -85,13 +85,16 @@ module Methadone
       super(log_device)
       @stderr_logger = Logger.new(error_device)
 
-      @split_logs = log_device.tty? && error_device.tty?
+      log_device_tty   = tty?(log_device)
+      error_device_tty = tty?(error_device)
+
+      @split_logs = log_device_tty && error_device_tty
 
       self.level = Logger::Severity::INFO
       @stderr_logger.level = DEFAULT_ERROR_LEVEL
 
-      self.formatter = BLANK_FORMAT if log_device.tty?
-      @stderr_logger.formatter = BLANK_FORMAT if error_device.tty?
+      self.formatter = BLANK_FORMAT if log_device_tty
+      @stderr_logger.formatter = BLANK_FORMAT if error_device_tty
     end
 
     def level=(level)
@@ -117,6 +120,13 @@ module Methadone
     # +formatter+:: Proc that handles the formatting, the same as for #formatter=
     def error_formatter=(formatter)
       @stderr_logger.formatter=formatter
+    end
+
+  private
+
+    def tty?(device_or_string)
+      return device_or_string.tty? if device_or_string.respond_to? :tty?
+      false
     end
 
   end

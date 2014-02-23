@@ -1,6 +1,7 @@
 require 'base_test'
 require 'methadone'
 require 'stringio'
+require 'tempfile'
 
 class TestCLILogger < BaseTest
   include Methadone
@@ -155,6 +156,27 @@ class TestCLILogger < BaseTest
     Then {
       $stdout.string.should == "debug\nerror\n"
       $stderr.string.should == "ERROR_LOGGER: error\n"
+    }
+  end
+
+  test_that "we can use filenames as log devices" do
+    Given {
+      tempfile = Tempfile.new("stderr_log")
+      @stdout_file = tempfile.path
+      tempfile.close
+
+      tempfile = Tempfile.new("stdout_log")
+      @stderr_file = tempfile.path
+      tempfile.close
+    }
+    When {
+      @logger = CLILogger.new(@stdout_file,@stderr_file)
+      @logger.info("some info")
+      @logger.error("some error")
+    }
+    Then {
+      File.read(@stdout_file).should =~ /some info/
+      File.read(@stderr_file).should =~ /some error/
     }
   end
 
