@@ -85,7 +85,7 @@ on("--force","Overwrite files if they exist")
 on("--[no-]readme","[Do not ]produce a README file")
 on("--rspec", "Generate RSpec unit tests instead of Test::Unit")
 
-licenses = %w(mit apache custom NONE)
+licenses = %w(mit apache gplv2 gplv3 custom NONE)
 on("-l LICENSE","--license",licenses,"Specify the license for your project",'(' + licenses.join('|') + ')')
 
 use_log_level_option

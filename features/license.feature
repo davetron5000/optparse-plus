@@ -20,6 +20,18 @@ Feature: Users should get the license included
       |license|
       |apache|
       |mit|
+      |gplv2|
+      |gplv3|
+
+  Scenario Outline: Stock licenses should be personalized
+    When I successfully run `methadone -l <license> tmp/newgem`
+    Then LICENSE.txt should contain user information and program name
+
+    Examples:
+      |license|
+      |mit|
+      |gplv2|
+      |gplv3|
 
   Scenario: We only support a few licenses
     When I run `methadone -l foobar tmp/newgem`
