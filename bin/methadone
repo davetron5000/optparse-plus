@@ -72,7 +72,7 @@ main do |app_name|
 
   if rspec
     add_to_file gemspec, [
-    "  #{gem_variable}.add_development_dependency('rspec')",
+    "  #{gem_variable}.add_development_dependency('rspec', '~> 2.99')",
     ], :before => /^end\s*$/
   end
 end

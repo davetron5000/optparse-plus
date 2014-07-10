@@ -14,7 +14,7 @@ Feature: Bootstrap a new command-line app using RSpec instead of Test::Unit
       |tmp/newgem/test                      |
     And the following files should exist:
       |tmp/newgem/spec/something_spec.rb                 |
-    And the file "tmp/newgem/newgem.gemspec" should match /add_development_dependency\('rspec'/
+    And the file "tmp/newgem/newgem.gemspec" should match /add_development_dependency\('rspec', '~> 2.99'/
     When I cd to "tmp/newgem"
     And I successfully run `rake -T -I../../lib`
     Then the output should contain:
