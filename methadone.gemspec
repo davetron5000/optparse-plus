@@ -25,7 +25,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency("simplecov", "~> 0.5")
   s.add_development_dependency("clean_test")
   s.add_development_dependency("mocha", "0.13.2")
-  s.add_development_dependency("minitest", "4.6.1")
   s.add_development_dependency("sdoc")
-  s.add_development_dependency("rspec", "~> 2.99") # needed so that rspec-bootstrapped app test can run
+  s.add_development_dependency("rspec", "~> 3.0.0") # needed so that rspec-bootstrapped app test can run
 end
