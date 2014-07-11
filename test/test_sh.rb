@@ -1,7 +1,7 @@
 require 'base_test'
 require 'methadone'
 
-class TestSH < Clean::Test::TestCase
+class TestSH < BaseTest
   include Methadone::SH
   include Methadone::CLILogging
 
@@ -143,7 +143,7 @@ class TestSH < Clean::Test::TestCase
       use_capturing_logger
       @command = test_command("foo")
       @block_called = false
-    } 
+    }
     When {
       @exit_code = sh @command do
         @block_called = true
@@ -160,7 +160,7 @@ class TestSH < Clean::Test::TestCase
       use_capturing_logger
       @command = test_command("foo")
       @block_called = false
-    } 
+    }
     When {
       @exit_code = sh @command, :expected => [2] do
         @block_called = true
@@ -180,7 +180,7 @@ class TestSH < Clean::Test::TestCase
           @command = test_command("foo")
           @block_called = false
           @exitstatus_received = nil
-        } 
+        }
         When {
           @exit_code = self.send(method,@command,:expected => expected) do |_,_,exitstatus|
             @block_called = true
@@ -242,7 +242,7 @@ class TestSH < Clean::Test::TestCase
     }
   end
 
-  test_that "sh! runs a command that will fail and includes an error message that appears in the exception" do 
+  test_that "sh! runs a command that will fail and includes an error message that appears in the exception" do
     Given {
       use_capturing_logger
       @command = test_command("foo")
