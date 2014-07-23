@@ -29,6 +29,7 @@ Feature: Users should get the license included
 
     Examples:
       |license|
+      |apache|
       |mit|
       |gplv2|
       |gplv3|
