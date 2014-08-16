@@ -148,3 +148,10 @@ Feature: Bootstrap a new command-line app
     And the banner should document that this app's arguments are:
       |app_name|which is required|
     And there should be a one line summary of what the app does
+
+  Scenario: The whole initial state of the app has been staged with git
+    Given I successfully run `methadone -l custom tmp/newgem`
+    And I cd to "tmp/newgem"
+    When I successfully run `git ls-files --others --deleted `
+    Then the output should match /\A\Z/
+
