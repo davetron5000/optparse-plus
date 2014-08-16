@@ -32,17 +32,7 @@ Feature: Users should get the license included
     When I successfully run `methadone -l <license> tmp/newgem`
     Then newgem's license should be the <license> license
     And the README should reference this license
-
-    Examples:
-      |license|
-      |apache|
-      |mit|
-      |gplv2|
-      |gplv3|
-
-  Scenario Outline: Stock licenses should be personalized
-    When I successfully run `methadone -l <license> tmp/newgem`
-    Then LICENSE.txt should contain user information and program name
+    And LICENSE.txt should contain user information and program name
 
     Examples:
       |license|
