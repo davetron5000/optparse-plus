@@ -67,7 +67,7 @@ main do |app_name|
   #Ensure the gemspec file mentions the correct license
   gemspec_content = File.read(gemspec)
   gemspec_content.gsub!(/(^\s*#{gem_variable}\.license\s*=\s*).*/,"\\1#{license.to_s.inspect}")
-  File.write(gemspec, gemspec_content)
+  File.open(gemspec,'w') {|f| f.write gemspec_content }
 
 
   copy_file "README.rdoc", :binding => binding if using_readme
