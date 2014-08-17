@@ -89,7 +89,7 @@ main do |app_name|
     ], :before => /^end\s*$/
   end
 
-  sh %q(git add --all .)
+  sh! %q(git add --all .)
 end
 
 options[:readme] = true
