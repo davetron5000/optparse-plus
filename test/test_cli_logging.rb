@@ -173,12 +173,12 @@ class TestCLILogging < BaseTest
   test_that "when we enable runtime log level toggling, it toggles the log level on receiving the set signal" do
     Given {
       @app = MyOtherAppThatActsLikeItUsesMain.new
-      @app.call_use_log_level_option( :change_at_runtime => 'USR1' )
+      @app.call_use_log_level_option( :change_at_runtime => 'USR2' )
       @level = Logger::INFO
       @app.use_option(@level)
     }
     When {
-      Process.kill('USR1', $$)
+      Process.kill('USR2', $$)
       sleep(1) # call sleep to give the trap handler a chance to kick in
     }
     Then {
