@@ -122,6 +122,71 @@ class TestCLILogging < BaseTest
     }
   end
 
+  test_that "when we call toggle_log_level, it sets the loggers level to debug" do
+    Given {
+      @app = MyOtherAppThatActsLikeItUsesMain.new
+      @level = Logger::INFO
+      @app.call_use_log_level_option
+      @app.use_option(@level)
+    }
+    When {
+      @app.toggle_log_level
+    }
+    Then {
+      @app.logger.level.should == Logger::DEBUG
+    }
+  end
+
+  test_that "when we toggle the log level and change the logger, the new logger has also it's log level increased" do
+    Given {
+      @app = MyAppThatActsLikeItUsesMain.new
+      @app.call_use_log_level_option
+      @level = Logger::INFO
+    }
+    When {
+      @app.use_option(@level)
+      @app.toggle_log_level
+      @other_logger = OpenStruct.new
+      @app.change_logger(@other_logger)
+    }
+    Then {
+      @other_logger.level.should == Logger::DEBUG
+    }
+  end
+
+  test_that "when we call toggle_log_level twice, it sets the log level back to its original value" do
+    Given {
+      @app = MyOtherAppThatActsLikeItUsesMain.new
+      @app.call_use_log_level_option
+      @level = Logger::INFO
+      @app.use_option(@level)
+    }
+    When {
+      @app.toggle_log_level
+      @app.toggle_log_level
+    }
+    Then {
+      @app.logger.level.should == @level
+    }
+  end
+
+  test_that "when we enable runtime log level toggling, it toggles the log level on receiving the set signal" do
+    Given {
+      @app = MyOtherAppThatActsLikeItUsesMain.new
+      @app.call_use_log_level_option( :change_at_runtime => 'USR1' )
+      @level = Logger::INFO
+      @app.use_option(@level)
+    }
+    When {
+      Process.kill('USR1', $$)
+      sleep(0) # call sleep to give the trap handler a chance to kick in
+    }
+    Then {
+      @app.logger.level.should == Logger::DEBUG
+    }
+  end
+
+
   class MyAppThatActsLikeItUsesMain
     include Methadone::CLILogging
 
@@ -139,6 +204,12 @@ class TestCLILogging < BaseTest
 
     def logger
       @logger ||= OpenStruct.new
+    end
+  end
+
+  class MyOtherAppThatActsLikeItUsesMain < MyAppThatActsLikeItUsesMain
+    def call_use_log_level_option(opts=nil)
+      use_log_level_option(opts)
     end
   end
 
