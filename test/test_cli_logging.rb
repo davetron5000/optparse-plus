@@ -179,7 +179,7 @@ class TestCLILogging < BaseTest
     }
     When {
       Process.kill('USR1', $$)
-      sleep(0) # call sleep to give the trap handler a chance to kick in
+      sleep(1) # call sleep to give the trap handler a chance to kick in
     }
     Then {
       @app.logger.level.should == Logger::DEBUG
