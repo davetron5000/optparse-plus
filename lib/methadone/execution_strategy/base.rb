@@ -18,17 +18,17 @@ module Methadone
       # <tt>[2]</tt>:: A Process::Status-like objects that responds to <tt>exitstatus</tt> which returns
       #                the exit code of the command (e.g. 0 for success).
       def run_command(command)
-        subclass_must_impelment!
+        subclass_must_implement!
       end
 
       # Returns the class that, if caught by calling #run_command, represents the underlying command
       # not existing.  For example, in MRI Ruby, if you try to execute a non-existent command,
       # you get a Errno::ENOENT.
       def exception_meaning_command_not_found
-        subclass_must_impelment!
+        subclass_must_implement!
       end
     protected
-      def subclass_must_impelment!; raise "subclass must implement"; end
+      def subclass_must_implement!; raise "subclass must implement"; end
     end
   end
 end
