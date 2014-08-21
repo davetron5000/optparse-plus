@@ -5,6 +5,8 @@ require 'stringio'
 class TestCLILogging < BaseTest
   include Methadone
 
+  SLEEP_TIME = 0.1
+
   def setup
     @blank_format = proc do |severity,datetime,progname,msg|
       msg + "\n"
@@ -122,15 +124,16 @@ class TestCLILogging < BaseTest
     }
   end
 
-  test_that "when we call toggle_log_level, it sets the loggers level to debug" do
+
+  test_that "when we enable runtime log level toggling, it toggles the log level on receiving the set signal" do
     Given {
-      @app = MyOtherAppThatActsLikeItUsesMain.new
+      @app = MyAppThatActsLikeItUsesMain.new
+      @app.call_use_log_level_option( :toggle_debug_on_signal => 'USR2' )
       @level = Logger::INFO
-      @app.call_use_log_level_option
       @app.use_option(@level)
     }
     When {
-      @app.toggle_log_level
+      send_signal_and_wait_a_moment('USR2')
     }
     Then {
       @app.logger.level.should == Logger::DEBUG
@@ -140,12 +143,12 @@ class TestCLILogging < BaseTest
   test_that "when we toggle the log level and change the logger, the new logger has also it's log level increased" do
     Given {
       @app = MyAppThatActsLikeItUsesMain.new
-      @app.call_use_log_level_option
+      @app.call_use_log_level_option( :toggle_debug_on_signal => 'USR2' )
       @level = Logger::INFO
+      @app.use_option(@level)
     }
     When {
-      @app.use_option(@level)
-      @app.toggle_log_level
+      send_signal_and_wait_a_moment('USR2')
       @other_logger = OpenStruct.new
       @app.change_logger(@other_logger)
     }
@@ -154,35 +157,19 @@ class TestCLILogging < BaseTest
     }
   end
 
-  test_that "when we call toggle_log_level twice, it sets the log level back to its original value" do
+  test_that "when we enable runtime log level toggling and send the signal twice, the original log level is restored" do
     Given {
-      @app = MyOtherAppThatActsLikeItUsesMain.new
-      @app.call_use_log_level_option
+      @app = MyAppThatActsLikeItUsesMain.new
+      @app.call_use_log_level_option( :toggle_debug_on_signal => 'USR2' )
       @level = Logger::INFO
       @app.use_option(@level)
     }
     When {
-      @app.toggle_log_level
-      @app.toggle_log_level
+      send_signal_and_wait_a_moment('USR2')
+      send_signal_and_wait_a_moment('USR2')
     }
     Then {
-      @app.logger.level.should == @level
-    }
-  end
-
-  test_that "when we enable runtime log level toggling, it toggles the log level on receiving the set signal" do
-    Given {
-      @app = MyOtherAppThatActsLikeItUsesMain.new
-      @app.call_use_log_level_option( :change_at_runtime => 'USR2' )
-      @level = Logger::INFO
-      @app.use_option(@level)
-    }
-    When {
-      Process.kill('USR2', $$)
-      sleep(1) # call sleep to give the trap handler a chance to kick in
-    }
-    Then {
-      @app.logger.level.should == Logger::DEBUG
+      @app.logger.level.should == Logger::INFO
     }
   end
 
@@ -190,8 +177,8 @@ class TestCLILogging < BaseTest
   class MyAppThatActsLikeItUsesMain
     include Methadone::CLILogging
 
-    def call_use_log_level_option
-      use_log_level_option
+    def call_use_log_level_option(args = {})
+      use_log_level_option(args)
     end
 
     def use_option(level)
@@ -204,12 +191,6 @@ class TestCLILogging < BaseTest
 
     def logger
       @logger ||= OpenStruct.new
-    end
-  end
-
-  class MyOtherAppThatActsLikeItUsesMain < MyAppThatActsLikeItUsesMain
-    def call_use_log_level_option(opts=nil)
-      use_log_level_option(opts)
     end
   end
 
@@ -253,5 +234,10 @@ class TestCLILogging < BaseTest
     end
 
     def logger_id; logger.object_id; end
+  end
+
+  def send_signal_and_wait_a_moment(signal)
+    Process.kill(signal, $$)
+    sleep(SLEEP_TIME) # call sleep to give the trap handler a chance to kick in
   end
 end
