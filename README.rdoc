@@ -38,8 +38,6 @@ http://a1.mzstatic.com/us/r30/Publication/v4/2c/f7/90/2cf7902f-f709-9125-c73d-87
   * MRI Ruby 2.1.0
   * JRuby in both 1.8 and 1.9 mode
 
-It should work on 2.0.0 but there's a weird bundler issue where some of the aruba tests fail in odd ways.
-
 == Bootstrapping a new CLI App
 
 The +methadone+ command-line app will bootstrap a new command-line app, setting up a proper gem structure, unit tests, and cucumber-based tests with aruba:
