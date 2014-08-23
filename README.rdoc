@@ -126,7 +126,7 @@ Methadone::CLILogger is designed to handle this.  It's a proper subclass of Ruby
 See {CLILogger's rdoc}[http://davetron5000.github.com/methadone/rdoc/classes/Methadone/CLILogger.html] and then {CLILogging's}[http://davetron5000.github.com/methadone/rdoc/classes/Methadone/CLILogging.html] for more.
 
 
-Currently, there are classes the assist in directing output logger-style to the right place; basically ensuring that errors go to +STDERR+ and everything else goes to +STDOUT+.  All of this is, of course, configurable
+Currently, there are classes that assist in directing output logger-style to the right place; basically ensuring that errors go to +STDERR+ and everything else goes to +STDOUT+.  All of this is, of course, configurable
 
 == Cucumber Steps
 

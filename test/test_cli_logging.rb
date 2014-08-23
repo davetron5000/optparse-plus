@@ -5,6 +5,8 @@ require 'stringio'
 class TestCLILogging < BaseTest
   include Methadone
 
+  SLEEP_TIME = 0.1
+
   def setup
     @blank_format = proc do |severity,datetime,progname,msg|
       msg + "\n"
@@ -122,11 +124,61 @@ class TestCLILogging < BaseTest
     }
   end
 
+
+  test_that "when we enable runtime log level toggling, it toggles the log level on receiving the set signal" do
+    Given {
+      @app = MyAppThatActsLikeItUsesMain.new
+      @app.call_use_log_level_option( :toggle_debug_on_signal => 'USR2' )
+      @level = Logger::INFO
+      @app.use_option(@level)
+    }
+    When {
+      send_signal_and_wait_a_moment('USR2')
+    }
+    Then {
+      @app.logger.level.should == Logger::DEBUG
+    }
+  end
+
+  test_that "when we toggle the log level and change the logger, the new logger has also it's log level increased" do
+    Given {
+      @app = MyAppThatActsLikeItUsesMain.new
+      @app.call_use_log_level_option( :toggle_debug_on_signal => 'USR2' )
+      @level = Logger::INFO
+      @app.use_option(@level)
+    }
+    When {
+      send_signal_and_wait_a_moment('USR2')
+      @other_logger = OpenStruct.new
+      @app.change_logger(@other_logger)
+    }
+    Then {
+      @other_logger.level.should == Logger::DEBUG
+    }
+  end
+
+  test_that "when we enable runtime log level toggling and send the signal twice, the original log level is restored" do
+    Given {
+      @app = MyAppThatActsLikeItUsesMain.new
+      @app.call_use_log_level_option( :toggle_debug_on_signal => 'USR2' )
+      @level = Logger::INFO
+      @app.use_option(@level)
+    }
+    When {
+      send_signal_and_wait_a_moment('USR2')
+      send_signal_and_wait_a_moment('USR2')
+    }
+    Then {
+      @app.logger.level.should == Logger::INFO
+    }
+  end
+
+
   class MyAppThatActsLikeItUsesMain
     include Methadone::CLILogging
 
-    def call_use_log_level_option
-      use_log_level_option
+    def call_use_log_level_option(args = {})
+      use_log_level_option(args)
     end
 
     def use_option(level)
@@ -182,5 +234,10 @@ class TestCLILogging < BaseTest
     end
 
     def logger_id; logger.object_id; end
+  end
+
+  def send_signal_and_wait_a_moment(signal)
+    Process.kill(signal, $$)
+    sleep(SLEEP_TIME) # call sleep to give the trap handler a chance to kick in
   end
 end

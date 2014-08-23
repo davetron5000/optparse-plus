@@ -74,7 +74,11 @@ module Methadone
     }
 
     # Call this *if* you've included Methadone::Main to set up a <tt>--log-level</tt> option for your app
-    # that will allow the user to configure the logging level.
+    # that will allow the user to configure the logging level. You can pass an optional hash with
+    # <tt>:toggle_debug_on_signal => <SIGNAME></tt> to enable runtime toggling of the log level by sending the
+    # signal <tt><SIGNAME></tt> to your app
+    #
+    # +args+:: optional hash
     #
     # Example:
     #
@@ -86,12 +90,48 @@ module Methadone
     #
     #     go!
     #
-    def use_log_level_option
+    # Example with runtime toggling:
+    #
+    #
+    #     main do 
+    #       # your app
+    #     end
+    #
+    #     use_log_level_option :toggle_debug_on_signal => 'USR1'
+    #
+    #     go!
+    def use_log_level_option(args = {})
       on("--log-level LEVEL",LOG_LEVELS,'Set the logging level',
                                         '(' + LOG_LEVELS.keys.join('|') + ')',
                                         '(Default: info)') do |level|
         @log_level = level
+        @log_level_original = level
+        @log_level_toggled = false
         logger.level = level
+
+        setup_toggle_trap(args[:toggle_debug_on_signal])
+      end
+    end
+
+  private
+
+    # Call this to toggle the log level between <tt>debug</tt> and its initial value
+    def toggle_log_level
+      @log_level_original = logger.level unless @log_level_toggled
+      logger.level = if @log_level_toggled
+                       @log_level_original
+                     else
+                       LOG_LEVELS['debug']
+                     end
+      @log_level_toggled = !@log_level_toggled
+      @log_level = logger.level
+    end
+
+    def setup_toggle_trap(signal)
+      if signal
+        Signal.trap(signal) do
+          toggle_log_level
+        end
       end
     end
   end
