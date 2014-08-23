@@ -41,11 +41,11 @@
     <div class="description">
       
 <p>A Logger instance that gives better control of messaging the user and
-logging app activity.  At it's most basic, you would use <code>info</code>
-as a replacement for <code>puts</code> and <code>error</code> as a
-replacement for <code>STDERR.puts</code>.  Since this is a logger, however,
-you can also use debug, warn, and fatal, and you can control the format and
-"logging level" as such.</p>
+logging app activity.  At it&#39;s most basic, you would use
+<code>info</code> as a replacement for <code>puts</code> and
+<code>error</code> as a replacement for <code>STDERR.puts</code>.  Since
+this is a logger, however, you can also use debug, warn, and fatal, and you
+can control the format and "logging level" as such.</p>
 
 <p>So, by default:</p>
 <ul><li>
@@ -85,7 +85,7 @@ error_formatter=</p>
 <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">warn</span>(<span class="ruby-string">&quot;careful!&quot;</span>) <span class="ruby-comment"># =&gt; only the standard OUTPUT gets this</span>
 <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">error</span>(<span class="ruby-string">&quot;Something went wrong!&quot;</span>) <span class="ruby-comment"># =&gt; only the standard error gets this</span>
 
-<span class="ruby-identifier">logger</span> = <span class="ruby-constant">CLILogger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">'logfile.txt'</span>)
+<span class="ruby-identifier">logger</span> = <span class="ruby-constant">CLILogger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&#39;logfile.txt&#39;</span>)
 <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-string">&quot;Starting up&quot;</span>) <span class="ruby-comment"># =&gt; logfile.txt gets this</span>
 <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">error</span>(<span class="ruby-string">&quot;Something went wrong!&quot;</span>) <span class="ruby-comment"># =&gt; BOTH logfile.txt AND the standard error get this</span>
 </pre>
@@ -250,13 +250,16 @@ Logger::Severity::WARN</p>
   <span class="ruby-keyword">super</span>(<span class="ruby-identifier">log_device</span>)
   <span class="ruby-ivar">@stderr_logger</span> = <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">error_device</span>)
 
-  <span class="ruby-ivar">@split_logs</span> = <span class="ruby-identifier">log_device</span>.<span class="ruby-identifier">tty?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">error_device</span>.<span class="ruby-identifier">tty?</span>
+  <span class="ruby-identifier">log_device_tty</span>   = <span class="ruby-identifier">tty?</span>(<span class="ruby-identifier">log_device</span>)
+  <span class="ruby-identifier">error_device_tty</span> = <span class="ruby-identifier">tty?</span>(<span class="ruby-identifier">error_device</span>)
+
+  <span class="ruby-ivar">@split_logs</span> = <span class="ruby-identifier">log_device_tty</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">error_device_tty</span>
 
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">level</span> = <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">Severity</span><span class="ruby-operator">::</span><span class="ruby-constant">INFO</span>
   <span class="ruby-ivar">@stderr_logger</span>.<span class="ruby-identifier">level</span> = <span class="ruby-constant">DEFAULT_ERROR_LEVEL</span>
 
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">formatter</span> = <span class="ruby-constant">BLANK_FORMAT</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">log_device</span>.<span class="ruby-identifier">tty?</span>
-  <span class="ruby-ivar">@stderr_logger</span>.<span class="ruby-identifier">formatter</span> = <span class="ruby-constant">BLANK_FORMAT</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">error_device</span>.<span class="ruby-identifier">tty?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">formatter</span> = <span class="ruby-constant">BLANK_FORMAT</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">log_device_tty</span>
+  <span class="ruby-ivar">@stderr_logger</span>.<span class="ruby-identifier">formatter</span> = <span class="ruby-constant">BLANK_FORMAT</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">error_device_tty</span>
 <span class="ruby-keyword">end</span></pre>
               </div>
             </div>
@@ -295,7 +298,7 @@ will affect both, so the order of the calls matters.</p>
                 
               </p>
               <div id="method-i-error_formatter-3D_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/cli_logger.rb, line 118</span>
+                <pre><span class="ruby-comment"># File lib/methadone/cli_logger.rb, line 121</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">error_formatter=</span>(<span class="ruby-identifier">formatter</span>)
   <span class="ruby-ivar">@stderr_logger</span>.<span class="ruby-identifier">formatter</span>=<span class="ruby-identifier">formatter</span>
 <span class="ruby-keyword">end</span></pre>
@@ -337,7 +340,7 @@ to the error logger</p>
                 
               </p>
               <div id="method-i-error_level-3D_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/cli_logger.rb, line 110</span>
+                <pre><span class="ruby-comment"># File lib/methadone/cli_logger.rb, line 113</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">error_level=</span>(<span class="ruby-identifier">level</span>)
   <span class="ruby-ivar">@stderr_logger</span>.<span class="ruby-identifier">level</span> = <span class="ruby-identifier">level</span>
 <span class="ruby-keyword">end</span></pre>
@@ -371,7 +374,7 @@ to the error logger</p>
                 
               </p>
               <div id="method-i-level-3D_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/cli_logger.rb, line 97</span>
+                <pre><span class="ruby-comment"># File lib/methadone/cli_logger.rb, line 100</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">level=</span>(<span class="ruby-identifier">level</span>)
   <span class="ruby-keyword">super</span>(<span class="ruby-identifier">level</span>)
   <span class="ruby-identifier">current_error_level</span> = <span class="ruby-ivar">@stderr_logger</span>.<span class="ruby-identifier">level</span>

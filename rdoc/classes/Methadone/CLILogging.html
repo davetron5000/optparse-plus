@@ -40,8 +40,8 @@ href="CLILogger.html">Methadone::CLILogger</a> instance.</p>
 <p>Include this module into your class, and <a
 href="CLILogging.html#method-i-logger">logger</a> provides access to a
 shared logger. This is handy if you want all of your clases to have access
-to the same logger, but  don't want to (or aren't able to) pass it around
-to each class.</p>
+to the same logger, but  don&#39;t want to (or aren&#39;t able to) pass it
+around to each class.</p>
 
 <p>This also provides methods for direct logging without going through the <a
 href="CLILogging.html#method-i-logger">logger</a></p>
@@ -216,11 +216,11 @@ you want.</p>
             <td class="attr-name">LOG_LEVELS</td>
             <td>=</td>
             <td class="attr-value">{
-'debug' =&gt; Logger::DEBUG,
-'info' =&gt; Logger::INFO,
-'warn' =&gt; Logger::WARN,
-'error' =&gt; Logger::ERROR,
-'fatal' =&gt; Logger::FATAL,
+&#39;debug&#39; =&gt; Logger::DEBUG,
+&#39;info&#39; =&gt; Logger::INFO,
+&#39;warn&#39; =&gt; Logger::WARN,
+&#39;error&#39; =&gt; Logger::ERROR,
+&#39;fatal&#39; =&gt; Logger::FATAL,
 }</td>
           </tr>
           
@@ -286,12 +286,13 @@ you want.</p>
           
           
             <div class="description">
-              <p>Change the global logger that includers will use.  Useful if you don't want
-the default configured logger.  Note that the <code>change_logger</code>
-version is preferred because Ruby will often parse <code>logger =
-Logger.new</code> as the declaration of, and assignment to, of a local
-variable.  You'd need to do <code>self.logger=Logger.new</code> to be sure.
-This method is a bit easier.</p>
+              <p>Change the global logger that includers will use.  Useful if you don&#39;t
+want the default configured logger.  Note that the
+<code>change_logger</code> version is preferred because Ruby will often
+parse <code>logger = Logger.new</code> as the declaration of, and
+assignment to, of a local variable.  You&#39;d need to do
+<code>self.logger=Logger.new</code> to be sure.  This method is a bit
+easier.</p>
 <dl class="rdoc-list note-list"><dt><code>new_logger</code>
 <dd>
 <p>the new logger.  May not be nil and should be a logger of some kind</p>
@@ -510,16 +511,22 @@ the same logger via this method.</p>
         <div class="method">
           <div class="title method-title" id="method-i-use_log_level_option">
             
-              <a name="method-i-use_log_level_option"></a><b>use_log_level_option</b>()
+              <a name="method-i-use_log_level_option"></a><b>use_log_level_option</b>(args = {})
             
           </div>
           
           
             <div class="description">
-              <p>Call this <strong>if</strong> you've included <a
+              <p>Call this <strong>if</strong> you&#39;ve included <a
 href="Main.html">Methadone::Main</a> to set up a <code>--log-level</code>
 option for your app that will allow the user to configure the logging
-level.</p>
+level. You can pass an optional hash with <code>:toggle_debug_on_signal
+=&gt; &lt;SIGNAME&gt;</code> to enable runtime toggling of the log level by
+sending the signal <code>&lt;SIGNAME&gt;</code> to your app</p>
+<dl class="rdoc-list note-list"><dt><code>args</code>
+<dd>
+<p>optional hash</p>
+</dd></dl>
 
 <p>Example:</p>
 
@@ -530,6 +537,17 @@ end
 use_log_level_option
 
 go!</pre>
+
+<p>Example with runtime toggling:</p>
+
+<pre class="ruby"><span class="ruby-identifier">main</span> <span class="ruby-keyword">do</span> 
+  <span class="ruby-comment"># your app</span>
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-identifier">use_log_level_option</span> :<span class="ruby-identifier">toggle_debug_on_signal</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&#39;USR1&#39;</span>
+
+<span class="ruby-identifier">go!</span>
+</pre>
             </div>
           
           
@@ -545,13 +563,17 @@ go!</pre>
                 
               </p>
               <div id="method-i-use_log_level_option_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/cli_logging.rb, line 89</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">use_log_level_option</span>
-  <span class="ruby-identifier">on</span>(<span class="ruby-string">&quot;--log-level LEVEL&quot;</span>,<span class="ruby-constant">LOG_LEVELS</span>,<span class="ruby-string">'Set the logging level'</span>,
-                                    <span class="ruby-string">'('</span> <span class="ruby-operator">+</span> <span class="ruby-constant">LOG_LEVELS</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">'|'</span>) <span class="ruby-operator">+</span> <span class="ruby-string">')'</span>,
-                                    <span class="ruby-string">'(Default: info)'</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">level</span><span class="ruby-operator">|</span>
+                <pre><span class="ruby-comment"># File lib/methadone/cli_logging.rb, line 103</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">use_log_level_option</span>(<span class="ruby-identifier">args</span> = {})
+  <span class="ruby-identifier">on</span>(<span class="ruby-string">&quot;--log-level LEVEL&quot;</span>,<span class="ruby-constant">LOG_LEVELS</span>,<span class="ruby-string">&#39;Set the logging level&#39;</span>,
+                                    <span class="ruby-string">&#39;(&#39;</span> <span class="ruby-operator">+</span> <span class="ruby-constant">LOG_LEVELS</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&#39;|&#39;</span>) <span class="ruby-operator">+</span> <span class="ruby-string">&#39;)&#39;</span>,
+                                    <span class="ruby-string">&#39;(Default: info)&#39;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">level</span><span class="ruby-operator">|</span>
     <span class="ruby-ivar">@log_level</span> = <span class="ruby-identifier">level</span>
+    <span class="ruby-ivar">@log_level_original</span> = <span class="ruby-identifier">level</span>
+    <span class="ruby-ivar">@log_level_toggled</span> = <span class="ruby-keyword">false</span>
     <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">level</span> = <span class="ruby-identifier">level</span>
+
+    <span class="ruby-identifier">setup_toggle_trap</span>(<span class="ruby-identifier">args</span>[<span class="ruby-value">:toggle_debug_on_signal</span>])
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
               </div>

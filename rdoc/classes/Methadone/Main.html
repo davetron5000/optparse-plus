@@ -53,7 +53,7 @@ can do the following:</p>
 
 <pre class="ruby"><span class="ruby-comment">#!/usr/bin/env ruby</span>
 
-<span class="ruby-identifier">require</span> <span class="ruby-string">'methadone'</span>
+<span class="ruby-identifier">require</span> <span class="ruby-string">&#39;methadone&#39;</span>
 
 <span class="ruby-keyword">class</span> <span class="ruby-constant">App</span>
   <span class="ruby-identifier">include</span> <span class="ruby-constant">Methadone</span><span class="ruby-operator">::</span><span class="ruby-constant">Main</span>
@@ -64,7 +64,7 @@ can do the following:</p>
     <span class="ruby-identifier">options</span>[:<span class="ruby-identifier">flag</span>] =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">value</span> <span class="ruby-identifier">of</span> <span class="ruby-identifier">flag</span> <span class="ruby-identifier">passed</span> <span class="ruby-identifier">on</span> <span class="ruby-identifier">command</span> <span class="ruby-identifier">line</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-comment"># Proxy to an OptionParser instance's on method</span>
+  <span class="ruby-comment"># Proxy to an OptionParser instance&#39;s on method</span>
   <span class="ruby-identifier">on</span>(<span class="ruby-string">&quot;--[no]-switch&quot;</span>)
   <span class="ruby-identifier">on</span>(<span class="ruby-string">&quot;--flag VALUE&quot;</span>)
 
@@ -72,7 +72,7 @@ can do the following:</p>
   <span class="ruby-identifier">arg</span> :<span class="ruby-identifier">maybe</span>, :<span class="ruby-identifier">optional</span>
 
   <span class="ruby-identifier">defaults_from_env_var</span> <span class="ruby-constant">SOME_VAR</span>
-  <span class="ruby-identifier">defaults_from_config_file</span> <span class="ruby-string">'.my_app.rc'</span>
+  <span class="ruby-identifier">defaults_from_config_file</span> <span class="ruby-string">&#39;.my_app.rc&#39;</span>
 
   <span class="ruby-identifier">go!</span>
 <span class="ruby-keyword">end</span>
@@ -81,26 +81,26 @@ can do the following:</p>
 <p>Our app then acts as follows:</p>
 
 <pre class="ruby">$ <span class="ruby-identifier">our_app</span> 
-<span class="ruby-comment"># =&gt; parse error: 'needed' is required</span>
+<span class="ruby-comment"># =&gt; parse error: &#39;needed&#39; is required</span>
 $ <span class="ruby-identifier">our_app</span> <span class="ruby-identifier">foo</span>
 <span class="ruby-comment"># =&gt; succeeds; &quot;maybe&quot; in main is nil</span>
 $ <span class="ruby-identifier">our_app</span> <span class="ruby-operator">-</span><span class="ruby-operator">-</span><span class="ruby-identifier">flag</span> <span class="ruby-identifier">foo</span>
 <span class="ruby-comment"># =&gt; options[:flag] has the value &quot;foo&quot;</span>
-$ <span class="ruby-constant">SOME_VAR</span>=<span class="ruby-string">'--flag foo'</span> <span class="ruby-identifier">our_app</span>
+$ <span class="ruby-constant">SOME_VAR</span>=<span class="ruby-string">&#39;--flag foo&#39;</span> <span class="ruby-identifier">our_app</span>
 <span class="ruby-comment"># =&gt; options[:flag] has the value &quot;foo&quot;</span>
-$ <span class="ruby-constant">SOME_VAR</span>=<span class="ruby-string">'--flag foo'</span> <span class="ruby-identifier">our_app</span> <span class="ruby-operator">-</span><span class="ruby-operator">-</span><span class="ruby-identifier">flag</span> <span class="ruby-identifier">bar</span>
+$ <span class="ruby-constant">SOME_VAR</span>=<span class="ruby-string">&#39;--flag foo&#39;</span> <span class="ruby-identifier">our_app</span> <span class="ruby-operator">-</span><span class="ruby-operator">-</span><span class="ruby-identifier">flag</span> <span class="ruby-identifier">bar</span>
 <span class="ruby-comment"># =&gt; options[:flag] has the value &quot;bar&quot;</span>
 </pre>
 
-<p>Note that we've done all of this inside a class that we called
-<code>App</code>.  This isn't strictly necessary, and you can just
+<p>Note that we&#39;ve done all of this inside a class that we called
+<code>App</code>.  This isn&#39;t strictly necessary, and you can just
 <code>include</code> <a href="Main.html">Methadone::Main</a> and <a
 href="CLILogging.html">Methadone::CLILogging</a> at the root of your
 <code>bin</code> file if you like.  This is somewhat unsafe, because
 <code>self</code> inside the <code>bin</code> file is <a
 href="../Object.html">Object</a>, and any methods you create (or cause to
 be created via <code>include</code>) will be present on
-<strong>every</strong> object.  This can cause odd problems, so it's
+<strong>every</strong> object.  This can cause odd problems, so it&#39;s
 recommended that you <strong>not</strong> do this.</p>
 
     </div>
@@ -323,7 +323,8 @@ recommended that you <strong>not</strong> do this.</p>
               <p>Sets the name of an arguments your app accepts.  Note that no sanity
 checking is done on the configuration of your arguments you create via
 multiple calls to this method. Namely, the last argument should be the only
-one that is a :many or a :any, but the system here won't sanity check that.</p>
+one that is a :many or a :any, but the system here won&#39;t sanity check
+that.</p>
 <dl class="rdoc-list note-list"><dt><code>arg_name</code>
 <dd>
 <p>name of the argument to appear in documentation This will be converted into
@@ -386,15 +387,15 @@ help</p>
           
           
             <div class="description">
-              <p>Set the name of the file, in the user's home directory, where defaults can
-be configured. The format of this file can be either a simple string of
+              <p>Set the name of the file, in the user&#39;s home directory, where defaults
+can be configured. The format of this file can be either a simple string of
 options, like what goes in the environment variable (see <a
 href="Main.html#method-i-defaults_from_env_var">defaults_from_env_var</a>),
 or YAML, in which case it should be a hash where keys are the option names,
 and values their defaults.</p>
 <dl class="rdoc-list note-list"><dt>filename
 <dd>
-<p>name of the file, relative to the user's home directory</p>
+<p>name of the file, relative to the user&#39;s home directory</p>
 </dd></dl>
             </div>
           
@@ -413,7 +414,7 @@ and values their defaults.</p>
               <div id="method-i-defaults_from_config_file_source" class="dyn-source">
                 <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 142</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">defaults_from_config_file</span>(<span class="ruby-identifier">filename</span>,<span class="ruby-identifier">options</span>={})
-  <span class="ruby-ivar">@rc_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-string">'HOME'</span>],<span class="ruby-identifier">filename</span>)
+  <span class="ruby-ivar">@rc_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;HOME&#39;</span>],<span class="ruby-identifier">filename</span>)
 <span class="ruby-keyword">end</span></pre>
               </div>
             </div>
@@ -508,8 +509,8 @@ options for your app.  Omit this to disable the feature.</p>
 href="Main.html#method-i-main">main</a> block evaluates to an integer, that
 value will be sent to Kernel#exit, otherwise, this will exit with 0</p>
 
-<p>If the command-line options couldn't be parsed, this will exit with 64 and
-whatever message OptionParser provided.</p>
+<p>If the command-line options couldn&#39;t be parsed, this will exit with 64
+and whatever message OptionParser provided.</p>
 
 <p>If a required argument (see <a href="Main.html#method-i-arg">arg</a>) is
 not found, this exits with 64 and a message about that missing argument.</p>
@@ -612,7 +613,7 @@ determine that list from another method to keep your code clean.</p>
 
 <pre class="ruby"><span class="ruby-comment">#!/usr/bin/env ruby -w</span>
 
-<span class="ruby-identifier">require</span> <span class="ruby-string">'methadone'</span>
+<span class="ruby-identifier">require</span> <span class="ruby-string">&#39;methadone&#39;</span>
 
 <span class="ruby-identifier">include</span> <span class="ruby-constant">Methadone</span><span class="ruby-operator">::</span><span class="ruby-constant">Main</span>
 
@@ -711,8 +712,8 @@ provided).</p>
             <div class="description">
               <p>Returns a Hash that you can use to store or retrieve options parsed from
 the command line.  When you put values in here, if you do so
-<strong>before</strong> you've declared your command-line interface via <a
-href="Main.html#method-i-on">on</a>, the value will be used in the
+<strong>before</strong> you&#39;ve declared your command-line interface via
+<a href="Main.html#method-i-on">on</a>, the value will be used in the
 docstring to indicate it is the default. You can use either a String or a
 Symbol and, after <a href="Main.html#method-i-go-21">go!</a> is called and
 the command-line is parsed, the values will be available as both a String
@@ -764,7 +765,7 @@ go!</pre>
           
             <div class="description">
               <p>Returns an OptionParser that you can use to declare your command-line
-interface.  Generally, you won't use this and will use <a
+interface.  Generally, you won&#39;t use this and will use <a
 href="Main.html#method-i-on">on</a> directly, but this allows you to have
 complete control of option parsing.</p>
 
@@ -849,7 +850,8 @@ for the option.</p>
 <dl class="rdoc-list note-list"><dt>version
 <dd>
 <p>the current version of your app.  Should almost always be YourApp::VERSION,
-where the module YourApp should've been generated by the bootstrap script</p>
+where the module YourApp should&#39;ve been generated by the bootstrap
+script</p>
 </dd><dt>version_options
 <dd>
 <p>controls how the version option behaves.  If this is a string, then the
@@ -857,7 +859,7 @@ string will be used as documentation for the --version flag. If a Hash,
 more configuration is available:</p>
 <dl class="rdoc-list note-list"><dt>custom_docs
 <dd>
-<p>the string to document the --version flag if you don't like the default</p>
+<p>the string to document the --version flag if you don&#39;t like the default</p>
 </dd><dt>compact
 <dd>
 <p>if true, --version will just show the app name and version - no help</p>

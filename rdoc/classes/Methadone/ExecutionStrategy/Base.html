@@ -93,7 +93,7 @@ Currently, this is nothing more than an interface specification.</p>
             
               
               <li>
-                <a href="#method-i-subclass_must_impelment-21">subclass_must_impelment!</a>
+                <a href="#method-i-subclass_must_implement-21">subclass_must_implement!</a>
               </li>
             
           </ul>
@@ -153,7 +153,7 @@ you get a Errno::ENOENT.</p>
               <div id="method-i-exception_meaning_command_not_found_source" class="dyn-source">
                 <pre><span class="ruby-comment"># File lib/methadone/execution_strategy/base.rb, line 27</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">exception_meaning_command_not_found</span>
-  <span class="ruby-identifier">subclass_must_impelment!</span>
+  <span class="ruby-identifier">subclass_must_implement!</span>
 <span class="ruby-keyword">end</span></pre>
               </div>
             </div>
@@ -208,7 +208,7 @@ which returns the exit code of the command (e.g. 0 for success).</p>
               <div id="method-i-run_command_source" class="dyn-source">
                 <pre><span class="ruby-comment"># File lib/methadone/execution_strategy/base.rb, line 20</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">run_command</span>(<span class="ruby-identifier">command</span>)
-  <span class="ruby-identifier">subclass_must_impelment!</span>
+  <span class="ruby-identifier">subclass_must_implement!</span>
 <span class="ruby-keyword">end</span></pre>
               </div>
             </div>
@@ -218,9 +218,9 @@ which returns the exit code of the command (e.g. 0 for success).</p>
       <div class="sectiontitle">Instance Protected methods</div>
       
         <div class="method">
-          <div class="title method-title" id="method-i-subclass_must_impelment-21">
+          <div class="title method-title" id="method-i-subclass_must_implement-21">
             
-              <a name="method-i-subclass_must_impelment-21"></a><b>subclass_must_impelment!</b>()
+              <a name="method-i-subclass_must_implement-21"></a><b>subclass_must_implement!</b>()
             
           </div>
           
@@ -238,12 +238,12 @@ which returns the exit code of the command (e.g. 0 for success).</p>
               
               <p class="source-link">
                 Source: 
-                <a href="javascript:toggleSource('method-i-subclass_must_impelment-21_source')" id="l_method-i-subclass_must_impelment-21_source">show</a>
+                <a href="javascript:toggleSource('method-i-subclass_must_implement-21_source')" id="l_method-i-subclass_must_implement-21_source">show</a>
                 
               </p>
-              <div id="method-i-subclass_must_impelment-21_source" class="dyn-source">
+              <div id="method-i-subclass_must_implement-21_source" class="dyn-source">
                 <pre><span class="ruby-comment"># File lib/methadone/execution_strategy/base.rb, line 31</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">subclass_must_impelment!</span>; <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;subclass must implement&quot;</span>; <span class="ruby-keyword">end</span></pre>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">subclass_must_implement!</span>; <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;subclass must implement&quot;</span>; <span class="ruby-keyword">end</span></pre>
               </div>
             </div>
             

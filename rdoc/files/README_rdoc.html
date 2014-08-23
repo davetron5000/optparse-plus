@@ -23,7 +23,7 @@
         </h1>
         <ul class="files">
             <li>README.rdoc</li>
-            <li>Last modified: 2012-12-08 13:53:15 -0800</li>
+            <li>Last modified: 2014-08-23 09:42:30 -0400</li>
         </ul>
     </div>
 
@@ -60,7 +60,7 @@ and powerful command-line applications.</p>
 <p>A command-line app to bootstrap a new command-line app.</p>
 </li><li>
 <p>A lightweight DSL to create your command-line interface, that loses none of
-<code>OptionParser</code>'s power.</p>
+<code>OptionParser</code>&#39;s power.</p>
 </li><li>
 <p>A simplified means of running external commands that has better error
 handling and diagnostics.</p>
@@ -95,22 +95,17 @@ ebook that contains a step-by-step tutorial on making an awesome app with
 <ul><li>
 <p>The build runs on Travis for:</p>
 <ul><li>
-<p>MRI Ruby 1.8.7</p>
-</li><li>
 <p>MRI Ruby 1.9.2</p>
 </li><li>
 <p>MRI Ruby 1.9.3</p>
 </li><li>
-<p>RBX</p>
+<p>MRI Ruby 2.0.0</p>
 </li><li>
-<p>REE</p>
+<p>MRI Ruby 2.1.0</p>
 </li><li>
 <p>JRuby in both 1.8 and 1.9 mode</p>
 </li></ul>
 </li></ul>
-
-<p>It should work on 2.0.0 but there's a weird bundler issue where some of the
-aruba tests fail in odd ways.</p>
 
 <h2 id="label-Bootstrapping+a+new+CLI+App">Bootstrapping a new CLI App</h2>
 
@@ -132,7 +127,7 @@ $ cat features/newgem.feature
 Feature: My bootstrapped app kinda works
   In order to get going on coding my awesome app
   I want to have aruba and cucumber setup
-  So I don't have to do it myself
+  So I don&#39;t have to do it myself
 
   Scenario: App just runs
     When I run `newgem --help`
@@ -174,7 +169,7 @@ top</p>
 <code>Hash</code></p>
 </li><li>
 <p>No exception handling - you have to explicitly call <code>exit</code>
-and/or let exceptions' stack traces leak through.</p>
+and/or let exceptions&#39; stack traces leak through.</p>
 </li></ul>
 
 <p><a href="../classes/Methadone.html">Methadone</a> provides <a
@@ -210,15 +205,15 @@ cron-like tasks, you can sort out what happened</p>
 <span class="ruby-comment">#        logs the standard error at WARN</span>
 <span class="ruby-comment">#        returns the exit code for your examination</span>
 <span class="ruby-comment">#</span>
-<span class="ruby-comment">#        there's a LOT MORE</span>
+<span class="ruby-comment">#        there&#39;s a LOT MORE</span>
 </pre>
 
 <p>See the <a
 href="http://davetron5000.github.com/methadone/rdoc/classes/Methadone/SH.html">rdoc</a>
 for more detailed examples and usage.</p>
 
-<p>This isn't a replacement for Open3 or ChildProcess, but a way to easily "do
-the right thing" for most cases.</p>
+<p>This isn&#39;t a replacement for Open3 or ChildProcess, but a way to easily
+"do the right thing" for most cases.</p>
 
 <h2 id="label-Zero-Config+Logging">Zero-Config Logging</h2>
 
@@ -230,18 +225,18 @@ past).  Logging can be a pain to set up, and can also make it hard to give
 the user at the command-prompt a good experience.</p>
 
 <p><a href="../classes/Methadone/CLILogger.html">Methadone::CLILogger</a> is
-designed to handle this.  It's a proper subclass of Ruby's built-in
+designed to handle this.  It&#39;s a proper subclass of Ruby&#39;s built-in
 <code>Logger</code> with a few enhancements:</p>
 <ul><li>
-<p>Messages don't get formatting if they are destined for a TTY (e.g. the user
-sitting at her terminal)</p>
+<p>Messages don&#39;t get formatting if they are destined for a TTY (e.g. the
+user sitting at her terminal)</p>
 </li><li>
 <p>Errors and warnings go to the standard error.</p>
 </li><li>
 <p>Debug and info messages go to the standard output.</p>
 </li><li>
 <p>When these are redirected to a file, the log messages are properly
-date/time stamped as you'd expect</p>
+date/time stamped as you&#39;d expect</p>
 </li><li>
 <p>You can mix-in <a
 href="../classes/Methadone/CLILogging.html">Methadone::CLILogging</a> to
@@ -255,10 +250,10 @@ rdoc</a> and then <a
 href="http://davetron5000.github.com/methadone/rdoc/classes/Methadone/CLILogging.html">CLILogging's</a>
 for more.</p>
 
-<p>Currently, there are classes the assist in directing output logger-style to
-the right place; basically ensuring that errors go to <code>STDERR</code>
-and everything else goes to <code>STDOUT</code>.  All of this is, of
-course, configurable</p>
+<p>Currently, there are classes that assist in directing output logger-style
+to the right place; basically ensuring that errors go to
+<code>STDERR</code> and everything else goes to <code>STDOUT</code>.  All
+of this is, of course, configurable</p>
 
 <h2 id="label-Cucumber+Steps">Cucumber Steps</h2>
 
@@ -270,7 +265,7 @@ opinionated, steps.</p>
 
 <h3 id="label-Example">Example</h3>
 
-<p>Here's an example from methadone's own tests:</p>
+<p>Here&#39;s an example from methadone&#39;s own tests:</p>
 
 <pre>Scenario: Help is properly documented
   When I get help for &quot;methadone&quot;
@@ -280,7 +275,7 @@ opinionated, steps.</p>
   And the banner should be present
   And the banner should include the version
   And the banner should document that this app takes options
-  And the banner should document that this app's arguments are:
+  And the banner should document that this app&#39;s arguments are:
     |app_name|which is required|
     |dir_name|which is optional|</pre>
 
@@ -291,11 +286,12 @@ for a list of all the steps provided.</p>
 
 <h2 id="label-Contributing">Contributing</h2>
 <ul><li>
-<p>Feel free to file an issue, even if you don't have time to submit a patch</p>
+<p>Feel free to file an issue, even if you don&#39;t have time to submit a
+patch</p>
 </li><li>
-<p>Please try to include a test for any patch you submit.  If you don't
-include a test, I'll have to write one, and it'll take longer to get your
-code in.</p>
+<p>Please try to include a test for any patch you submit.  If you don&#39;t
+include a test, I&#39;ll have to write one, and it&#39;ll take longer to
+get your code in.</p>
 </li></ul>
 
     </div>

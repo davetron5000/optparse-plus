@@ -376,7 +376,7 @@ should retain a reference to this</p>
   <span class="ruby-operator">::</span><span class="ruby-constant">Hash</span>[<span class="ruby-ivar">@args</span>.<span class="ruby-identifier">zip</span>(<span class="ruby-operator">::</span><span class="ruby-constant">ARGV</span>)].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">arg_name</span>,<span class="ruby-identifier">arg_value</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">if</span> <span class="ruby-ivar">@arg_options</span>[<span class="ruby-identifier">arg_name</span>].<span class="ruby-identifier">include?</span> <span class="ruby-value">:required</span>
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">arg_value</span>.<span class="ruby-identifier">nil?</span>
-        <span class="ruby-identifier">message</span> = <span class="ruby-node">&quot;'#{arg_name.to_s}' is required&quot;</span>
+        <span class="ruby-identifier">message</span> = <span class="ruby-node">&quot;&#39;#{arg_name.to_s}&#39; is required&quot;</span>
         <span class="ruby-identifier">message</span> = <span class="ruby-string">&quot;at least one &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">message</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@arg_options</span>[<span class="ruby-identifier">arg_name</span>].<span class="ruby-identifier">include?</span> <span class="ruby-value">:many</span>
         <span class="ruby-identifier">raise</span> <span class="ruby-operator">::</span><span class="ruby-constant">OptionParser</span><span class="ruby-operator">::</span><span class="ruby-constant">ParseError</span>,<span class="ruby-identifier">message</span>
       <span class="ruby-keyword">end</span>
@@ -538,9 +538,9 @@ purpose</p>
                 <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 507</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">post_setup</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@arg_documentation</span>.<span class="ruby-identifier">empty?</span>
-    <span class="ruby-ivar">@option_parser</span>.<span class="ruby-identifier">separator</span> <span class="ruby-string">''</span>
+    <span class="ruby-ivar">@option_parser</span>.<span class="ruby-identifier">separator</span> <span class="ruby-string">&#39;&#39;</span>
     <span class="ruby-ivar">@option_parser</span>.<span class="ruby-identifier">separator</span> <span class="ruby-string">&quot;Arguments:&quot;</span>
-    <span class="ruby-ivar">@option_parser</span>.<span class="ruby-identifier">separator</span> <span class="ruby-string">''</span>
+    <span class="ruby-ivar">@option_parser</span>.<span class="ruby-identifier">separator</span> <span class="ruby-string">&#39;&#39;</span>
     <span class="ruby-ivar">@args</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">arg</span><span class="ruby-operator">|</span>
       <span class="ruby-ivar">@option_parser</span>.<span class="ruby-identifier">separator</span> <span class="ruby-node">&quot;    #{arg}&quot;</span>
       <span class="ruby-ivar">@option_parser</span>.<span class="ruby-identifier">separator</span> <span class="ruby-node">&quot;        #{@arg_documentation[arg]}&quot;</span>

@@ -195,12 +195,12 @@
               <div id="method-i-doc_source" class="dyn-source">
                 <pre><span class="ruby-comment"># File bin/cukedoc, line 19</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">doc</span>(<span class="ruby-identifier">type</span>,<span class="ruby-identifier">regexp</span>,&amp;<span class="ruby-identifier">block</span>)
-  <span class="ruby-identifier">s</span> = <span class="ruby-identifier">regexp</span>.<span class="ruby-identifier">inspect</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">%r^\/\^?/</span>,<span class="ruby-string">''</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">%r\$?\/$/</span>,<span class="ruby-string">''</span>).<span class="ruby-identifier">split</span>(<span class="ruby-regexp">%r\([^)]*\)/</span>)
+  <span class="ruby-identifier">s</span> = <span class="ruby-identifier">regexp</span>.<span class="ruby-identifier">inspect</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">%r^\/\^?/</span>,<span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">%r\$?\/$/</span>,<span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">split</span>(<span class="ruby-regexp">%r\([^)]*\)/</span>)
   <span class="ruby-identifier">params</span> = []
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">nil?</span>
-    <span class="ruby-identifier">params</span> = <span class="ruby-identifier">block</span>.<span class="ruby-identifier">parameters</span>.<span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">_</span><span class="ruby-operator">|</span> <span class="ruby-string">':'</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">_</span>[<span class="ruby-number">1</span>].<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span> <span class="ruby-string">':'</span> }
+    <span class="ruby-identifier">params</span> = <span class="ruby-identifier">block</span>.<span class="ruby-identifier">parameters</span>.<span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">_</span><span class="ruby-operator">|</span> <span class="ruby-string">&#39;:&#39;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">_</span>[<span class="ruby-number">1</span>].<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;:&#39;</span> }
   <span class="ruby-keyword">end</span>
-  <span class="ruby-identifier">string</span> = <span class="ruby-string">''</span>
+  <span class="ruby-identifier">string</span> = <span class="ruby-string">&#39;&#39;</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-number">1</span>
     <span class="ruby-identifier">s</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">item</span><span class="ruby-operator">|</span>
       <span class="ruby-identifier">string</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">item</span>.<span class="ruby-identifier">color</span>(<span class="ruby-value">:white</span>)
@@ -210,10 +210,10 @@
   <span class="ruby-keyword">else</span>
     <span class="ruby-identifier">string</span> = <span class="ruby-identifier">s</span>.<span class="ruby-identifier">first</span>.<span class="ruby-identifier">color</span>(<span class="ruby-value">:white</span>)
   <span class="ruby-keyword">end</span>
-  <span class="ruby-identifier">params</span> = <span class="ruby-identifier">params</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">','</span>)
+  <span class="ruby-identifier">params</span> = <span class="ruby-identifier">params</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&#39;,&#39;</span>)
   <span class="ruby-identifier">params</span> = <span class="ruby-node">&quot;\n    #{params}&quot;</span>.<span class="ruby-identifier">color</span>(<span class="ruby-value">:cyan</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">params</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-number">0</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">string</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">%r:$/</span>
-    <span class="ruby-identifier">string</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">' '</span>
+    <span class="ruby-identifier">string</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39; &#39;</span>
   <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">printf</span>(<span class="ruby-string">&quot;%5s %s%s\n&quot;</span>,<span class="ruby-identifier">type</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">color</span>(<span class="ruby-value">:red</span>),<span class="ruby-identifier">string</span>,<span class="ruby-identifier">params</span>)
 <span class="ruby-keyword">end</span></pre>
