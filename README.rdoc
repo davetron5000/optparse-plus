@@ -32,14 +32,11 @@ http://a1.mzstatic.com/us/r30/Publication/v4/2c/f7/90/2cf7902f-f709-9125-c73d-87
 == Platforms
 
 * The build runs on Travis for:
-  * MRI Ruby 1.8.7
   * MRI Ruby 1.9.2
   * MRI Ruby 1.9.3
-  * RBX
-  * REE
+  * MRI Ruby 2.0.0
+  * MRI Ruby 2.1.0
   * JRuby in both 1.8 and 1.9 mode
-
-It should work on 2.0.0 but there's a weird bundler issue where some of the aruba tests fail in odd ways.
 
 == Bootstrapping a new CLI App
 
