@@ -37,7 +37,7 @@ class App
 
   version <%= module_name %>::VERSION
 
-  use_log_level_option
+  use_log_level_option :toggle_debug_on_signal => 'USR1'
 
   go!
 end
