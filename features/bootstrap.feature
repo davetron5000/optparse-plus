@@ -36,7 +36,7 @@ Feature: Bootstrap a new command-line app
     And the file "tmp/newgem/.gitignore" should match /.DS_Store/
     And the file "tmp/newgem/newgem.gemspec" should match /add_development_dependency\('aruba'/
     And the file "tmp/newgem/newgem.gemspec" should match /add_development_dependency\('rdoc'/
-    And the file "tmp/newgem/newgem.gemspec" should match /add_development_dependency\('rake', '~> 0.9.2'/
+    And the file "tmp/newgem/newgem.gemspec" should match /add_development_dependency\('rake'/
     And the file "tmp/newgem/newgem.gemspec" should match /add_dependency\('methadone'/
     And the file "tmp/newgem/newgem.gemspec" should use the same block variable throughout
     Given I cd to "tmp/newgem"
