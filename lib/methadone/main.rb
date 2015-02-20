@@ -133,14 +133,17 @@ module Methadone
       @env_var = env_var
     end
 
-    # Set the name of the file, in the user's home directory, where defaults can be configured.
+    # Set the path to the file where defaults can be configured.
+    #
     # The format of this file can be either a simple string of options, like what goes
     # in the environment variable (see #defaults_from_env_var), or YAML, in which case
     # it should be a hash where keys are the option names, and values their defaults.
     #
-    # filename:: name of the file, relative to the user's home directory
+    # Relative paths will be expanded relative to the user's home directory.
+    #
+    # filename:: path to the file
     def defaults_from_config_file(filename,options={})
-      @rc_file = File.join(ENV['HOME'],filename)
+      @rc_file = File.expand_path(filename, ENV['HOME'])
     end
 
     # Start your command-line app, exiting appropriately when

@@ -652,6 +652,31 @@ class TestMain < BaseTest
 
   end
 
+  test_that "we can get defaults from an absolute config filename" do
+    tempfile = Tempfile.new('methadone_test.rc')
+    Given app_to_use_rc_file(tempfile)
+    And {
+      @flag_value = any_string
+      rc_file = File.join(tempfile)
+      File.open(rc_file,'w') do |file|
+        file.puts({
+          'switch' => true,
+          'flag' => @flag_value,
+        }.to_yaml)
+      end
+    }
+    When {
+      @code = lambda { go! }
+    }
+    Then {
+      assert_exits(0,&@code)
+      @switch.should == true
+      @flag.should == @flag_value
+    }
+
+  end
+
+
   test_that "we can specify an rc file even if it doesn't exist" do
     Given app_to_use_rc_file
     And {
@@ -740,7 +765,7 @@ class TestMain < BaseTest
 
 private
 
-  def app_to_use_rc_file
+  def app_to_use_rc_file(rc_file = '.my_app.rc')
     lambda {
       reset!
       @switch = nil
@@ -752,7 +777,7 @@ private
         @args = args
       end
 
-      defaults_from_config_file '.my_app.rc'
+      defaults_from_config_file rc_file
 
       on('--switch','Some Switch')
       on('--flag FOO','Some Flag')
