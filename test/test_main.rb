@@ -654,7 +654,7 @@ class TestMain < BaseTest
 
   test_that "we can get defaults from an absolute config filename" do
     tempfile = Tempfile.new('methadone_test.rc')
-    Given app_to_use_rc_file(tempfile)
+    Given app_to_use_rc_file(tempfile.path)
     And {
       @flag_value = any_string
       rc_file = File.join(tempfile)
