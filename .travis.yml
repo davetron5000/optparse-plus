@@ -5,7 +5,6 @@ script: 'bundle exec rake'
 rvm:
   - 1.9.2
   - 1.9.3
-  - 1.9.3-p484 
   - 2.0.0
   - 2.1.0
   - jruby-18mode
