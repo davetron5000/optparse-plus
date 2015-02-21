@@ -248,7 +248,7 @@ should retain a reference to this</p>
                 
               </p>
               <div id="method-c-new_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 416</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 420</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">initialize</span>(<span class="ruby-identifier">option_parser</span>,<span class="ruby-identifier">options</span>)
   <span class="ruby-ivar">@option_parser</span> = <span class="ruby-identifier">option_parser</span>
   <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>
@@ -294,7 +294,7 @@ should retain a reference to this</p>
                 
               </p>
               <div id="method-i-arg_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 471</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 475</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">arg</span>(<span class="ruby-identifier">arg_name</span>,*<span class="ruby-identifier">options</span>)
   <span class="ruby-identifier">options</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value">:optional</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-value">:any</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">options</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-value">:optional</span>)
   <span class="ruby-identifier">options</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value">:required</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">include?</span> <span class="ruby-value">:optional</span>
@@ -336,7 +336,7 @@ should retain a reference to this</p>
                 
               </p>
               <div id="method-i-banner-3D_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 465</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 469</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">banner=</span>(<span class="ruby-identifier">new_banner</span>)
   <span class="ruby-ivar">@option_parser</span>.<span class="ruby-identifier">banner</span>=<span class="ruby-identifier">new_banner</span>
   <span class="ruby-ivar">@user_specified_banner</span> = <span class="ruby-keyword">true</span>
@@ -371,7 +371,7 @@ should retain a reference to this</p>
                 
               </p>
               <div id="method-i-check_args-21_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 430</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 434</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">check_args!</span>
   <span class="ruby-operator">::</span><span class="ruby-constant">Hash</span>[<span class="ruby-ivar">@args</span>.<span class="ruby-identifier">zip</span>(<span class="ruby-operator">::</span><span class="ruby-constant">ARGV</span>)].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">arg_name</span>,<span class="ruby-identifier">arg_value</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">if</span> <span class="ruby-ivar">@arg_options</span>[<span class="ruby-identifier">arg_name</span>].<span class="ruby-identifier">include?</span> <span class="ruby-value">:required</span>
@@ -413,7 +413,7 @@ should retain a reference to this</p>
                 
               </p>
               <div id="method-i-description_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 483</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 487</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">description</span>(<span class="ruby-identifier">desc</span>)
   <span class="ruby-ivar">@description</span> = <span class="ruby-identifier">desc</span>
   <span class="ruby-identifier">set_banner</span>
@@ -449,7 +449,7 @@ to  the underlying OptionParser instance</p>
                 
               </p>
               <div id="method-i-method_missing_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 490</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 494</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">method_missing</span>(<span class="ruby-identifier">sym</span>,*<span class="ruby-identifier">args</span>,&amp;<span class="ruby-identifier">block</span>)
   <span class="ruby-ivar">@option_parser</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">sym</span>,*<span class="ruby-identifier">args</span>,&amp;<span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -486,7 +486,7 @@ href="Main.html">Main</a> module for how that works.</p>
                 
               </p>
               <div id="method-i-on_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 447</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 451</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">on</span>(*<span class="ruby-identifier">args</span>,&amp;<span class="ruby-identifier">block</span>)
   <span class="ruby-ivar">@accept_options</span> = <span class="ruby-keyword">true</span>
   <span class="ruby-identifier">args</span> = <span class="ruby-identifier">add_default_value_to_docstring</span>(*<span class="ruby-identifier">args</span>)
@@ -535,7 +535,7 @@ purpose</p>
                 
               </p>
               <div id="method-i-post_setup_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 507</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 511</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">post_setup</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@arg_documentation</span>.<span class="ruby-identifier">empty?</span>
     <span class="ruby-ivar">@option_parser</span>.<span class="ruby-identifier">separator</span> <span class="ruby-string">&#39;&#39;</span>
@@ -577,7 +577,7 @@ purpose</p>
                 
               </p>
               <div id="method-i-version_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 500</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 504</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">version</span>(<span class="ruby-identifier">version</span>)
   <span class="ruby-ivar">@version</span> = <span class="ruby-identifier">version</span>
   <span class="ruby-identifier">set_banner</span>

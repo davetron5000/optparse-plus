@@ -369,7 +369,7 @@ help</p>
                 
               </p>
               <div id="method-i-arg_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 241</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 245</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">arg</span>(<span class="ruby-identifier">arg_name</span>,*<span class="ruby-identifier">options</span>)
   <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">arg</span>(<span class="ruby-identifier">arg_name</span>,*<span class="ruby-identifier">options</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -387,15 +387,19 @@ help</p>
           
           
             <div class="description">
-              <p>Set the name of the file, in the user&#39;s home directory, where defaults
-can be configured. The format of this file can be either a simple string of
-options, like what goes in the environment variable (see <a
+              <p>Set the path to the file where defaults can be configured.</p>
+
+<p>The format of this file can be either a simple string of options, like what
+goes in the environment variable (see <a
 href="Main.html#method-i-defaults_from_env_var">defaults_from_env_var</a>),
 or YAML, in which case it should be a hash where keys are the option names,
 and values their defaults.</p>
+
+<p>Relative paths will be expanded relative to the user&#39;s home directory.</p>
 <dl class="rdoc-list note-list"><dt>filename
 <dd>
-<p>name of the file, relative to the user&#39;s home directory</p>
+<p>path to the file.  If relative, will look in user&#39;s HOME directory. If
+absolute, this is the absolute path to where the file should be.</p>
 </dd></dl>
             </div>
           
@@ -412,9 +416,9 @@ and values their defaults.</p>
                 
               </p>
               <div id="method-i-defaults_from_config_file_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 142</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 146</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">defaults_from_config_file</span>(<span class="ruby-identifier">filename</span>,<span class="ruby-identifier">options</span>={})
-  <span class="ruby-ivar">@rc_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;HOME&#39;</span>],<span class="ruby-identifier">filename</span>)
+  <span class="ruby-ivar">@rc_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">filename</span>, <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;HOME&#39;</span>])
 <span class="ruby-keyword">end</span></pre>
               </div>
             </div>
@@ -485,7 +489,7 @@ options for your app.  Omit this to disable the feature.</p>
                 
               </p>
               <div id="method-i-description_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 247</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 251</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">description</span>(<span class="ruby-identifier">desc</span>)
   <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">description</span>(<span class="ruby-identifier">desc</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -529,7 +533,7 @@ not found, this exits with 64 and a message about that missing argument.</p>
                 
               </p>
               <div id="method-i-go-21_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 158</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 162</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">go!</span>
   <span class="ruby-identifier">setup_defaults</span>
   <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">post_setup</span>
@@ -692,7 +696,7 @@ provided).</p>
                 
               </p>
               <div id="method-i-on_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 221</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 225</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">on</span>(*<span class="ruby-identifier">args</span>,&amp;<span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">on</span>(*<span class="ruby-identifier">args</span>,&amp;<span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -746,7 +750,7 @@ go!</pre>
                 
               </p>
               <div id="method-i-options_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 272</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 276</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">options</span>
   <span class="ruby-ivar">@options</span> <span class="ruby-operator">||=</span> {}
 <span class="ruby-keyword">end</span></pre>
@@ -826,7 +830,7 @@ for the option.</p>
                 
               </p>
               <div id="method-i-opts_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 215</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 219</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">opts</span>
   <span class="ruby-ivar">@option_parser</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">OptionParserProxy</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">OptionParser</span>.<span class="ruby-identifier">new</span>,<span class="ruby-identifier">options</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -886,7 +890,7 @@ second is the version string</p>
                 
               </p>
               <div id="method-i-version_source" class="dyn-source">
-                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 291</span>
+                <pre><span class="ruby-comment"># File lib/methadone/main.rb, line 295</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">version</span>(<span class="ruby-identifier">version</span>,<span class="ruby-identifier">version_options</span>={})
   <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">version</span>(<span class="ruby-identifier">version</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">version_options</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">String</span>)
