@@ -657,7 +657,7 @@ class TestMain < BaseTest
     Given app_to_use_rc_file(tempfile.path)
     And {
       @flag_value = any_string
-      rc_file = File.join(tempfile)
+      rc_file = File.join(tempfile.path)
       File.open(rc_file,'w') do |file|
         file.puts({
           'switch' => true,
