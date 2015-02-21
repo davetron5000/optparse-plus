@@ -141,7 +141,8 @@ module Methadone
     #
     # Relative paths will be expanded relative to the user's home directory.
     #
-    # filename:: path to the file
+    # filename:: path to the file.  If relative, will look in user's HOME directory.
+    #            If absolute, this is the absolute path to where the file should be.
     def defaults_from_config_file(filename,options={})
       @rc_file = File.expand_path(filename, ENV['HOME'])
     end
