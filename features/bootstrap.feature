@@ -7,6 +7,7 @@ Feature: Bootstrap a new command-line app
     Given the directory "tmp/newgem" does not exist
     And the directory "tmp/new-gem" does not exist
 
+    @wip
   Scenario: Bootstrap a new app from scratch
     When I successfully run `methadone tmp/newgem`
     Then the following directories should exist:
@@ -38,6 +39,7 @@ Feature: Bootstrap a new command-line app
     And the file "tmp/newgem/newgem.gemspec" should match /add_development_dependency\('rdoc'/
     And the file "tmp/newgem/newgem.gemspec" should match /add_development_dependency\('rake'/
     And the file "tmp/newgem/newgem.gemspec" should match /add_dependency\('methadone'/
+    And the file "tmp/newgem/newgem.gemspec" should include "test-unit" if needed
     And the file "tmp/newgem/newgem.gemspec" should use the same block variable throughout
     Given I cd to "tmp/newgem"
     And my app's name is "newgem"

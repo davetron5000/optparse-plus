@@ -86,6 +86,13 @@ main do |app_name|
     "  #{gem_variable}.add_development_dependency('rake')",
     "  #{gem_variable}.add_dependency('methadone', '~> #{Methadone::VERSION}')",
   ], :before => /^end\s*$/
+  ruby_major,ruby_minor,ruby_patch = RUBY_VERSION.split(/\./).map(&:to_i)
+
+  if ruby_major >= 2 && ruby_minor >= 2
+    add_to_file gemspec, [
+      "  #{gem_variable}.add_development_dependency('test-unit')",
+    ], :before => /^end\s*$/
+  end
 
   if rspec
     add_to_file gemspec, [
