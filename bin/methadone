@@ -66,7 +66,11 @@ main do |app_name|
 
   #Ensure the gemspec file mentions the correct license
   gemspec_content = File.read(gemspec)
-  gemspec_content.gsub!(/(^\s*#{gem_variable}\.license\s*=\s*).*/,"\\1#{license.to_s.inspect}")
+  if gemspec_content =~ /(^\s*#{gem_variable}\.license\s*=\s*).*/
+    gemspec_content.gsub!(/(^\s*#{gem_variable}\.license\s*=\s*).*/,"\\1#{license.to_s.inspect}")
+  else
+    gemspec_content.gsub!(/(^\s*#{gem_variable}\.name\s*=\s*.*)/,"\\1\n  #{gem_variable}.license=#{license.to_s.inspect}")
+  end
   File.open(gemspec,'w') {|f| f.write gemspec_content }
 
 
@@ -85,7 +89,7 @@ main do |app_name|
 
   if rspec
     add_to_file gemspec, [
-    "  #{gem_variable}.add_development_dependency('rspec', '~> 2.99')",
+    "  #{gem_variable}.add_development_dependency('rspec', '~> 3')",
     ], :before => /^end\s*$/
   end
 

@@ -28,6 +28,7 @@ Feature: Users should get the license included
     And the README should not reference a license
     And the file "tmp/newgem/LICENSE.txt" should not exist
 
+    @wip
   Scenario Outline: Include one of a few stock licenses
     When I successfully run `methadone -l <license> tmp/newgem`
     Then newgem's license should be the <license> license

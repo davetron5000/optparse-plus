@@ -51,15 +51,15 @@ Feature: Bootstrap a new command-line app
     And the banner should document that this app takes no arguments
     When I successfully run `rake -T -I../../lib`
     Then the output should match /rake clean/
-    Then the output should match /rake clobber/
-    Then the output should match /rake clobber_rdoc/
-    Then the output should match /rake features/
-    Then the output should match /rake rdoc/
-    Then the output should match /rake release/
-    Then the output should match /rake rerdoc/
-    Then the output should match /rake test/
-    And the output should match /rake install       # Build and install newgem-0.0.1.gem into system gems/
-    And the output should match /rake build         # Build newgem-0.0.1.gem into the pkg directory/
+    And the output should match /rake clobber/
+    And the output should match /rake clobber_rdoc/
+    And the output should match /rake features/
+    And the output should match /rake rdoc/
+    And the output should match /rake release/
+    And the output should match /rake rerdoc/
+    And the output should match /rake test/
+    And the output should match /rake install/
+    And the output should match /rake build/
     When I run `rake -I../../../../lib`
     Then the exit status should be 0
     And the output should match /1 tests, 1 assertions, 0 failures, 0 errors/
@@ -100,10 +100,7 @@ Feature: Bootstrap a new command-line app
     And I cd to "tmp/new-gem"
     And my app's name is "new-gem"
     When I successfully run `bin/new-gem --version` with "lib" in the library path
-    Then the output should contain:
-    """
-    new-gem version 0.0.1
-    """
+    Then the output should match /new-gem version 0/
 
   Scenario: Version flag can be used to only show the app version with a custom format
     Given I successfully run `methadone tmp/new-gem`
@@ -111,10 +108,7 @@ Feature: Bootstrap a new command-line app
     And I cd to "tmp/new-gem"
     And my app's name is "new-gem"
     When I successfully run `bin/new-gem --version` with "lib" in the library path
-    Then the output should contain:
-    """
-    new-gem V0.0.1
-    """
+    Then the output should match /new-gem V0/
 
   Scenario: Won't squash an existing dir
     When I successfully run `methadone tmp/newgem`
