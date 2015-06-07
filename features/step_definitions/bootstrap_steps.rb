@@ -39,3 +39,9 @@ Given /^"(.*?)" has configured version to show only the version (.*)and not help
     end
   end
 end
+
+Then /^the file "(.*?)" should include "(.*?)" if needed$/ do |file, gemname|
+  if RUBY_VERSION =~ /^2\./ && RUBY_VERSION !~ /^2.0/ && RUBY_VERSION !~ /^2.1/
+    step %{the file "#{file}" should match /add_development_dependency\\('#{gemname}/}
+  end
+end
