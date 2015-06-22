@@ -65,20 +65,17 @@ module Methadone
     #             <tt>:executable</tt>:: true if this file should be set executable
     #             <tt>:binding</tt>:: the binding to use for the template
     def copy_file(relative_path,options = {})
-      options[:from] ||= :full
 
       relative_path = File.join(relative_path.split(/\//))
 
-      template_path = File.join(template_dir(options[:from]),relative_path + ".erb")
-      template = ERB.new(File.open(template_path).readlines.join(''))
+      template_path = File.join(template_dir(options[:from] || :full),relative_path + ".erb")
+      template = ERB.new(File.open(template_path).readlines.join(''), nil ,'-')
 
       relative_path_parts = File.split(relative_path)
       relative_path_parts[-1] = options[:as] if options[:as]
 
-      erb_binding = options[:binding] or binding
-
       File.open(File.join(relative_path_parts),'w') do |file|
-        file.puts template.result(erb_binding)
+        file.puts template.result(options[:binding] || binding)
         file.chmod(0755) if options[:executable]
       end
     end
@@ -91,15 +88,21 @@ module Methadone
     def template_dirs_in(profile)
       template_dir = template_dir(profile)
 
-      Dir["#{template_dir}/**/*"].select { |x| 
-        File.directory? x 
-      }.map { |dir| 
+      Dir["#{template_dir}/**/*"].select { |x|
+        File.directory? x
+      }.map { |dir|
         dir.gsub(/^#{template_dir}\//,'')
       }
     end
 
     def render_license_partial(partial)
-      ERB.new(File.read(template_dir('full/'+partial))).result(binding).strip 
+      ERB.new(File.read(template_dir('full/'+partial))).result(binding).strip
+    end
+
+    # converts string to constant form:
+    #   methadone-module_name-class_name => Methadone::ModuleName::ClassName
+    def titlify(name)
+      name.gsub(/(^|-|_)(.)/) {"#{'::' if $1 == '-'}#{$2.upcase}"}
     end
 
     def gemspec
@@ -111,6 +114,11 @@ module Methadone
       raise "Multiple gemspec files" if files.size>1
       raise "No gemspec file" if files.size < 1
       Gem::Specification::load(files.first)
+    end
+
+    def normalize_command(cmd)
+      #Note: not i18n-safe
+      cmd.tr('A-Z','a-z').gsub(/[^a-z0-9_]/,'_').sub(/^_*/,'')
     end
   end
 end

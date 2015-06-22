@@ -7,10 +7,15 @@ $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '../lib'))
 require 'optparse'
 require 'methadone'
 require '<%= require_file %>'
+require '<%= gemname %>/commands'
 
 class App
   include Methadone::Main
   include Methadone::CLILogging
+
+<% commands.each do |cmd| -%>
+  command "<%= cmd %>" => <%= module_name %>::Commands::<%= titlify(normalize_command(cmd)) %>
+<% end -%>
 
   main do # Add args you want: |like,so|
     # your program code here
@@ -34,14 +39,14 @@ class App
   # Or, just call OptionParser methods on opts
   #
   # Require an argument
-  # arg :some_arg 
+  # arg :some_arg
   #
   # # Make an argument optional
   # arg :optional_arg, :optional
 
   version <%= module_name %>::VERSION
 
-  use_log_level_option :toggle_debug_on_signal => 'USR1'
+  use_log_level_option
 
   go!
 end
