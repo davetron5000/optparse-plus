@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("rake")
   s.add_development_dependency("rdoc","~> 3.9")
   s.add_development_dependency("cucumber")
-  s.add_development_dependency("aruba")
+  s.add_development_dependency("aruba", "0.5.1")
   s.add_development_dependency("simplecov", "~> 0.5")
   s.add_development_dependency("clean_test")
   s.add_development_dependency("mocha", "0.13.2")
