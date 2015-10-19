@@ -10,7 +10,7 @@ module Methadone
   # === Example
   #
   #     class MyClass
-  #       include Methadone::CLILogger
+  #       include Methadone::CLILogging
   #       
   #       def doit
   #         debug("About to doit!")
