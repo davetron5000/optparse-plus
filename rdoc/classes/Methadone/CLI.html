@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
     <title>Methadone::CLI</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=ASCII-8BIT" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="../../css/reset.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="../../css/github.css" type="text/css" media="screen" />
@@ -156,8 +156,9 @@ require &#39;methadone&#39;</p>
         <div class="method">
           <div class="title method-title" id="method-i-add_to_file">
             
-              <a name="method-i-add_to_file"></a><b>add_to_file</b>(file,lines,options = {})
+              <b>add_to_file</b>(file,lines,options = {})
             
+            <a href="../../classes/Methadone/CLI.html#method-i-add_to_file" name="method-i-add_to_file" class="permalink">Link</a>
           </div>
           
           
@@ -221,8 +222,9 @@ to insert said content.</p>
         <div class="method">
           <div class="title method-title" id="method-i-check_and_prepare_basedir-21">
             
-              <a name="method-i-check_and_prepare_basedir-21"></a><b>check_and_prepare_basedir!</b>(basedir,force)
+              <b>check_and_prepare_basedir!</b>(basedir,force)
             
+            <a href="../../classes/Methadone/CLI.html#method-i-check_and_prepare_basedir-21" name="method-i-check_and_prepare_basedir-21" class="permalink">Link</a>
           </div>
           
           
@@ -272,8 +274,9 @@ and force is true. In that case, we clean it out entirely</p>
         <div class="method">
           <div class="title method-title" id="method-i-copy_file">
             
-              <a name="method-i-copy_file"></a><b>copy_file</b>(relative_path,options = {})
+              <b>copy_file</b>(relative_path,options = {})
             
+            <a href="../../classes/Methadone/CLI.html#method-i-copy_file" name="method-i-copy_file" class="permalink">Link</a>
           </div>
           
           
@@ -289,7 +292,7 @@ making the ultimate path OS independent.</p>
 <p>Options to affect how the copy is done:</p>
 <dl class="rdoc-list note-list"><dt><code>:from</code>
 <dd>
-<p>The name of the profile from which to find the file, "full" by default</p>
+<p>The name of the profile from which to find the file, “full” by default</p>
 </dd><dt><code>:as</code>
 <dd>
 <p>The name the file should get if not the one in relative_path</p>
@@ -320,7 +323,7 @@ making the ultimate path OS independent.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">copy_file</span>(<span class="ruby-identifier">relative_path</span>,<span class="ruby-identifier">options</span> = {})
   <span class="ruby-identifier">options</span>[<span class="ruby-value">:from</span>] <span class="ruby-operator">||=</span> <span class="ruby-value">:full</span>
 
-  <span class="ruby-identifier">relative_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">relative_path</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">%r\//</span>))
+  <span class="ruby-identifier">relative_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">relative_path</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/\//</span>))
 
   <span class="ruby-identifier">template_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">template_dir</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:from</span>]),<span class="ruby-identifier">relative_path</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;.erb&quot;</span>)
   <span class="ruby-identifier">template</span> = <span class="ruby-constant">ERB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">template_path</span>).<span class="ruby-identifier">readlines</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&#39;&#39;</span>))
@@ -343,8 +346,9 @@ making the ultimate path OS independent.</p>
         <div class="method">
           <div class="title method-title" id="method-i-gemspec">
             
-              <a name="method-i-gemspec"></a><b>gemspec</b>()
+              <b>gemspec</b>()
             
+            <a href="../../classes/Methadone/CLI.html#method-i-gemspec" name="method-i-gemspec" class="permalink">Link</a>
           </div>
           
           
@@ -377,8 +381,9 @@ making the ultimate path OS independent.</p>
         <div class="method">
           <div class="title method-title" id="method-i-render_license_partial">
             
-              <a name="method-i-render_license_partial"></a><b>render_license_partial</b>(partial)
+              <b>render_license_partial</b>(partial)
             
+            <a href="../../classes/Methadone/CLI.html#method-i-render_license_partial" name="method-i-render_license_partial" class="permalink">Link</a>
           </div>
           
           
@@ -411,13 +416,14 @@ making the ultimate path OS independent.</p>
         <div class="method">
           <div class="title method-title" id="method-i-template_dir">
             
-              <a name="method-i-template_dir"></a><b>template_dir</b>(from)
+              <b>template_dir</b>(from)
             
+            <a href="../../classes/Methadone/CLI.html#method-i-template_dir" name="method-i-template_dir" class="permalink">Link</a>
           </div>
           
           
             <div class="description">
-              <p>Get the location of the templates for profile "from"</p>
+              <p>Get the location of the templates for profile “from”</p>
             </div>
           
           
@@ -445,8 +451,9 @@ making the ultimate path OS independent.</p>
         <div class="method">
           <div class="title method-title" id="method-i-template_dirs_in">
             
-              <a name="method-i-template_dirs_in"></a><b>template_dirs_in</b>(profile)
+              <b>template_dirs_in</b>(profile)
             
+            <a href="../../classes/Methadone/CLI.html#method-i-template_dirs_in" name="method-i-template_dirs_in" class="permalink">Link</a>
           </div>
           
           
@@ -474,7 +481,7 @@ making the ultimate path OS independent.</p>
   <span class="ruby-constant">Dir</span>[<span class="ruby-node">&quot;#{template_dir}/**/*&quot;</span>].<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> 
     <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span> <span class="ruby-identifier">x</span> 
   }.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dir</span><span class="ruby-operator">|</span> 
-    <span class="ruby-identifier">dir</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-node">%r^#{template_dir}\//</span>,<span class="ruby-string">&#39;&#39;</span>)
+    <span class="ruby-identifier">dir</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-node">/^#{template_dir}\//</span>,<span class="ruby-string">&#39;&#39;</span>)
   }
 <span class="ruby-keyword">end</span></pre>
               </div>
@@ -482,6 +489,7 @@ making the ultimate path OS independent.</p>
             
           </div>
                     </div>
+
     </div>
   </body>
 </html>    
