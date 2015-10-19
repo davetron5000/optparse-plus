@@ -21,7 +21,7 @@ class TestExitNow < BaseTest
     }
   end
 
-  test_that "exit_now without an exit code uses 1 as the exti code" do
+  test_that "exit_now without an exit code uses 1 as the exit code" do
     Given {
       @message = any_string
     }

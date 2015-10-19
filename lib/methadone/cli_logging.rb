@@ -103,7 +103,7 @@ module Methadone
     def use_log_level_option(args = {})
       on("--log-level LEVEL",LOG_LEVELS,'Set the logging level',
                                         '(' + LOG_LEVELS.keys.join('|') + ')',
-                                        '(Default: info)') do |level|
+                                        '(Default: info)', :global) do |level|
         @log_level = level
         @log_level_original = level
         @log_level_toggled = false

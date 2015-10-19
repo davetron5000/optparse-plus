@@ -54,19 +54,22 @@ class TestMain < BaseTest
     Then main_shouldve_been_called
   end
 
-  test_that "my main block gets the command-line parameters" do
+  test_that "my main block does not get command-line parameters that were not specified by args, but they are still available in ARGV" do
     Given {
       @params = []
+      @argv = []
       main do |param1,param2,param3|
         @params << param1
         @params << param2
         @params << param3
+        @argv = ::ARGV
       end
       set_argv %w(one two three)
     }
     When run_go_safely
     Then {
-      @params.should == %w(one two three)
+      @params.should == [nil,nil,nil]
+      @argv.should == %w(one two three)
     }
   end
 
@@ -85,16 +88,20 @@ class TestMain < BaseTest
   test_that "my main block can ask for arguments that it might not receive" do
     Given {
       @params = []
+      @argv = []
+      arg 'param1'
       main do |param1,param2,param3|
         @params << param1
         @params << param2
         @params << param3
+        @argv = ::ARGV
       end
       set_argv %w(one two)
     }
     When run_go_safely
     Then {
-      @params.should == ['one','two',nil]
+      @params.should == ['one',nil,nil]
+      @argv.should == ['two']
     }
   end
 
@@ -118,6 +125,7 @@ class TestMain < BaseTest
 
   test_that "go exits with 70, which is the Linux sysexits.h code for this sort of thing, if there's an exception" do
     Given {
+      leak_exceptions false
       main do
         raise "oh noes"
       end
@@ -191,7 +199,7 @@ class TestMain < BaseTest
       end
     }
     Then {
-      assert_raises Methadone::Error do 
+      assert_raises Methadone::Error do
         When run_go!
       end
     }
@@ -269,7 +277,7 @@ class TestMain < BaseTest
     }
   end
 
-  test_that "when setting defualts they get copied to strings/symbols as well" do
+  test_that "when setting defaults they get copied to strings/symbols as well" do
     Given {
       @flag_with_string_key_defalt = nil
       @flag_with_symbol_key_defalt = nil
@@ -332,7 +340,7 @@ class TestMain < BaseTest
       on("--[no-]negatable")
       on("--flag FLAG","-f","Some documentation string")
       on("--flag-with-dashes FOO")
-      on("--other") do 
+      on("--other") do
         options[:some_other] = true
       end
 
@@ -385,7 +393,7 @@ class TestMain < BaseTest
   test_that "I can specify which arguments my app takes and if they are required as well as document them" do
     Given {
       main {}
-      @db_name_desc = any_string 
+      @db_name_desc = any_string
       @user_desc = any_string
       @password_desc = any_string
 
@@ -419,7 +427,7 @@ class TestMain < BaseTest
   test_that "I can specify which arguments my app takes and if they are singular or optional plural" do
     Given {
       main {}
-      
+
       arg :db_name
       arg :user, :required, :one
       arg :tables, :any
@@ -448,7 +456,7 @@ class TestMain < BaseTest
 
       on("-s")
     }
-
+    When {opts}
     Then {
       opts.banner.should == 'FOOBAR'
     }
@@ -499,11 +507,12 @@ class TestMain < BaseTest
     Given  {
       main{}
       version "0.0.1"
-      set_argv(['--verison'])
+      set_argv(['--version'])
     }
     Then run_go_safely
     And {
       opts.to_s.should match /Show help\/version info/m
+      $stdout.string.should match /^#{@version}$/
     }
   end
 
@@ -517,6 +526,49 @@ class TestMain < BaseTest
     Then run_go_safely
     And {
       opts.to_s.should match /#{@version_message}/
+    }
+  end
+
+  test_that "when I specify a version with :basic format, only the command and version show up and the help is 'show version info'" do
+    @version = "2.0.9.pre"
+    Given {
+      version @version, :basic
+      set_argv %w(--version)
+    }
+    When run_go_safely
+    Then {
+      opts.to_s.should match /^ *--version.*Show version info$/
+      $stdout.string.should match /^#{::File.basename($0)} version #{@version}$/
+    }
+  end
+
+  test_that "when I specify a version with :terse format, only the version show up and the help is 'show version'" do
+    @version = "2.0.9.pre"
+    Given {
+      version @version, :terse
+      set_argv %w(--version)
+    }
+    When run_go_safely
+    Then {
+      opts.to_s.should match /^ *--version.*Show version$/
+      $stdout.string.should match /^#{@version}$/
+    }
+  end
+
+  test_that "default values for boolean options are put into the docstring" do
+    Given {
+      main {}
+      options[:foo] = false
+      options[:bar] = true
+      on("--foo","Do the foo")
+      on("--[no-]bar", "Bar it like crazy")
+    }
+    When {
+      @help_string = opts.to_s
+    }
+    When {
+      @help_string.should match /--foo.*\n.*\(default: false\)/
+      @help_string.should match /--\[no-\]bar.*\n.*\(default: true\)/
     }
   end
 
@@ -763,6 +815,326 @@ class TestMain < BaseTest
     }
   end
 
+  test_that "usage is displayed if called with no arguments given when help_if_bare specified" do
+    Given {
+      help_if_bare
+      on("--required VALUE")
+      main {puts 'main called'}
+    }
+    When {
+      @code = lambda {go!}
+    }
+    Then {
+      assert_exits(64,&@code)
+      $stdout.string.should_not match /main called/
+      $stdout.string.should match /Usage:.*--required VALUE/m
+    }
+  end
+
+  test_that "arguments are filled according to their need" do
+    Given {
+      @can_use_one = nil
+      @any_will_do = nil
+      @need_1 = nil
+      @at_least_one = nil
+      @if_youve_got_one = nil
+      @any_left = nil
+      @last_one = nil
+      arg 'can_use_one', :optional, Integer
+      arg 'any_will_do', :any
+      arg 'need_1', :required
+      arg 'at_least_one', :many
+      arg 'if_youve_got_one', :optional
+      arg 'any_left', :any
+      arg 'last_one', :required
+      main do |can_use_one,any_will_do,need_1,at_least_one,if_youve_got_one,any_left,last_one|
+        @can_use_one = can_use_one
+        @any_will_do = any_will_do
+        @need_1 = need_1
+        @at_least_one = at_least_one
+        @if_youve_got_one = if_youve_got_one
+        @any_left = any_left
+        @last_one = last_one
+      end
+      set_argv %w(1 2 3 4 5 6 7 8 9 10)
+    }
+    When run_go_safely
+    Then {
+      @can_use_one.should == '1'
+      @any_will_do.should == %w(2 3 4 5 6 7)
+      @need_1.should == '8'
+      @at_least_one.should == ['9']
+      @if_youve_got_one.should == nil
+      @any_left.should == []
+      @last_one.should == '10'
+    }
+  end
+
+  test_that "arguments can be given valid values" do
+    Given {
+      arg "foo", %w(one two three)
+      @foo = nil
+      main do |foo|
+        @foo = foo
+      end
+      set_argv %w(two)
+    }
+    When run_go_safely
+    Then {
+      @foo = 'two'
+    }
+  end
+
+  test_that "arguments can be given valid values, and raise errors when they don't match" do
+    Given {
+      arg "foo", %w(one two three)
+      @foo = nil
+      main do |foo|
+        @foo = foo
+      end
+      set_argv %w(four)
+    }
+    When run_go_safely
+    Then {
+      assert_logged_at_error("parse error: foo: 'four' is invalid")
+      @foo = nil
+    }
+  end
+
+  test_that "arguments that take multiple values can be given valid values" do
+    Given {
+      arg "foo", :many, %w(one two three)
+      @foo = nil
+      main do |foo|
+        @foo = foo
+      end
+      set_argv %w(two one two)
+    }
+    When run_go_safely
+    Then {
+      @foo = %w(two one two)
+    }
+  end
+
+  test_that "arguments that take multiple values can be given valid values, and raise errors when they don't match" do
+    Given {
+      arg "foo", :many, %w(one two three)
+      @foo = nil
+      main do |foo|
+        @foo = foo
+      end
+      set_argv %w(four one two seven)
+    }
+    When run_go_safely
+    Then {
+      assert_logged_at_error("parse error: foo: The following value(s) were invalid: 'four seven'")
+      @foo = nil
+    }
+  end
+  test_that "arguments can be given regexp filters" do
+    Given {
+      arg "foo", /^th/
+      @foo = nil
+      main do |foo|
+        @foo = foo
+      end
+      set_argv %w(this)
+    }
+    When run_go_safely
+    Then {
+      @foo = 'this'
+    }
+  end
+
+  test_that "arguments can be given regexp filters, and raise errors when they don't match" do
+    Given {
+      arg "foo", :optional, /^th/
+      @foo = nil
+      main do |foo|
+        @foo = foo
+      end
+      set_argv %w(width)
+    }
+    When run_go_safely
+    Then {
+      assert_logged_at_error("parse error: foo: 'width' is invalid")
+      @foo = nil
+    }
+  end
+
+  test_that "arguments that take multiple values can be given regexp filters" do
+    Given {
+      arg "foo", :many, /^th/
+      @foo = nil
+      main do |foo|
+        @foo = foo
+      end
+      set_argv %w(this that the\ other)
+    }
+    When run_go_safely
+    Then {
+      @foo = %w(this that the\ other)
+    }
+  end
+
+  test_that "arguments that take multiple values can be given regexp filters, and raise errors when they don't match" do
+    Given {
+      arg "foo", :any, /^th/
+      @foo = nil
+      main do |foo|
+        @foo = foo
+      end
+      set_argv %w(there is this theory on things that grow)
+    }
+    When run_go_safely
+    Then {
+      assert_logged_at_error("parse error: foo: The following value(s) were invalid: 'is on grow'")
+      @foo = nil
+    }
+  end
+
+  test_that "arguments can be given multiple filters, requiring only one be accepted" do
+    Given {
+      arg "foo", :any, /^....$/, ['one', 'two', 'six'], /\A..?e.?e.?\z/
+      @foo = nil
+      main do |foo|
+        @foo = foo
+      end
+      set_argv %w(one two three four five six seven)
+    }
+    When run_go_safely
+    Then {
+      @foo = %w(one two three four five six seven)
+    }
+  end
+
+  test_that "options can be mutually exclusive" do
+    Given {
+      @first = nil
+      @second = nil
+      reset!
+      main do
+        @first = options[:f]
+        @second = options[:s]
+      end
+
+      on("-f", "--first", "First Option")
+      on("-s", "Second Option", :excludes => :f)
+    }
+    When {
+      set_argv %w(-f)
+      @code = lambda { go! }
+    }
+    Then {
+      assert_exits(0,&@code)
+      @first.should be_truthy
+      @second.should be_nil
+    }
+  end
+
+  test_that "options can be mutually exclusive, which raise an error if both are used" do
+    Given {
+
+      @first = nil
+      @second = nil
+      reset!
+      main do
+        @first = options[:f]
+        @second = options[:s]
+      end
+      on("-f", "--first", "First Option")
+      on("-s", "Second Option", :excludes => :f)
+    }
+    When {
+      set_argv %w(-f -s)
+      @code = lambda { go! }
+    }
+    Then {
+      assert_exits(64,&@code)
+      assert_logged_at_error("parse error: -s cannot be used if already using -f|--first")
+      $stdout.string.should match /Usage:/
+    }
+  end
+
+  test_that "options can be mutually exclusive, which raise an error if both are used - order doesn't matter" do
+    Given {
+
+      @first = nil
+      @second = nil
+      reset!
+      main do
+        @first = options[:f]
+        @second = options[:s]
+      end
+      on("-f", "--first", "First Option")
+      on("-s", "Second Option", :excludes => :f)
+    }
+    When {
+      set_argv %w(-s -f)
+      @code = lambda { go! }
+    }
+    Then {
+      assert_exits(64,&@code)
+      assert_logged_at_error("parse error: -s cannot be used if already using -f|--first")
+      $stdout.string.should match /Usage:/
+    }
+  end
+
+  test_that "options can be mutually exclusive, the enemy of my enemy is my friend" do
+    Given {
+
+      @first = nil
+      @second = nil
+      @third = nil
+      reset!
+      main do
+        @first = options[:f]
+        @second = options[:s]
+        @third = options[:third]
+      end
+      on("-f", "--first", "First Option")
+      on("--another-one", "Second Option", :excludes => :f)
+      on("--third TEST", "Second Option", :excludes => "another-one")
+    }
+    When {
+      set_argv %w(-f --third value)
+      @code = lambda { go! }
+    }
+    Then {
+      assert_exits(0,&@code)
+      @first.should be_truthy
+      @second.should be_nil
+      @third.should == 'value'
+    }
+  end
+
+  test_that "options can be options can require other options to be present" do
+    Given {
+
+      @first = nil
+      @second = nil
+      @third = nil
+      reset!
+      main do
+        @first = options[:f]
+        @second = options[:s]
+        @third = options[:third]
+      end
+      on("-f", "--first", "First Option")
+      on("-a","--another-one", "Second Option")
+      on("--third TEST", "Second Option", :requires => [:first,'another-one'])
+    }
+    When {
+      set_argv %w(-f --third value)
+      @code = lambda { go! }
+    }
+    Then {
+      assert_exits(64,&@code)
+      assert_logged_at_error("parse error: Missing option -a|--another-one required by option --third TEST")
+      $stdout.string.should match /Usage:/
+    }
+  end
+
 private
 
   def app_to_use_rc_file(rc_file = '.my_app.rc')
@@ -793,7 +1165,8 @@ private
       @switch = nil
       @flag = nil
       @args = nil
-      main do |*args|
+      arg :args, :any
+      main do |args|
         @switch = options[:switch]
         @flag = options[:flag]
         @args = args
@@ -809,7 +1182,7 @@ private
   def main_shouldve_been_called
     Proc.new { assert @called,"Main block wasn't called?!" }
   end
-  
+
   def run_go_safely
     Proc.new { safe_go! }
   end

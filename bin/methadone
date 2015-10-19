@@ -22,6 +22,15 @@ main do |app_name|
 
   chdir File.dirname(app_name)
 
+  # Create the basic files for a gem via bundler:
+  #   Gemfile
+  #   Rakefile
+  #   LICENSE.txt
+  #   README.md
+  #   .gitignore
+  #   <gemname>.gemspec
+  #   lib/<gemname>.rb
+  #   lib/<gemname>/version.rb
   require_file = nil
   sh! "bundle gem #{gemname} --no-color" do |stdout|
     require_file = stdout.split(/\n/).select { |file|
@@ -31,9 +40,21 @@ main do |app_name|
   require_file = gemname if require_file.nil?
   require_file.gsub!(/^.*lib\//,'')
 
+  add_library_to_load_path = options[:add_lib] || false
+
   chdir gemname
 
   template_dirs_in(:full).each  { |dir| mkdir_p dir }
+
+  commands = options[:commands]
+  multi = !commands.nil?
+  if multi
+    mkdir_p "lib/#{gemname}/commands"
+    copy_file 'lib/commands.rb', :as => "#{gemname}/commands.rb", :from => :multicommand, :binding => binding
+    commands.each do |cmd|
+      copy_file 'lib/command.rb', :as => "#{gemname}/commands/#{normalize_command(cmd)}.rb",  :from => :multicommand, :binding => binding
+    end
+  end
 
   rspec = options[:rspec]
 
@@ -48,7 +69,6 @@ main do |app_name|
     template_dirs_in(:test_unit).each  { |dir| mkdir_p dir }
     copy_file "test/tc_something.rb", :from => :test_unit, :binding => binding
   end
-
 
   gemspec = "#{gemname}.gemspec"
   gem_variable = File.open(gemspec) { |x| x.read }.match(/(\w+)\.executables/)[1]
@@ -78,7 +98,7 @@ main do |app_name|
 
   copy_file "features/executable.feature", :as => "#{gemname}.feature", :binding => binding
   copy_file "features/step_definitions/executable_steps.rb", :as => "#{gemname}_steps.rb"
-  copy_file "bin/executable", :as => gemname, :executable => true, :binding => binding
+  copy_file "bin/executable", :as => gemname, :executable => true, :binding => binding, :from => (multi ? :multicommand : :full)
 
   add_to_file gemspec, [
     "  #{gem_variable}.add_development_dependency('rdoc')",
@@ -110,6 +130,16 @@ description "Kick the bash habit by bootstrapping your Ruby command-line apps"
 on("--force","Overwrite files if they exist")
 on("--[no-]readme","[Do not ]produce a README file")
 on("--rspec", "Generate RSpec unit tests instead of Test::Unit")
+on("--add-lib", "Add lib to the load path") do
+  options[:add_lib] = true
+end
+on "-c cmd1,cmd2,cmdN", "--commands", Array, "Generate framework for a cli app that provides the following commands" do |commands|
+  options[:commands] = commands
+  unless options[:commands].grep(/^-/).empty?
+    puts "Cannot have commands that begin with a '-'"
+    exit 65 # Data format error
+  end
+end
 
 licenses = %w(mit apache gplv2 gplv3 custom NONE)
 on("-l LICENSE","--license",licenses,"Specify the license for your project",'(' + licenses.join('|') + ')')
