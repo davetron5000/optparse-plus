@@ -353,7 +353,12 @@ module Methadone
     def set_defaults_from_rc_file
       if @rc_file && File.exists?(@rc_file)
         File.open(@rc_file) do |file| 
-          parsed = YAML::load(file)
+          parsed = begin
+                     YAML::load(file)
+                   rescue => ex
+                     logger.error ex.message unless no_message? ex
+                     nil
+                   end
           if parsed.kind_of? String
             parse_string_for_argv(parsed).each do |arg|
               ::ARGV.unshift(arg)
