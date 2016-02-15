@@ -31,13 +31,7 @@ http://a1.mzstatic.com/us/r30/Publication/v4/2c/f7/90/2cf7902f-f709-9125-c73d-87
 
 == Platforms
 
-* The build runs on Travis for:
-  * MRI Ruby 1.9.3
-  * MRI Ruby 2.0.0
-  * MRI Ruby 2.1.0
-  * MRI Ruby 2.2.0
-  * MRI Ruby 2.2.2
-  * JRuby 1.9 mode
+In general, we try to support {supported MRI Rubies}[https://www.ruby-lang.org/en/downloads/] as well as JRuby, however see the {Travis config file}[./.travis.yml] for specifics.
 
 == Bootstrapping a new CLI App
 
