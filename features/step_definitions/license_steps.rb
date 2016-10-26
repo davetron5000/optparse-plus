@@ -5,7 +5,7 @@ end
 Then /^newgem's license should be the (\w+) license/ do |license|
   @license = license
   step %(a file named "tmp/newgem/LICENSE.txt" should exist)
-  step %(the file "tmp/newgem/newgem.gemspec" should match /#{@license}/)
+  step %(the file "tmp/newgem/newgem.gemspec" should match /#{@license.upcase}/)
 end
 
 Then /^the README should reference this license$/ do
