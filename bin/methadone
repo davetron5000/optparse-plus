@@ -83,7 +83,6 @@ main do |app_name|
   add_to_file gemspec, [
     "  #{gem_variable}.add_development_dependency('rdoc')",
     "  #{gem_variable}.add_development_dependency('aruba')",
-    "  #{gem_variable}.add_development_dependency('rake')",
     "  #{gem_variable}.add_dependency('methadone', '~> #{Methadone::VERSION}')",
   ], :before => /^end\s*$/
   ruby_major,ruby_minor,ruby_patch = RUBY_VERSION.split(/\./).map(&:to_i)
