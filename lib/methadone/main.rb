@@ -21,22 +21,22 @@ module Methadone
   # You also get a more expedient interface to OptionParser as well
   # as checking for required arguments to your app.  For example, if
   # we want our app to accept a negatable switch named "switch", a flag
-  # named "flag", and two arguments "needed" (which is required) 
+  # named "flag", and two arguments "needed" (which is required)
   # and "maybe" which is optional, we can do the following:
   #
   #     #!/usr/bin/env ruby
-  #       
+  #
   #     require 'methadone'
-  #      
+  #
   #     class App
   #       include Methadone::Main
   #       include Methadone::CLILogging
-  #       
+  #
   #       main do |needed, maybe|
   #         options[:switch] => true or false, based on command line
   #         options[:flag] => value of flag passed on command line
   #       end
-  #       
+  #
   #       # Proxy to an OptionParser instance's on method
   #       on("--[no]-switch")
   #       on("--flag VALUE")
@@ -52,7 +52,7 @@ module Methadone
   #
   # Our app then acts as follows:
   #
-  #     $ our_app 
+  #     $ our_app
   #     # => parse error: 'needed' is required
   #     $ our_app foo
   #     # => succeeds; "maybe" in main is nil
@@ -81,7 +81,7 @@ module Methadone
     # Declare the main method for your app.
     # This allows you to specify the general logic of your
     # app at the top of your bin file, but can rely on any methods
-    # or other code that you define later.  
+    # or other code that you define later.
     #
     # For example, suppose you want to process a set of files, but
     # wish to determine that list from another method to keep your
@@ -111,7 +111,7 @@ module Methadone
     # *Note*: #go! will modify +ARGV+ so any unparsed arguments that you do *not* declare as arguments
     # to #main will essentially be unavailable.  I consider this a bug, and it should be changed/fixed in
     # a future version.
-    # 
+    #
     # To run this method, call #go!
     def main(&block)
       @main_block = block
@@ -165,7 +165,7 @@ module Methadone
       opts.parse!
       opts.check_args!
       result = call_main
-      if result.kind_of? Fixnum
+      if result.kind_of? Integer
         exit result
       else
         exit 0
@@ -299,7 +299,7 @@ module Methadone
       end
       version_options[:custom_docs] ||= "Show help/version info"
       version_options[:format] ||= "%s version %s"
-      opts.on("--version",version_options[:custom_docs]) do 
+      opts.on("--version",version_options[:custom_docs]) do
         if version_options[:compact]
           puts version_options[:format] % [::File.basename($0),version]
         else
@@ -352,7 +352,7 @@ module Methadone
 
     def set_defaults_from_rc_file
       if @rc_file && File.exists?(@rc_file)
-        File.open(@rc_file) do |file| 
+        File.open(@rc_file) do |file|
           parsed = begin
                      YAML::load(file)
                    rescue => ex
@@ -461,9 +461,9 @@ module Methadone
       else
         opt_names = option_names(*args)
         @option_parser.on(*args) do |value|
-          opt_names.each do |name| 
-            @options[name] = value 
-            @options[name.to_s] = value 
+          opt_names.each do |name|
+            @options[name] = value
+            @options[name.to_s] = value
           end
         end
       end
@@ -494,7 +494,7 @@ module Methadone
       set_banner
     end
 
-    # Defers all calls save #on to 
+    # Defers all calls save #on to
     # the underlying OptionParser instance
     def method_missing(sym,*args,&block)
       @option_parser.send(sym,*args,&block)
@@ -528,7 +528,7 @@ module Methadone
     private
 
     def document_help
-      @option_parser.on("-h","--help","Show command line help") do 
+      @option_parser.on("-h","--help","Show command line help") do
         puts @option_parser.to_s
         exit 0
       end
@@ -547,10 +547,10 @@ module Methadone
     end
 
     def option_names_from(args)
-      args.select(&STRINGS_ONLY).select { |_| 
-        _ =~ /^\-/ 
-      }.map { |_| 
-        _.gsub(/^\-+/,'').gsub(/\s.*$/,'') 
+      args.select(&STRINGS_ONLY).select { |_|
+        _ =~ /^\-/
+      }.map { |_|
+        _.gsub(/^\-+/,'').gsub(/\s.*$/,'')
       }
     end
 
@@ -559,7 +559,7 @@ module Methadone
         new_banner="Usage: #{::File.basename($0)}"
         new_banner += " [options]" if @accept_options
         unless @args.empty?
-          new_banner += " " 
+          new_banner += " "
           new_banner += @args.map { |arg|
             if @arg_options[arg].include? :any
               "[#{arg.to_s}...]"

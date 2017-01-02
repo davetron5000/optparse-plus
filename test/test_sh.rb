@@ -304,7 +304,7 @@ class TestSH < BaseTest
 
     def run_command(command)
       @command = command
-      if @exitcode.kind_of? Fixnum
+      if @exitcode.kind_of? Integer
         [any_string,any_string,OpenStruct.new(:exitstatus => @exitcode)]
       else
         [any_string,any_string,@exitcode]

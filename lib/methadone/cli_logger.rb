@@ -16,7 +16,7 @@ module Methadone
   #   is redirected to a file, a better timestamped logging format is used
   #
   # You can customize this in several ways:
-  # 
+  #
   # * You can override the devices used by passing different devices to the constructor
   # * You can adjust the level of message that goes to the error logger via error_level=
   # * You can adjust the format for messages to the error logger separately via error_formatter=
@@ -33,7 +33,7 @@ module Methadone
   #     logger.debug("Starting up") # => only the standard output gets this
   #     logger.warn("careful!") # => only the standard OUTPUT gets this
   #     logger.error("Something went wrong!") # => only the standard error gets this
-  #     
+  #
   #     logger = CLILogger.new('logfile.txt')
   #     logger.debug("Starting up") # => logfile.txt gets this
   #     logger.error("Something went wrong!") # => BOTH logfile.txt AND the standard error get this
@@ -43,7 +43,7 @@ module Methadone
     }
 
     # Helper to proxy methods to the super class AND to the internal error logger
-    # 
+    #
     # +symbol+:: Symbol for name of the method to proxy
     def self.proxy_method(symbol) #:nodoc:
       old_name = "old_#{symbol}".to_sym
@@ -58,7 +58,7 @@ module Methadone
     proxy_method :'datetime_format='
 
     def add(severity, message = nil, progname = nil, &block) #:nodoc:
-      if @split_logs 
+      if @split_logs
         unless severity >= @stderr_logger.level
           super(severity,message,progname,&block)
         end
@@ -67,7 +67,7 @@ module Methadone
       end
       @stderr_logger.add(severity,message,progname,&block)
     end
-   
+
     DEFAULT_ERROR_LEVEL = Logger::Severity::WARN
 
     # A logger that logs error-type messages to a second device; useful
@@ -82,8 +82,9 @@ module Methadone
     # +log_device+:: device where all log messages should go, based on level
     # +error_device+:: device where all error messages should go.  By default, this is Logger::Severity::WARN
     def initialize(log_device=$stdout,error_device=$stderr)
-      super(log_device)
       @stderr_logger = Logger.new(error_device)
+
+      super(log_device)
 
       log_device_tty   = tty?(log_device)
       error_device_tty = tty?(error_device)

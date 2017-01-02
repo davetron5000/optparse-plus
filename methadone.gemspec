@@ -19,13 +19,13 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.add_dependency("bundler")
   s.add_development_dependency("rake")
-  s.add_development_dependency("rdoc","~> 3.9")
+  s.add_development_dependency("rdoc","~> 5.0")
   s.add_development_dependency("cucumber")
   s.add_development_dependency("aruba", "0.5.1")
   s.add_development_dependency("simplecov", "~> 0.5")
   s.add_development_dependency("clean_test")
   s.add_development_dependency("mocha", "0.13.2")
-  s.add_development_dependency("sdoc")
+  s.add_development_dependency("sdoc", "1.0.0.rc1")
   s.add_development_dependency("rspec", "~> 3")
   s.add_development_dependency("i18n", "= 0.6.1")
 end
