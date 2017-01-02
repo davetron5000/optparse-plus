@@ -66,7 +66,7 @@ class TestMain < BaseTest
     }
     When run_go_safely
     Then {
-      @params.should == %w(one two three)
+      @params.should be == %w(one two three)
     }
   end
 
@@ -94,7 +94,7 @@ class TestMain < BaseTest
     }
     When run_go_safely
     Then {
-      @params.should == ['one','two',nil]
+      @params.should be == ['one','two',nil]
     }
   end
 
@@ -248,7 +248,7 @@ class TestMain < BaseTest
 
     Then {
       @switch.should be true
-      @flag.should == 'value'
+      @flag.should be == 'value'
     }
   end
 
@@ -345,18 +345,18 @@ class TestMain < BaseTest
       @switch[0].should be true
       @some_other[0].should be true
       @other[0].should_not be true
-      @flag[0].should == 'value'
-      @f[0].should == 'value'
-      @with_dashes[0].should == 'BAR'
+      @flag[0].should be == 'value'
+      @f[0].should be == 'value'
+      @with_dashes[0].should be == 'BAR'
 
       @switch[1].should be true
       @some_other[1].should be nil # ** this is set manually
       @other[1].should_not be true
-      @flag[1].should == 'value'
-      @f[1].should == 'value'
-      @with_dashes[1].should == 'BAR'
+      @flag[1].should be == 'value'
+      @f[1].should be == 'value'
+      @with_dashes[1].should be == 'BAR'
 
-      opts.to_s.should match /Some documentation string/
+      opts.to_s.should match(/Some documentation string/)
     }
   end
 
@@ -366,7 +366,7 @@ class TestMain < BaseTest
     }
 
     Then {
-      opts.banner.should_not match /\[options\]/
+      opts.banner.should_not match(/\[options\]/)
     }
   end
 
@@ -377,7 +377,7 @@ class TestMain < BaseTest
     }
 
     Then {
-      opts.banner.should match /\[options\]/
+      opts.banner.should match(/\[options\]/)
     }
 
   end
@@ -395,10 +395,10 @@ class TestMain < BaseTest
     }
     When run_go_safely
     Then {
-      opts.banner.should match /db_name user \[password\]$/
-      opts.to_s.should match /#{@db_name_desc}/
-      opts.to_s.should match /#{@user_desc}/
-      opts.to_s.should match /#{@password_desc}/
+      opts.banner.should match(/db_name user \[password\]$/)
+      opts.to_s.should match(/#{@db_name_desc}/)
+      opts.to_s.should match(/#{@user_desc}/)
+      opts.to_s.should match(/#{@password_desc}/)
     }
   end
 
@@ -412,7 +412,7 @@ class TestMain < BaseTest
     }
 
     Then {
-      opts.banner.should match /db_name user tables...$/
+      opts.banner.should match(/db_name user tables...$/)
     }
   end
 
@@ -426,7 +426,7 @@ class TestMain < BaseTest
     }
 
     Then {
-      opts.banner.should match /db_name user \[tables...\]$/
+      opts.banner.should match(/db_name user \[tables...\]$/)
     }
   end
 
@@ -437,7 +437,7 @@ class TestMain < BaseTest
 
     }
     Then {
-      opts.banner.should match /^An app of total awesome$/
+      opts.banner.should match(/^An app of total awesome$/)
     }
   end
 
@@ -450,7 +450,7 @@ class TestMain < BaseTest
     }
 
     Then {
-      opts.banner.should == 'FOOBAR'
+      opts.banner.should be == 'FOOBAR'
     }
   end
 
@@ -491,7 +491,7 @@ class TestMain < BaseTest
     }
 
     Then {
-      opts.banner.should match /^v0.0.1/m
+      opts.banner.should match(/^v0.0.1/m)
     }
   end
 
@@ -503,7 +503,7 @@ class TestMain < BaseTest
     }
     Then run_go_safely
     And {
-      opts.to_s.should match /Show help\/version info/m
+      opts.to_s.should match(/Show help\/version info/m)
     }
   end
 
@@ -516,7 +516,7 @@ class TestMain < BaseTest
     }
     Then run_go_safely
     And {
-      opts.to_s.should match /#{@version_message}/
+      opts.to_s.should match(/#{@version_message}/)
     }
   end
 
@@ -530,7 +530,7 @@ class TestMain < BaseTest
       @help_string = opts.to_s
     }
     When {
-      @help_string.should match /\(default: bar\)/
+      @help_string.should match(/\(default: bar\)/)
     }
 
   end
@@ -545,7 +545,7 @@ class TestMain < BaseTest
       @help_string = opts.to_s
     }
     When {
-      @help_string.should match /\(default: bar\)/
+      @help_string.should match(/\(default: bar\)/)
     }
   end
 
@@ -556,7 +556,7 @@ class TestMain < BaseTest
       @help_string = opts.to_s
     }
     Then {
-      @help_string.should match /Default values can be placed in the APP_OPTS environment variable/
+      @help_string.should match(/Default values can be placed in the APP_OPTS environment variable/)
     }
   end
 
@@ -573,9 +573,9 @@ class TestMain < BaseTest
     }
     Then {
       assert_exits(0,'',&@code)
-      @switch.should == true
-      @flag.should == @flag_value
-      @args.should == [@some_arg]
+      @switch.should be == true
+      @flag.should be == @flag_value
+      @args.should be == [@some_arg]
     }
   end
 
@@ -591,8 +591,8 @@ class TestMain < BaseTest
     }
     Then {
       assert_exits(0,'',&@code)
-      @switch.should == true
-      @flag.should == @flag_value
+      @switch.should be == true
+      @flag.should be == @flag_value
     }
   end
 
@@ -607,8 +607,8 @@ class TestMain < BaseTest
     }
     Then {
       assert_exits(0,'',&@code)
-      @switch.should == true
-      @flag.should == @flag_value
+      @switch.should be == true
+      @flag.should be == @flag_value
     }
   end
 
@@ -624,8 +624,8 @@ class TestMain < BaseTest
     }
     Then {
       assert_exits(0,'',&@code)
-      @switch.should == true
-      @flag.should == @flag_value
+      @switch.should be == true
+      @flag.should be == @flag_value
     }
   end
 
@@ -646,8 +646,8 @@ class TestMain < BaseTest
     }
     Then {
       assert_exits(0,&@code)
-      @switch.should == true
-      @flag.should == @flag_value
+      @switch.should be == true
+      @flag.should be == @flag_value
     }
 
   end
@@ -670,8 +670,8 @@ class TestMain < BaseTest
     }
     Then {
       assert_exits(0,&@code)
-      @switch.should == true
-      @flag.should == @flag_value
+      @switch.should be == true
+      @flag.should be == @flag_value
     }
 
   end
@@ -682,15 +682,15 @@ class TestMain < BaseTest
     And {
       @flag_value = any_string
       rc_file = File.join(ENV['HOME'],'.my_app.rc')
-      raise "Something's wrong, expection rc file not to exist" if File.exists?(rc_file)
+      raise "Something's wrong, expection rc file not to exist" if File.exist?(rc_file)
     }
     When {
       @code = lambda { go! }
     }
     Then {
       assert_exits(0,&@code)
-      @switch.should == nil
-      @flag.should == nil
+      @switch.should be == nil
+      @flag.should be == nil
     }
   end
 
@@ -708,8 +708,8 @@ class TestMain < BaseTest
     }
     Then {
       assert_exits(0,&@code)
-      @switch.should == true
-      @flag.should == @flag_value
+      @switch.should be == true
+      @flag.should be == @flag_value
     }
 
   end
@@ -728,8 +728,8 @@ class TestMain < BaseTest
     }
     Then {
       assert_exits(0,&@code)
-      @switch.should == true
-      @flag.should == @flag_value
+      @switch.should be == true
+      @flag.should be == @flag_value
     }
   end
 
@@ -758,8 +758,8 @@ class TestMain < BaseTest
       main {}
     }
     Then {
-      opts.banner.should match /^An app of total awesome$/
-      opts.to_s.should match /--switch/
+      opts.banner.should match(/^An app of total awesome$/)
+      opts.to_s.should match(/--switch/)
     }
   end
 

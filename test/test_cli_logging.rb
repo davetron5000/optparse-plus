@@ -32,8 +32,8 @@ class TestCLILogging < BaseTest
     }
 
     Then {
-      $stdout.string.should == "debug\ninfo\nwarn\nerror\nfatal\n"
-      $stderr.string.should == "warn\nerror\nfatal\n"
+      $stdout.string.should be == "debug\ninfo\nwarn\nerror\nfatal\n"
+      $stderr.string.should be == "warn\nerror\nfatal\n"
     }
   end
 
@@ -43,7 +43,7 @@ class TestCLILogging < BaseTest
       @second = MyOtherClassThatLogsToStdout.new
     }
     Then {
-      @first.logger_id.should == @second.logger_id
+      @first.logger_id.should be == @second.logger_id
     }
   end
 
@@ -59,8 +59,8 @@ class TestCLILogging < BaseTest
       end
     }
     Then {
-      @logger_id.should_not == @second.logger_id
-      @first.logger_id.should == @second.logger_id
+      @logger_id.should_not be == @second.logger_id
+      @first.logger_id.should be == @second.logger_id
     }
   end
 
@@ -76,8 +76,8 @@ class TestCLILogging < BaseTest
       end
     }
     Then {
-      @logger_id.should_not == @second.logger_id
-      @first.logger_id.should == @second.logger_id
+      @logger_id.should_not be == @second.logger_id
+      @first.logger_id.should be == @second.logger_id
     }
   end
 
@@ -104,7 +104,7 @@ class TestCLILogging < BaseTest
       @app.use_option(@level)
     }
     Then {
-      @app.logger.level.should == @level
+      @app.logger.level.should be == @level
     }
   end
 
@@ -120,7 +120,7 @@ class TestCLILogging < BaseTest
       @app.change_logger(@other_logger)
     }
     Then {
-      @other_logger.level.should == @level
+      @other_logger.level.should be == @level
     }
   end
 
@@ -136,7 +136,7 @@ class TestCLILogging < BaseTest
       send_signal_and_wait_a_moment('USR2')
     }
     Then {
-      @app.logger.level.should == Logger::DEBUG
+      @app.logger.level.should be == Logger::DEBUG
     }
   end
 
@@ -153,7 +153,7 @@ class TestCLILogging < BaseTest
       @app.change_logger(@other_logger)
     }
     Then {
-      @other_logger.level.should == Logger::DEBUG
+      @other_logger.level.should be == Logger::DEBUG
     }
   end
 
@@ -169,7 +169,7 @@ class TestCLILogging < BaseTest
       send_signal_and_wait_a_moment('USR2')
     }
     Then {
-      @app.logger.level.should == Logger::INFO
+      @app.logger.level.should be == Logger::INFO
     }
   end
 

@@ -48,7 +48,7 @@ module Methadone
     def change_logger(new_logger)
       raise ArgumentError,"Logger may not be nil" if new_logger.nil?
       @@logger = new_logger
-      @@logger.level = @log_level if @log_level
+      @@logger.level = @log_level if defined?(@log_level) && @log_level
     end
 
     alias logger= change_logger

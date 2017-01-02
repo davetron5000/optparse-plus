@@ -100,7 +100,6 @@ module Methadone
 
     def level=(level)
       super(level)
-      current_error_level = @stderr_logger.level
       if (level > DEFAULT_ERROR_LEVEL) && @split_logs
         @stderr_logger.level = level
       end

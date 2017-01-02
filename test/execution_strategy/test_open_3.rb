@@ -23,8 +23,8 @@ module ExecutionStrategy
         @results = @strategy.run_command(@command)
       }
       Then {
-        @results[0].should == @stdout
-        @results[1].should == @stderr
+        @results[0].should be == @stdout
+        @results[1].should be == @stderr
         @results[2].should be @status
       }
     end
@@ -46,8 +46,8 @@ module ExecutionStrategy
         @results = @strategy.run_command(@command)
       }
       Then {
-        @results[0].should == @stdout
-        @results[1].should == @stderr
+        @results[0].should be == @stdout
+        @results[1].should be == @stderr
         @results[2].should be @status
       }
     end
@@ -58,7 +58,7 @@ module ExecutionStrategy
         @klass = @strategy.exception_meaning_command_not_found
       }
       Then {
-        @klass.should == Errno::ENOENT
+        @klass.should be == Errno::ENOENT
       }
     end
 
