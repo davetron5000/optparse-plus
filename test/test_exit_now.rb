@@ -16,8 +16,8 @@ class TestExitNow < BaseTest
     }
     Then {
       exception = assert_raises(Methadone::Error,&@code)
-      exception.exit_code.should == @exit_code
-      exception.message.should == @message
+      exception.exit_code.should be == @exit_code
+      exception.message.should be == @message
     }
   end
 
@@ -30,8 +30,8 @@ class TestExitNow < BaseTest
     }
     Then {
       exception = assert_raises(Methadone::Error,&@code)
-      exception.exit_code.should == 1
-      exception.message.should == @message
+      exception.exit_code.should be == 1
+      exception.message.should be == @message
     }
   end
 end 

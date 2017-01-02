@@ -54,7 +54,7 @@ class TestSH < BaseTest
         end
       }
       Then {
-        @stdout_received.should == test_command_stdout
+        @stdout_received.should be == test_command_stdout
         assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout)
       }
     end
@@ -71,7 +71,7 @@ class TestSH < BaseTest
         end
       }
       Then {
-        @block_called.should == true
+        @block_called.should be == true
         assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout)
       }
     end
@@ -87,7 +87,7 @@ class TestSH < BaseTest
         @exit_code = self.send(method,@command,&@lambda)
       }
       Then {
-        @block_called.should == true
+        @block_called.should be == true
         assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout)
       }
     end
@@ -107,8 +107,8 @@ class TestSH < BaseTest
         end
       }
       Then {
-        @stdout_received.should == test_command_stdout
-        @stderr_received.length.should == 0
+        @stdout_received.should be == test_command_stdout
+        @stderr_received.length.should be == 0
         assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout)
       }
     end
@@ -130,9 +130,9 @@ class TestSH < BaseTest
         end
       }
       Then {
-        @stdout_received.should == test_command_stdout
-        @stderr_received.length.should == 0
-        @exitstatus_received.should == 0
+        @stdout_received.should be == test_command_stdout
+        @stderr_received.length.should be == 0
+        @exitstatus_received.should be == 0
         assert_successful_command_execution(@exit_code,@logger,@command,test_command_stdout)
       }
     end
@@ -150,7 +150,7 @@ class TestSH < BaseTest
       end
     }
     Then {
-      @exit_code.should == 1
+      @exit_code.should be == 1
       assert_logger_output_for_failure(@logger,@command,test_command_stdout,test_command_stderr)
     }
   end
@@ -167,7 +167,7 @@ class TestSH < BaseTest
       end
     }
     Then {
-      @exit_code.should == 1
+      @exit_code.should be == 1
       assert_logger_output_for_failure(@logger,@command,test_command_stdout,test_command_stderr)
     }
   end
@@ -188,12 +188,12 @@ class TestSH < BaseTest
           end
         }
         Then {
-          @exit_code.should == 1
-          @block_called.should == true
-          @exitstatus_received.should == 1
-          @logger.debugs[0].should == "Executing '#{test_command}foo'"
-          @logger.debugs[1].should == "stdout output of '#{test_command}foo': #{test_command_stdout}"
-          @logger.warns[0].should == "stderr output of '#{test_command}foo': #{test_command_stderr}"
+          @exit_code.should be == 1
+          @block_called.should be == true
+          @exitstatus_received.should be == 1
+          @logger.debugs[0].should be == "Executing '#{test_command}foo'"
+          @logger.debugs[1].should be == "stdout output of '#{test_command}foo': #{test_command_stdout}"
+          @logger.warns[0].should be == "stderr output of '#{test_command}foo': #{test_command_stderr}"
         }
       end
     end
@@ -208,7 +208,7 @@ class TestSH < BaseTest
       @exit_code = sh @command
     }
     Then {
-      @exit_code.should == 1
+      @exit_code.should be == 1
       assert_logger_output_for_failure(@logger,@command,test_command_stdout,test_command_stderr)
     }
   end
@@ -222,8 +222,8 @@ class TestSH < BaseTest
       @exit_code = sh @command
     }
     Then {
-      @exit_code.should == 127 # consistent with what bash does
-      @logger.errors[0].should match /^Error running '#{@command}': .+$/
+      @exit_code.should be == 127 # consistent with what bash does
+      @logger.errors[0].should match(/^Error running '#{@command}': .+$/)
     }
   end
 
@@ -237,7 +237,7 @@ class TestSH < BaseTest
     }
     Then {
       exception = assert_raises(Methadone::FailedCommandError,&@code)
-      exception.command.should == @command
+      exception.command.should be == @command
       assert_logger_output_for_failure(@logger,@command,test_command_stdout,test_command_stderr)
     }
   end
@@ -253,8 +253,8 @@ class TestSH < BaseTest
     }
     Then {
       exception = assert_raises(Methadone::FailedCommandError,&@code)
-      exception.command.should == @command
-      exception.message.should == @custom_error_message
+      exception.command.should be == @command
+      exception.message.should be == @custom_error_message
       assert_logger_output_for_failure(@logger,@command,test_command_stdout,test_command_stderr)
     }
   end
@@ -289,7 +289,7 @@ class TestSH < BaseTest
       @code = lambda { @test_app.sh @command }
     }
     Then {
-      exception = assert_raises(StandardError,&@code)
+      assert_raises(StandardError,&@code)
     }
   end
 
@@ -339,8 +339,8 @@ class TestSH < BaseTest
       @results = @app.sh(@command)
     }
     Then {
-      @app.strategy.command.should == @command
-      @results.should == @exit_code
+      @app.strategy.command.should be == @command
+      @results.should be == @exit_code
     }
   end
 
@@ -353,8 +353,8 @@ class TestSH < BaseTest
       @results = @app.sh(@command)
     }
     Then {
-      @app.strategy.command.should == @command
-      @results.should == 0
+      @app.strategy.command.should be == @command
+      @results.should be == 0
     }
   end
 
@@ -367,25 +367,25 @@ class TestSH < BaseTest
       @results = @app.sh(@command)
     }
     Then {
-      @app.strategy.command.should == @command
-      @results.should == 1
+      @app.strategy.command.should be == @command
+      @results.should be == 1
     }
   end
 
 private
 
   def assert_successful_command_execution(exit_code,logger,command,stdout)
-    exit_code.should == 0
-    logger.debugs[0].should == "Executing '#{command}'"
-    logger.debugs[1].should == "stdout output of '#{command}': #{stdout}"
-    logger.warns.length.should == 0
+    exit_code.should be == 0
+    logger.debugs[0].should be == "Executing '#{command}'"
+    logger.debugs[1].should be == "stdout output of '#{command}': #{stdout}"
+    logger.warns.length.should be == 0
   end
 
   def assert_logger_output_for_failure(logger,command,stdout,stderr)
-    logger.debugs[0].should == "Executing '#{command}'"
-    logger.infos[0].should == "stdout output of '#{command}': #{stdout}"
-    logger.warns[0].should == "stderr output of '#{command}': #{stderr}"
-    logger.warns[1].should == "Error running '#{command}'"
+    logger.debugs[0].should be == "Executing '#{command}'"
+    logger.infos[0].should be == "stdout output of '#{command}': #{stdout}"
+    logger.warns[0].should be == "stderr output of '#{command}': #{stderr}"
+    logger.warns[1].should be == "Error running '#{command}'"
   end
 
   def use_capturing_logger

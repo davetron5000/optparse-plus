@@ -37,8 +37,8 @@ class TestCLILogger < BaseTest
     When log_all_levels
 
     Then {
-      $stdout.string.should == "debug\ninfo\n"
-      $stderr.string.should == "warn\nerror\nfatal\n"
+      $stdout.string.should be == "debug\ninfo\n"
+      $stderr.string.should be == "warn\nerror\nfatal\n"
     }
   end
 
@@ -58,8 +58,8 @@ class TestCLILogger < BaseTest
     When log_all_levels
 
     Then {
-      $stdout.string.should == ""
-      $stderr.string.should == "error\nfatal\n"
+      $stdout.string.should be == ""
+      $stderr.string.should be == "error\nfatal\n"
     }
   end
 
@@ -69,7 +69,7 @@ class TestCLILogger < BaseTest
 
     Then stdout_should_have_everything
     And {
-      $stderr.string.should == "warn\nerror\nfatal\n"
+      $stderr.string.should be == "warn\nerror\nfatal\n"
     }
   end
 
@@ -80,7 +80,7 @@ class TestCLILogger < BaseTest
 
     Then stdout_should_have_everything
     And {
-      $stderr.string.should == "fatal\n"
+      $stderr.string.should be == "fatal\n"
     }
   end
 
@@ -97,8 +97,8 @@ class TestCLILogger < BaseTest
     When log_all_levels
 
     Then {
-      @out.string.should == "debug\ninfo\nwarn\nerror\nfatal\n"
-      @err.string.should == "warn\nerror\nfatal\n"
+      @out.string.should be == "debug\ninfo\nwarn\nerror\nfatal\n"
+      @err.string.should be == "warn\nerror\nfatal\n"
     }
   end
 
@@ -108,8 +108,8 @@ class TestCLILogger < BaseTest
     When log_all_levels
 
     Then {
-      $stdout.string.should == "fatal\n"
-      $stderr.string.should == "warn\nerror\nfatal\n"
+      $stdout.string.should be == "fatal\n"
+      $stderr.string.should be == "warn\nerror\nfatal\n"
     }
   end
 
@@ -126,8 +126,8 @@ class TestCLILogger < BaseTest
     }
 
     Then {
-      $stdout.string.should match /the time.*DEBUG.*debug/
-      $stderr.string.should match /the time.*ERROR.*error/
+      $stdout.string.should match(/the time.*DEBUG.*debug/)
+      $stderr.string.should match(/the time.*ERROR.*error/)
     }
   end
 
@@ -137,8 +137,8 @@ class TestCLILogger < BaseTest
       @logger << "foo"
     }
     Then {
-      $stdout.string.should == "foo"
-      $stderr.string.should == ""
+      $stdout.string.should be == "foo"
+      $stderr.string.should be == ""
     }
   end
 
@@ -154,8 +154,8 @@ class TestCLILogger < BaseTest
       @logger.error("error")
     }
     Then {
-      $stdout.string.should == "debug\nerror\n"
-      $stderr.string.should == "ERROR_LOGGER: error\n"
+      $stdout.string.should be == "debug\nerror\n"
+      $stderr.string.should be == "ERROR_LOGGER: error\n"
     }
   end
 
@@ -211,7 +211,7 @@ class TestCLILogger < BaseTest
 
   def stdout_should_have_everything
     proc do
-      $stdout.string.should == "debug\ninfo\nwarn\nerror\nfatal\n"
+      $stdout.string.should be == "debug\ninfo\nwarn\nerror\nfatal\n"
     end
   end
 

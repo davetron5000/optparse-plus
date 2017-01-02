@@ -325,6 +325,8 @@ module Methadone
     end
 
     def add_defaults_to_docs
+      @env_var = nil unless defined? @env_var
+      @rc_file = nil unless defined? @rc_file
       if @env_var && @rc_file
         opts.separator ''
         opts.separator 'Default values can be placed in:'
@@ -351,7 +353,7 @@ module Methadone
     end
 
     def set_defaults_from_rc_file
-      if @rc_file && File.exists?(@rc_file)
+      if @rc_file && File.exist?(@rc_file)
         File.open(@rc_file) do |file|
           parsed = begin
                      YAML::load(file)
@@ -392,6 +394,7 @@ module Methadone
 
     # Handle calling main and trapping any exceptions thrown
     def call_main
+      @leak_exceptions = nil unless defined? @leak_exceptions
       @main_block.call(*ARGV)
     rescue Methadone::Error => ex
       raise ex if ENV['DEBUG']
