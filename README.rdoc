@@ -117,7 +117,7 @@ This isn't a replacement for Open3 or ChildProcess, but a way to easily "do the 
 
 == Zero-Config Logging
 
-Chances are, your code is littered with <tt>STDERR.puts</tt> on a good day, and nothing on a bad day.  You probably also have a bunch of debug <tt>puts</tt> calls that you have commented out.  Logging is extremely helpful in understand how your app is behaving (or how it behaved in the past).  Logging can be a pain to set up, and can also make it hard to give the user at the command-prompt a good experience.
+Chances are, your code is littered with <tt>STDERR.puts</tt> on a good day, and nothing on a bad day.  You probably also have a bunch of debug <tt>puts</tt> calls that you have commented out.  Logging is extremely helpful in understanding how your app is behaving (or how it behaved in the past).  Logging can be a pain to set up, and can also make it hard to give the user at the command-prompt a good experience.
 
 Methadone::CLILogger is designed to handle this.  It's a proper subclass of Ruby's built-in <tt>Logger</tt> with a few enhancements:
 
