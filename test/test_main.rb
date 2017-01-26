@@ -763,6 +763,22 @@ class TestMain < BaseTest
     }
   end
 
+  test_that "usage is displayed if called with no arguments given when help_if_bare specified" do
+    Given {
+      help_if_bare
+      on("--required VALUE")
+      main {puts 'main called'}
+    }
+    When {
+      @code = lambda {go!}
+    }
+    Then {
+      assert_exits(64,&@code)
+      $stdout.string.should_not match /main called/
+      $stdout.string.should match /Usage:.*--required VALUE/m
+    }
+  end
+
 private
 
   def app_to_use_rc_file(rc_file = '.my_app.rc')

@@ -127,6 +127,11 @@ module Methadone
       @leak_exceptions = leak
     end
 
+    # Print the usage help if the command is run without any options or arguments.
+    def help_if_bare
+      @default_help = true
+    end
+
     # Set the name of the environment variable where users can place default
     # options for your app.  Omit this to disable the feature.
     def defaults_from_env_var(env_var)
@@ -160,6 +165,11 @@ module Methadone
     # If a required argument (see #arg) is not found, this exits with
     # 64 and a message about that missing argument.
     def go!
+      if @default_help and ARGV.empty?
+        puts opts.to_s
+        exit 64 # sysexits.h exit code EX_USAGE
+      end
+
       setup_defaults
       opts.post_setup
       opts.parse!
