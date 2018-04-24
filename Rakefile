@@ -13,7 +13,6 @@ desc 'run tests'
 Rake::TestTask.new do |t|
   t.libs << "lib"
   t.libs << "test"
-  t.ruby_opts << "-rrubygems"
   t.test_files = FileList['test/test_*.rb'] + FileList['test/execution_strategy/test_*.rb']
 end
 

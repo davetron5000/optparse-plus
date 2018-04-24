@@ -7,7 +7,6 @@ Feature: Bootstrap a new command-line app
     Given the directory "tmp/newgem" does not exist
     And the directory "tmp/new-gem" does not exist
 
-    @wip
   Scenario: Bootstrap a new app from scratch
     When I successfully run `methadone tmp/newgem`
     Then the following directories should exist:

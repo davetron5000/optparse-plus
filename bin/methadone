@@ -28,6 +28,9 @@ main do |app_name|
       file =~ /\.rb$/ && file !~ /version.rb$/
     }.first
   end
+  rm_rf "#{gemname}/spec"   # Don't want the default RSpec droppings
+  rm_rf "#{gemname}/.rspec"
+
   require_file = gemname if require_file.nil?
   require_file.gsub!(/^.*lib\//,'')
 
