@@ -9,11 +9,11 @@ include Rake::DSL
 
 Bundler::GemHelper.install_tasks
 
-desc 'run tests'
+desc 'run unit tests'
 Rake::TestTask.new do |t|
   t.libs << "lib"
-  t.libs << "test"
-  t.test_files = FileList['test/test_*.rb'] + FileList['test/execution_strategy/test_*.rb']
+  t.libs << "test/unit"
+  t.test_files = FileList['test/unit/test_*.rb'] + FileList['test/unit/execution_strategy/test_*.rb']
 end
 
 desc 'build rdoc'
