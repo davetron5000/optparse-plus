@@ -101,6 +101,7 @@ main do |app_name|
     "  #{gem_variable}.add_development_dependency('rspec', '~> 3')",
     ], :before => /^end\s*$/
   end
+  FileUtils.rm_f "README.md"
 
   sh! %q(git add --all .)
 end

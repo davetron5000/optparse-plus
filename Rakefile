@@ -16,6 +16,13 @@ Rake::TestTask.new do |t|
   t.test_files = FileList['test/unit/test_*.rb'] + FileList['test/unit/execution_strategy/test_*.rb']
 end
 
+desc 'run integration tests'
+Rake::TestTask.new("test:integration") do |t|
+  t.libs << "lib"
+  t.libs << "test/integration"
+  t.test_files = ENV["TEST"] || FileList['test/integration/test_*.rb']
+end
+
 desc 'build rdoc'
 task :rdoc => [:build_rdoc, :hack_css]
 RDoc::Task.new(:build_rdoc) do |rd|

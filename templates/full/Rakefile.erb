@@ -64,8 +64,10 @@ end
 Rake::RDocTask.new do |rd|
   <% if using_readme %>
   rd.main = "README.rdoc"
-  <% end %>
   rd.rdoc_files.include("README.rdoc","lib/**/*.rb","bin/**/*")
+  <% else %>
+  rd.rdoc_files.include("lib/**/*.rb","bin/**/*")
+  <% end %>
 end
 <% if rspec %>
 task :default => [:spec,:features]
