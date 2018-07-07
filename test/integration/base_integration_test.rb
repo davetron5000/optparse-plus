@@ -65,4 +65,38 @@ private
       assert_match(regexp,contents,"Expected #{filename} to contain #{regexp}")
     end
   end
+
+  def assert_banner(stdout, bin_name, takes_options: , takes_arguments: {})
+    if takes_options
+      assert_match(/Options/, stdout)
+      if takes_arguments == false || takes_arguments.empty?
+        assert_match(/Usage: #{Regexp.escape(bin_name)}.*\[options\]\s*$/,stdout)
+      else
+        expected_args = takes_arguments.map { |arg, required|
+          if required == :required
+            arg.to_s
+          else
+            "[#{arg}]"
+          end
+        }.join(" ")
+
+        assert_match(/Usage: #{Regexp.escape(bin_name)}.*\[options\]\s*#{expected_args}$/,stdout)
+      end
+    else
+      raise "not supported"
+    end
+  end
+
+  def assert_option(stdout, *options)
+    options.each do |option|
+      assert_match(/#{Regexp.escape(option)}/,@stdout)
+    end
+  end
+
+  def assert_oneline_summary(stdout)
+    output = stdout.split(/\n/)
+    assert output.size >= 3, "Expected 3 or more lines:\n#{stdout}"
+    assert_match(/^\s*$/,output[1],"Should be a blank line after the banner")
+    assert_match(/^\w+\s+\w+/,output[2],"Should be at least two words describing your app")
+  end
 end

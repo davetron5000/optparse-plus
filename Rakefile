@@ -18,7 +18,13 @@ desc 'run integration tests'
 Rake::TestTask.new("test:integration") do |t|
   t.libs << "lib"
   t.libs << "test/integration"
-  t.test_files = ENV["TEST"] || FileList['test/integration/test_*.rb']
+  test_file = ENV["TEST"]
+  ENV.delete("TEST")
+  t.test_files = if test_file
+                   [test_file]
+                 else
+                   FileList['test/integration/test_*.rb']
+                 end
 end
 
 desc 'build rdoc'
@@ -77,4 +83,4 @@ end
 
 CLEAN << "coverage"
 CLOBBER << FileList['**/*.rbc']
-task :default => [:test, :features]
+task :default => [:test, "test:integration"]
