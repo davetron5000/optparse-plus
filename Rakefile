@@ -2,8 +2,6 @@ require 'sdoc'
 require 'bundler'
 require 'rake/clean'
 require 'rake/testtask'
-require 'cucumber'
-require 'cucumber/rake/task'
 
 include Rake::DSL
 
@@ -75,28 +73,6 @@ task :hack_css do
       end
     end
   end
-end
-if RUBY_PLATFORM == 'java'
-task :features do
-  puts "Aruba doesn't work on JRuby; cannot run features"
-end
-task 'features:wip' => :features
-else
-CUKE_RESULTS = 'results.html'
-CLEAN << CUKE_RESULTS
-Cucumber::Rake::Task.new(:features) do |t|
-  tag_opts = ' --tags ~@pending'
-  tag_opts = " --tags #{ENV['TAGS']}" if ENV['TAGS']
-  t.cucumber_opts = "features --format html -o #{CUKE_RESULTS} --format pretty -x -s#{tag_opts}"
-  t.fork = false
-end
-
-Cucumber::Rake::Task.new('features:wip') do |t|
-  tag_opts = ' --tags ~@pending'
-  tag_opts = ' --tags @wip'
-  t.cucumber_opts = "features --format html -o #{CUKE_RESULTS} --format pretty -x -s#{tag_opts}"
-  t.fork = false
-end
 end
 
 CLEAN << "coverage"
