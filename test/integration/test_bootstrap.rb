@@ -34,6 +34,11 @@ class TestBootstrap < BaseIntegrationTest
       assert_match(/1 tests, 1 assertions, 0 failures, 0 errors/,@stdout)
       assert_match(/1 tests, 8 assertions, 0 failures, 0 errors/,@stdout) # integration test
     }
+    And {
+      gemspec = File.read("newgem/newgem.gemspec")
+      refute_match(/TODO/,gemspec)
+      refute_match(/FIXME/,gemspec)
+    }
   end
 
   test_that "bootstrapping a new app with a dash in its name works" do
@@ -63,6 +68,11 @@ class TestBootstrap < BaseIntegrationTest
     Then {
       assert_match(/1 tests, 1 assertions, 0 failures, 0 errors/,@stdout)
       assert_match(/1 tests, 8 assertions, 0 failures, 0 errors/,@stdout) # integration test
+    }
+    And {
+      gemspec = File.read("new-gem/new-gem.gemspec")
+      refute_match(/TODO/,gemspec)
+      refute_match(/FIXME/,gemspec)
     }
   end
 

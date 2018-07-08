@@ -16,9 +16,11 @@ Toward that end, this gem provides:
 * A lightweight DSL to create your command-line interface, that loses none of <tt>OptionParser</tt>'s power.
 * A simplified means of running external commands that has better error handling and diagnostics.
 * Simplified zero-config logging that is a better-than-<tt>puts</tt> <tt>puts</tt>.
-* Cucumber Steps, built on Aruba, to allow you to test-drive your command-line app development.
+* Support for integration-testing your CLI using Test::Unit
 
 == Tutorial
+
+**This tutorial is somewhat outdated, but generally still applies**
 
 http://a1.mzstatic.com/us/r30/Publication/v4/2c/f7/90/2cf7902f-f709-9125-c73d-87311216527d/MethadoneTutorial.225x225-75.jpg
 
@@ -31,11 +33,13 @@ http://a1.mzstatic.com/us/r30/Publication/v4/2c/f7/90/2cf7902f-f709-9125-c73d-87
 
 == Platforms
 
-In general, we try to support {supported MRI Rubies}[https://www.ruby-lang.org/en/downloads/] as well as JRuby, however see the {Travis config file}[./.travis.yml] for specifics.
+This library only supports the latest versions of Ruby. JRuby support has been too difficult to keep up with, though the library should work for JRuby.
+
+See the {Travis config file}[./.travis.yml] for specifics.
 
 == Bootstrapping a new CLI App
 
-The +methadone+ command-line app will bootstrap a new command-line app, setting up a proper gem structure, unit tests, and cucumber-based tests with aruba.
+The +methadone+ command-line app will bootstrap a new command-line app, setting up a proper gem structure, unit tests, and integration tests.
 
 It assumes you are using a standard Ruby development environment, which includes:
 
@@ -48,40 +52,82 @@ _(Note that apps *powered* by this gem have no particular runtime dependencies a
 
     $ methadone --help
     Usage: methadone [options] app_name
-            --force                      Overwrite files if they exist
-    $ methadone newgem
-    $ cd newgem
-    $ bundle
-    $ rake
-    1 tests, 1 assertions, 0 failures, 0 errors, 0 skips
-    1 scenario (1 passed)
-    3 steps (3 passed)
-    $ cat features/newgem.feature
-    Feature: My bootstrapped app kinda works
-      In order to get going on coding my awesome app
-      I want to have aruba and cucumber setup
-      So I don't have to do it myself
 
-      Scenario: App just runs
-        When I run `newgem --help`
-        Then the exit status should be 0
-        And the output should contain:
-        """
-        Usage: newgem [options]
-        """
+    Kick the bash habit by bootstrapping your Ruby command-line apps
+
+    v2.0.0
+
+    Options:
+        -h, --help                       Show command line help
+            --force                      Overwrite files if they exist
+            --[no-]readme                [Do not ]produce a README file
+            --rspec                      Generate RSpec unit tests instead of Test::Unit
+        -l, --license LICENSE            Specify the license for your project
+                                         (mit|apache|gplv2|gplv3|custom|NONE)
+            --log-level LEVEL            Set the logging level
+                                         (debug|info|warn|error|fatal)
+                                         (Default: info)
+            --version                    Show help/version info
+
+    Arguments:
+
+        app_name
+            Name of your app, which is used for the gem name and executable name
+
+
+
+
+
+    Usage: methadone [options] app_name
+            --force                      Overwrite files if they exist
+    $ methadone myapp -l mit
+    $ cd myapp
+    $ bundle install
+    ...
+    $ bundle exec rake
+    Started
+    .
+    Finished in 0.000499 seconds.
+    -----------------------------------------------------------------------------------------
+    1 tests, 1 assertions, 0 failures, 0 errors, 0 pendings, 0 omissions, 0 notifications
+    100% passed
+    -----------------------------------------------------------------------------------------
+    2004.01 tests/s, 2004.01 assertions/s
+    Started
+    .
+    Finished in 0.298281 seconds.
+    -----------------------------------------------------------------------------------------
+    1 tests, 8 assertions, 0 failures, 0 errors, 0 pendings, 0 omissions, 0 notifications
+    100% passed
+    -----------------------------------------------------------------------------------------
+    3.35 tests/s, 26.82 assertions/s
+
+    $ cat test/integration/test_cli.rb
+    require "methadone/test/base_integration_test"
+
+    class TestSomething < Methadone::BaseIntegrationTest
+      def test_truth
+        stdout,stderr,results = run_app("myapp","--help")
+        assert_banner(stdout, "myapp", takes_options: true, takes_arguments: false)
+        assert_option(stdout,"-h", "--help")
+        assert_option(stdout,"--version")
+        assert_oneline_summary(stdout)
+      end
+    end
+
 
 Basically, this sets you up with all the boilerplate that you *should* be using to write a command-line app.  Specifically, you get:
 
 * Gemified project (based on <tt>bundle gem</tt>)
 * An executable using Methadone::Main to outline your new app
 * <tt>Test::Unit</tt> test task set up and an empty unit test.
-* Aruba/Cucumber set up with a basic feature that exercise your executable
+* <tt>Test::Unit</tt> integration tests with some of methadone's assertions to let you drive your CLI's development
 * The outline of a README
 * An optional license included
 
 == DSL for your <tt>bin</tt> file
 
-A canonical <tt>OptionParser</tt> driven app has a few problems with it structurally that Methadone can solve:
+A canonical <tt>OptionParser</tt>-driven app has a few problems with it structurally that Methadone can solve:
 
 * Backwards organization - main logic is at the bottom of the file, not the top
 * Verbose to use +opts.on+ just to set a value in a +Hash+
@@ -129,32 +175,14 @@ Methadone::CLILogger is designed to handle this.  It's a proper subclass of Ruby
 
 See {CLILogger's rdoc}[http://davetron5000.github.com/methadone/rdoc/classes/Methadone/CLILogger.html] and then {CLILogging's}[http://davetron5000.github.com/methadone/rdoc/classes/Methadone/CLILogging.html] for more.
 
-
 Currently, there are classes that assist in directing output logger-style to the right place; basically ensuring that errors go to +STDERR+ and everything else goes to +STDOUT+.  All of this is, of course, configurable
 
-== Cucumber Steps
+== Integration Tests
 
-Methadone uses aruba[http://www.github.com/cucumber/aruba] for BDD-style testing with cucumber. This library has some awesome steps, and Methadone provides additional, more opinionated, steps.  
-
-=== Example
-
-Here's an example from methadone's own tests:
-
-    Scenario: Help is properly documented
-      When I get help for "methadone"
-      Then the exit status should be 0
-      And the following options should be documented:
-        |--force|
-      And the banner should be present
-      And the banner should include the version
-      And the banner should document that this app takes options
-      And the banner should document that this app's arguments are:
-        |app_name|which is required|
-        |dir_name|which is optional|
-
-See Methadone::Cucumber or its {rdoc}[http://davetron5000.github.com/methadone/rdoc/classes/Methadone/Cucumber.html] for a list of all the steps provided.
+Methadone provides some basic features for executing your CLI and asserting things about it.  Methadone::Test::IntegrationTestAssertions documents these.
 
 == Contributing
 
 * Feel free to file an issue, even if you don't have time to submit a patch
 * Please try to include a test for any patch you submit.  If you don't include a test, I'll have to write one, and it'll take longer to get your code in.
+* This is not intended to support “command-suite” style CLIs.  See {GLI}[http://naildrivin5.com/gli] if that's what you want.
