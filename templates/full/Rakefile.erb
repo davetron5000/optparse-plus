@@ -48,7 +48,11 @@ RSpec::Core::RakeTask.new do |t|
 end
 <% else %>
 Rake::TestTask.new do |t|
-  t.pattern = 'test/tc_*.rb'
+  t.pattern = 'test/unit/test_*.rb'
+end
+
+Rake::TestTask.new("test:integration") do |t|
+  t.pattern = 'test/integration/test_*.rb'
 end
 <% end %>
 
@@ -61,7 +65,7 @@ Rake::RDocTask.new do |rd|
   <% end %>
 end
 <% if rspec %>
-task :default => [:spec,:features]
+task :default => [:spec]
 <% else %>
-task :default => [:test,:features]
+task :default => [:test,"test:integration"]
 <% end %>

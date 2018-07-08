@@ -32,6 +32,7 @@ class TestBootstrap < BaseIntegrationTest
     When { @stdout, _ = rake("newgem", "") }
     Then {
       assert_match(/1 tests, 1 assertions, 0 failures, 0 errors/,@stdout)
+      assert_match(/1 tests, 8 assertions, 0 failures, 0 errors/,@stdout) # integration test
     }
   end
 
@@ -61,6 +62,7 @@ class TestBootstrap < BaseIntegrationTest
     When { @stdout, _ = rake("new-gem", "") }
     Then {
       assert_match(/1 tests, 1 assertions, 0 failures, 0 errors/,@stdout)
+      assert_match(/1 tests, 8 assertions, 0 failures, 0 errors/,@stdout) # integration test
     }
   end
 

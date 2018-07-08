@@ -49,7 +49,8 @@ main do |app_name|
     copy_file "spec/something_spec.rb", :from => :rspec, :binding => binding
   else
     template_dirs_in(:test_unit).each  { |dir| mkdir_p dir }
-    copy_file "test/tc_something.rb", :from => :test_unit, :binding => binding
+    copy_file "test/unit/test_something.rb", :from => :test_unit, :binding => binding
+    copy_file "test/integration/test_cli.rb", :from => :test_unit, :binding => binding
   end
 
 

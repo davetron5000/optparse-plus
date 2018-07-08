@@ -1,15 +1,10 @@
-require "test/unit"
+require "methadone/test/base_integration_test"
 require "clean_test/test_case"
-require "fileutils"
-require "pathname"
-require "tmpdir"
-require "open3"
 
-$FOR_TESTING_ONLY_SKIP_STDERR = false
-
-class BaseIntegrationTest < Clean::Test::TestCase
-  include FileUtils
-
+class BaseIntegrationTest < Methadone::BaseIntegrationTest
+  include Clean::Test::GivenWhenThen
+  include Clean::Test::TestThat
+  include Clean::Test::Any
   def setup
     root = (Pathname(__FILE__).dirname / ".." / "..").expand_path
     ENV["PATH"] = (root / "bin").to_s + File::PATH_SEPARATOR + ENV["PATH"]
@@ -35,6 +30,16 @@ private
     [ stdout, stderr, status ]
   end
 
+  def run_app(gemname,args="")
+    run_in_gem(gemname, "bin/#{gemname}", args)
+  end
+
+  # Runs rake inside the app for an integration test, returning stdout and stderr as strings
+  def rake(gemname,args="")
+    run_in_gem(gemname, "rake", args)
+  end
+
+  # Runs an arbitrary command inside the gem, returning stdout and stderr as strings.
   def run_in_gem(gemname, command, args)
     stdout = nil
     stderr = nil
@@ -51,52 +56,5 @@ private
     ENV["RUBYLIB"] = original_rubylib
   end
 
-  def run_app(gemname,args="")
-    run_in_gem(gemname, "bin/#{gemname}", args)
-  end
 
-  def rake(gemname,args="")
-    run_in_gem(gemname, "rake", args)
-  end
-
-  def assert_file(filename, contains:)
-    contents = File.read(filename)
-    Array(contains).each do |regexp|
-      assert_match(regexp,contents,"Expected #{filename} to contain #{regexp}")
-    end
-  end
-
-  def assert_banner(stdout, bin_name, takes_options: , takes_arguments: {})
-    if takes_options
-      assert_match(/Options/, stdout)
-      if takes_arguments == false || takes_arguments.empty?
-        assert_match(/Usage: #{Regexp.escape(bin_name)}.*\[options\]\s*$/,stdout)
-      else
-        expected_args = takes_arguments.map { |arg, required|
-          if required == :required
-            arg.to_s
-          else
-            "[#{arg}]"
-          end
-        }.join(" ")
-
-        assert_match(/Usage: #{Regexp.escape(bin_name)}.*\[options\]\s*#{expected_args}$/,stdout)
-      end
-    else
-      raise "not supported"
-    end
-  end
-
-  def assert_option(stdout, *options)
-    options.each do |option|
-      assert_match(/#{Regexp.escape(option)}/,@stdout)
-    end
-  end
-
-  def assert_oneline_summary(stdout)
-    output = stdout.split(/\n/)
-    assert output.size >= 3, "Expected 3 or more lines:\n#{stdout}"
-    assert_match(/^\s*$/,output[1],"Should be a blank line after the banner")
-    assert_match(/^\w+\s+\w+/,output[2],"Should be at least two words describing your app")
-  end
 end

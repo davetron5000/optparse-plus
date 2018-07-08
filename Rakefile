@@ -11,7 +11,15 @@ desc 'run unit tests'
 Rake::TestTask.new do |t|
   t.libs << "lib"
   t.libs << "test/unit"
-  t.test_files = FileList['test/unit/test_*.rb'] + FileList['test/unit/execution_strategy/test_*.rb']
+  test_file = ENV["TEST"]
+  ENV.delete("TEST")
+  t.test_files = if test_file
+                   [test_file]
+                 else
+                   FileList['test/unit/test_*.rb'] +
+                     FileList['test/unit/execution_strategy/test_*.rb'] +
+                     FileList['test/unit/test/test_*.rb']
+                 end
 end
 
 desc 'run integration tests'
