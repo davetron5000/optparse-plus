@@ -1,4 +1,8 @@
 module Methadone
+  #
+  # **NOTE!** Cucumber is not recommened or supported by methadone, as Aruba has diverged too much. This
+  # file is left here to allow you to update methadone but still use Cucumber & Aruba on older versions.
+  #
   # By <tt>require</tt>'ing <tt>methadone/cucumber</tt> in your Cucumber setup (e.g. in <tt>env.rb</tt>), you
   # gain access to the steps defined in this file.  They provide you with the following:
   #

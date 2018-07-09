@@ -28,6 +28,9 @@ main do |app_name|
       file =~ /\.rb$/ && file !~ /version.rb$/
     }.first
   end
+  rm_rf "#{gemname}/spec"   # Don't want the default RSpec droppings
+  rm_rf "#{gemname}/.rspec"
+
   require_file = gemname if require_file.nil?
   require_file.gsub!(/^.*lib\//,'')
 
@@ -37,7 +40,7 @@ main do |app_name|
 
   rspec = options[:rspec]
 
-  ["Rakefile", ".gitignore", "features/support/env.rb"].each do |file|
+  ["Rakefile", ".gitignore", ].each do |file|
     copy_file file, :binding => binding
   end
 
@@ -46,7 +49,8 @@ main do |app_name|
     copy_file "spec/something_spec.rb", :from => :rspec, :binding => binding
   else
     template_dirs_in(:test_unit).each  { |dir| mkdir_p dir }
-    copy_file "test/tc_something.rb", :from => :test_unit, :binding => binding
+    copy_file "test/unit/test_something.rb", :from => :test_unit, :binding => binding
+    copy_file "test/integration/test_cli.rb", :from => :test_unit, :binding => binding
   end
 
 
@@ -71,18 +75,21 @@ main do |app_name|
   else
     gemspec_content.gsub!(/(^\s*#{gem_variable}\.name\s*=\s*.*)/,"\\1\n#{"  #{gem_variable}.license".ljust(20)} = #{license.to_s.inspect.upcase}")
   end
+  # RubyGems won't deal with a gemspec in this state and so Bundler won't even
+  # work at all.  This is not helpful, so replace the magic keys its looking for
+  # with something else
+  gemspec_content.gsub!(/TODO/,"to-do")
+  gemspec_content.gsub!(/FIXME/,"fix me")
+  gemspec_content.gsub!(/^.*\.homepage.*$/,"")
   File.open(gemspec,'w') {|f| f.write gemspec_content }
 
 
   copy_file "README.rdoc", :binding => binding if using_readme
 
-  copy_file "features/executable.feature", :as => "#{gemname}.feature", :binding => binding
-  copy_file "features/step_definitions/executable_steps.rb", :as => "#{gemname}_steps.rb"
   copy_file "bin/executable", :as => gemname, :executable => true, :binding => binding
 
   add_to_file gemspec, [
     "  #{gem_variable}.add_development_dependency('rdoc')",
-    "  #{gem_variable}.add_development_dependency('aruba')",
     "  #{gem_variable}.add_dependency('methadone', '~> #{Methadone::VERSION}')",
   ], :before => /^end\s*$/
   ruby_major,ruby_minor,ruby_patch = RUBY_VERSION.split(/\./).map(&:to_i)
@@ -98,6 +105,7 @@ main do |app_name|
     "  #{gem_variable}.add_development_dependency('rspec', '~> 3')",
     ], :before => /^end\s*$/
   end
+  FileUtils.rm_f "README.md", verbose: true
 
   sh! %q(git add --all .)
 end

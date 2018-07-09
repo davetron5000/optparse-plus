@@ -2,19 +2,37 @@ require 'sdoc'
 require 'bundler'
 require 'rake/clean'
 require 'rake/testtask'
-require 'cucumber'
-require 'cucumber/rake/task'
 
 include Rake::DSL
 
 Bundler::GemHelper.install_tasks
 
-desc 'run tests'
+desc 'run unit tests'
 Rake::TestTask.new do |t|
   t.libs << "lib"
-  t.libs << "test"
-  t.ruby_opts << "-rrubygems"
-  t.test_files = FileList['test/test_*.rb'] + FileList['test/execution_strategy/test_*.rb']
+  t.libs << "test/unit"
+  test_file = ENV["TEST"]
+  ENV.delete("TEST")
+  t.test_files = if test_file
+                   [test_file]
+                 else
+                   FileList['test/unit/test_*.rb'] +
+                     FileList['test/unit/execution_strategy/test_*.rb'] +
+                     FileList['test/unit/test/test_*.rb']
+                 end
+end
+
+desc 'run integration tests'
+Rake::TestTask.new("test:integration") do |t|
+  t.libs << "lib"
+  t.libs << "test/integration"
+  test_file = ENV["TEST"]
+  ENV.delete("TEST")
+  t.test_files = if test_file
+                   [test_file]
+                 else
+                   FileList['test/integration/test_*.rb']
+                 end
 end
 
 desc 'build rdoc'
@@ -70,29 +88,7 @@ task :hack_css do
     end
   end
 end
-if RUBY_PLATFORM == 'java'
-task :features do
-  puts "Aruba doesn't work on JRuby; cannot run features"
-end
-task 'features:wip' => :features
-else
-CUKE_RESULTS = 'results.html'
-CLEAN << CUKE_RESULTS
-Cucumber::Rake::Task.new(:features) do |t|
-  tag_opts = ' --tags ~@pending'
-  tag_opts = " --tags #{ENV['TAGS']}" if ENV['TAGS']
-  t.cucumber_opts = "features --format html -o #{CUKE_RESULTS} --format pretty -x -s#{tag_opts}"
-  t.fork = false
-end
-
-Cucumber::Rake::Task.new('features:wip') do |t|
-  tag_opts = ' --tags ~@pending'
-  tag_opts = ' --tags @wip'
-  t.cucumber_opts = "features --format html -o #{CUKE_RESULTS} --format pretty -x -s#{tag_opts}"
-  t.fork = false
-end
-end
 
 CLEAN << "coverage"
 CLOBBER << FileList['**/*.rbc']
-task :default => [:test, :features]
+task :default => [:test, "test:integration"]
