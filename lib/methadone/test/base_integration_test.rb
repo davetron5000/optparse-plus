@@ -9,6 +9,8 @@ require_relative "integration_test_assertions"
 # Clean test should be setting this
 $FOR_TESTING_ONLY_SKIP_STDERR = false
 
+module Methadone
+end
 class Methadone::BaseIntegrationTest < Test::Unit::TestCase
   include FileUtils
   include Methadone::IntegrationTestAssertions
