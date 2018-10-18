@@ -1,3 +1,5 @@
+module Methadone
+end
 module Methadone::IntegrationTestAssertions
   # Assert that a file's contents contains one or more regexps
   #
