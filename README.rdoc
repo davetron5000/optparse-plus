@@ -16,6 +16,8 @@ Toward that end, this gem provides:
 * Simplified zero-config logging that is a better-than-<tt>puts</tt> <tt>puts</tt>.
 * Support for integration-testing your CLI using Test::Unit
 
+{Read about the name change if you care}[https://github.com/davetron5000/optparse-plus/wiki/Name-Change]
+
 == Platforms
 
 This library only supports the latest versions of Ruby. JRuby support has been too difficult to keep up with, though the library should work for JRuby.
