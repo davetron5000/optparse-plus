@@ -1,5 +1,5 @@
 require 'base_test'
-require 'mocha/setup'
+require 'mocha/test_unit'
 
 # Defined by JRuby, but this test must pass on any Ruby
 class NativeException

@@ -1,5 +1,5 @@
 require 'base_test'
-require 'mocha/setup'
+require 'mocha/test_unit'
 
 # Define this symbol without requiring the library;
 # all we're going to do is mock calls to it

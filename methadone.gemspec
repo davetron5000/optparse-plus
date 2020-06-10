@@ -11,7 +11,6 @@ Gem::Specification.new do |s|
   s.homepage    = "http://github.com/davetron5000/methadone"
   s.summary     = %q{Kick the bash habit and start your command-line apps off right}
   s.description = %q{Methadone provides a lot of small but useful features for developing a command-line app, including an opinionated bootstrapping process, some helpful cucumber steps, and some classes to bridge logging and output into a simple, unified, interface}
-  s.rubyforge_project = "methadone"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
@@ -21,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("rake")
   s.add_development_dependency("rdoc","~> 5.0")
   s.add_development_dependency("simplecov", "~> 0.5")
-  s.add_development_dependency("clean_test")
+  s.add_development_dependency("clean_test", "~> 1.0.1")
   s.add_development_dependency("mocha")
   s.add_development_dependency("sdoc", "1.0.0.rc1")
   s.add_development_dependency("rspec") # needed for testing the generated tests
