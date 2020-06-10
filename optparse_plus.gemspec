@@ -18,11 +18,11 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.add_dependency("bundler")
   s.add_development_dependency("rake")
-  s.add_development_dependency("rdoc","~> 5.0")
+  s.add_development_dependency("rdoc","~> 6.0")
+  s.add_development_dependency("sdoc")
   s.add_development_dependency("simplecov", "~> 0.5")
   s.add_development_dependency("clean_test", "~> 1.0.1")
   s.add_development_dependency("mocha")
-  s.add_development_dependency("sdoc", "1.0.0.rc1")
   s.add_development_dependency("rspec") # needed for testing the generated tests
   s.add_development_dependency("i18n")
 end
