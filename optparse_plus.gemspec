@@ -3,12 +3,12 @@ $:.push File.expand_path("../lib", __FILE__)
 require "optparse_plus/version"
 
 Gem::Specification.new do |s|
-  s.name        = "optparse_plus"
+  s.name        = "optparse-plus"
   s.version     = OptparsePlus::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["davetron5000"]
   s.email       = ["davetron5000 at gmail.com"]
-  s.homepage    = "http://github.com/davetron5000/optparse_plus"
+  s.homepage    = "http://github.com/davetron5000/optparse-plus"
   s.summary     = %q{Wrapper around the Standard Library's Option Parser to make CLIs Easier}
   s.description = %q{OptparsePlus provides a lot of small but useful features for developing a command-line app, including an opinionated bootstrapping process, some helpful integration test support, and some classes to bridge logging and output into a simple, unified, interface}
 

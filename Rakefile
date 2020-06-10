@@ -42,7 +42,7 @@ RDoc::Task.new(:build_rdoc) do |rd|
   rd.options << '-f' << 'sdoc'
   rd.template = 'direct'
   rd.rdoc_files.include("README.rdoc","lib/**/*.rb","bin/**/*")
-  rd.title = 'optparse_plus - Power Up your Command Line Apps'
+  rd.title = 'optparse-plus - Power Up your Command Line Apps'
 end
 CLOBBER << 'html'
 

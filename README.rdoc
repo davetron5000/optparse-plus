@@ -1,4 +1,4 @@
-= optparse_plus - Wrapper around OptionParse to Make CLIs a bit Easier
+= optparse-plus - Wrapper around OptionParse to Make CLIs a bit Easier
 
 Author::  Dave Copeland (mailto:davetron5000 at g mail dot com)
 Copyright:: Copyright (c) 2011 by Dave Copeland
@@ -106,19 +106,19 @@ Basically, this sets you up with all the boilerplate that you *should* be using 
 * Gemified project (based on <tt>bundle gem</tt>)
 * An executable using OptparsePlus::Main to outline your new app
 * <tt>Test::Unit</tt> test task set up and an empty unit test.
-* <tt>Test::Unit</tt> integration tests with some of optparse_plus's assertions to let you drive your CLI's development
+* <tt>Test::Unit</tt> integration tests with some of optparse-plus's assertions to let you drive your CLI's development
 * The outline of a README
 * An optional license included
 
 == DSL for your <tt>bin</tt> file
 
-A canonical <tt>OptionParser</tt>-driven app has a few problems with it structurally that optparse_plus can solve:
+A canonical <tt>OptionParser</tt>-driven app has a few problems with it structurally that optparse-plus can solve:
 
 * Backwards organization - main logic is at the bottom of the file, not the top
 * Verbose to use +opts.on+ just to set a value in a +Hash+
 * No exception handling - you have to explicitly call <tt>exit</tt> and/or let exceptions' stack traces leak through.
 
-optparse_plus provides OptparsePlus::Main to help make a clean and easy-to-maintain <tt>bin</tt> file.  See the  {rdoc}[http://davetron5000.github.com/optparse_plus/rdoc/classes/OptparsePlus/Main.html] for an example, and see {my blog}[http://www.naildrivin5.com/blog/2011/12/19/methadone-the-awesome-cli-library.html] on the derivation of this module.
+optparse-plus provides OptparsePlus::Main to help make a clean and easy-to-maintain <tt>bin</tt> file.  See the  {rdoc}[http://davetron5000.github.com/optparse-plus/rdoc/classes/OptparsePlus/Main.html] for an example, and see {my blog}[http://www.naildrivin5.com/blog/2011/12/19/methadone-the-awesome-cli-library.html] on the derivation of this module.
 
 == Wrapper for running external commands with good logging
 
@@ -142,7 +142,7 @@ Enter OptparsePlus::SH
     #
     #        there's a LOT MORE
 
-See the {rdoc}[http://davetron5000.github.com/optparse_plus/rdoc/classes/OptparsePlus/SH.html] for more detailed examples and usage.
+See the {rdoc}[http://davetron5000.github.com/optparse-plus/rdoc/classes/OptparsePlus/SH.html] for more detailed examples and usage.
 
 This isn't a replacement for Open3 or ChildProcess, but a way to easily "do the right thing" for most cases.
 
@@ -158,13 +158,13 @@ OptparsePlus::CLILogger is designed to handle this.  It's a proper subclass of R
 * When these are redirected to a file, the log messages are properly date/time stamped as you'd expect
 * You can mix-in OptparsePlus::CLILogging to get access to a global logger instances without resorting to an explicit global variable
 
-See {CLILogger's rdoc}[http://davetron5000.github.com/optparse_plus/rdoc/classes/OptparsePlus/CLILogger.html] and then {CLILogging's}[http://davetron5000.github.com/optparse_plus/rdoc/classes/OptparsePlus/CLILogging.html] for more.
+See {CLILogger's rdoc}[http://davetron5000.github.com/optparse-plus/rdoc/classes/OptparsePlus/CLILogger.html] and then {CLILogging's}[http://davetron5000.github.com/optparse-plus/rdoc/classes/OptparsePlus/CLILogging.html] for more.
 
 Currently, there are classes that assist in directing output logger-style to the right place; basically ensuring that errors go to +STDERR+ and everything else goes to +STDOUT+.  All of this is, of course, configurable
 
 == Integration Tests
 
-optparse_plus provides some basic features for executing your CLI and asserting things about it.  OptparsePlus::Test::IntegrationTestAssertions documents these.
+optparse-plus provides some basic features for executing your CLI and asserting things about it.  OptparsePlus::Test::IntegrationTestAssertions documents these.
 
 == Contributing
 
