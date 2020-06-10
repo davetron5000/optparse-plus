@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>OptparsePlus::BaseIntegrationTest</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="../../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../css/github.css" type="text/css" media="screen" />
+<script src="../../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/highlight.pack.js" type="text/javascript" charset="utf-8"></script>
+
+
+    <meta property="og:title" value="OptparsePlus::BaseIntegrationTest">
+
+  
+
+    <meta name="keywords" content="OptparsePlus::BaseIntegrationTest class">
+  
+    <meta name="keywords" content="run_app">
+  
+</head>
+
+<body>
+    <div class="banner">
+        
+        <h1>
+            <span class="type">Class</span>
+            OptparsePlus::BaseIntegrationTest
+            
+                <span class="parent">&lt;
+                    
+                    Test::Unit::TestCase
+                    
+                </span>
+            
+        </h1>
+        <ul class="files">
+            
+            <li><a href="../../files/lib/optparse_plus/test/base_integration_test_rb.html">lib/optparse_plus/test/base_integration_test.rb</a></li>
+            
+        </ul>
+    </div>
+    <div id="bodyContent">
+        <div id="content">
+  
+
+
+  
+
+
+  
+  
+
+
+  
+
+
+  
+    <!-- Method ref -->
+    <div class="sectiontitle">Methods</div>
+    <dl class="methods">
+      
+        <dt>R</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-run_app">run_app</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+    </dl>
+  
+
+  
+    <!-- Includes -->
+    <div class="sectiontitle">Included Modules</div>
+    <ul>
+      
+        <li>
+          
+            FileUtils
+          
+        </li>
+      
+        <li>
+          
+            <a href="IntegrationTestAssertions.html">
+              OptparsePlus::IntegrationTestAssertions
+            </a>
+          
+        </li>
+      
+    </ul>
+  
+
+
+
+  
+
+    
+
+    
+
+    
+
+
+    
+
+
+    <!-- Methods -->
+    
+    
+      <div class="sectiontitle">Instance Public methods</div>
+      
+        <div class="method">
+          <div class="title method-title" id="method-i-run_app">
+            
+              <b>run_app</b>(app_name, args, allow_failure: false)
+            
+            <a href="../../classes/OptparsePlus/BaseIntegrationTest.html#method-i-run_app" name="method-i-run_app" class="permalink">Link</a>
+          </div>
+
+          
+            <div class="description">
+              <p>Run your app, capturing stdout, stderr, and process status.</p>
+<dl class="rdoc-list note-list"><dt>app_name
+<dd>
+<p>Your bin name, without `bin/`</p>
+</dd><dt>args
+<dd>
+<p>CLI args as a string</p>
+</dd><dt>allow_failure
+<dd>
+<p>if true, this will return even if the app invocation fails.  If false (the default), blows up if things go</p>
+</dd></dl>
+
+<p>wrong.</p>
+            </div>
+          
+
+          
+
+          
+
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source:
+                <a href="javascript:toggleSource('method-i-run_app_source')" id="l_method-i-run_app_source">show</a>
+                
+              </p>
+              <div id="method-i-run_app_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/optparse_plus/test/base_integration_test.rb, line 23</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">run_app</span>(<span class="ruby-identifier">app_name</span>, <span class="ruby-identifier">args</span>, <span class="ruby-value">allow_failure:</span> <span class="ruby-keyword">false</span>)
+  <span class="ruby-identifier">command</span> = <span class="ruby-node">&quot;bin/#{app_name} #{args}&quot;</span>
+  <span class="ruby-identifier">stdout</span>,<span class="ruby-identifier">stderr</span>,<span class="ruby-identifier">results</span> = <span class="ruby-constant">Open3</span>.<span class="ruby-identifier">capture3</span>(<span class="ruby-identifier">command</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@allow_failure</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">results</span>.<span class="ruby-identifier">success?</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;&#39;#{command}&#39; failed!: #{results.inspect}\n\nSTDOUT {\n#{stdout}\n} STDERR {\n#{stderr}\n} END&quot;</span>
+  <span class="ruby-keyword">end</span>
+  [<span class="ruby-identifier">stdout</span>,<span class="ruby-identifier">stderr</span>,<span class="ruby-identifier">results</span>]
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+      
+    
+  
+</div>
+
+    </div>
+  </body>
+</html>

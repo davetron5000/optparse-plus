@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>OptparsePlus::ProcessStatus</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="../../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../css/github.css" type="text/css" media="screen" />
+<script src="../../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/highlight.pack.js" type="text/javascript" charset="utf-8"></script>
+
+
+    <meta property="og:title" value="OptparsePlus::ProcessStatus">
+
+  
+    
+    <meta name="description" content="OptparsePlus Internal - treat as private  A wrapper/enhancement of Process::Status that handles coersion and expected nonzero statuses.">
+    <meta property="og:description" content="OptparsePlus Internal - treat as private  A wrapper/enhancement of Process::Status that handles coersion and expected nonzero statuses.">
+  
+
+    <meta name="keywords" content="OptparsePlus::ProcessStatus class">
+  
+    <meta name="keywords" content="new, success?">
+  
+</head>
+
+<body>
+    <div class="banner">
+        
+        <h1>
+            <span class="type">Class</span>
+            OptparsePlus::ProcessStatus
+            
+                <span class="parent">&lt;
+                    
+                    <a href="../Object.html">Object</a>
+                    
+                </span>
+            
+        </h1>
+        <ul class="files">
+            
+            <li><a href="../../files/lib/optparse_plus/process_status_rb.html">lib/optparse_plus/process_status.rb</a></li>
+            
+        </ul>
+    </div>
+    <div id="bodyContent">
+        <div id="content">
+  
+    <div class="description">
+      
+<p><strong>OptparsePlus Internal - treat as private</strong></p>
+
+<p>A wrapper/enhancement of Process::Status that handles coersion and expected nonzero statuses</p>
+
+    </div>
+  
+
+
+  
+
+
+  
+  
+
+
+  
+
+
+  
+    <!-- Method ref -->
+    <div class="sectiontitle">Methods</div>
+    <dl class="methods">
+      
+        <dt>N</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-c-new">new</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>S</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-success-3F">success?</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+    </dl>
+  
+
+  
+
+
+
+  
+
+    
+
+    
+
+    
+
+
+    
+      <!-- Section attributes -->
+      <div class="sectiontitle">Attributes</div>
+      <table border='0' cellpadding='5'>
+        
+          <tr valign='top'>
+            <td class='attr-rw'>
+              [R]
+            </td>
+            <td class='attr-name'>exitstatus</td>
+            <td class='attr-desc'><p>The exit status, either directly from a Process::Status or derived from a non-Int value.</p></td>
+          </tr>
+        
+      </table>
+    
+
+
+    <!-- Methods -->
+    
+      <div class="sectiontitle">Class Public methods</div>
+      
+        <div class="method">
+          <div class="title method-title" id="method-c-new">
+            
+              <b>new</b>(status,expected)
+            
+            <a href="../../classes/OptparsePlus/ProcessStatus.html#method-c-new" name="method-c-new" class="permalink">Link</a>
+          </div>
+
+          
+            <div class="description">
+              <p>Create the <a href="ProcessStatus.html"><code>ProcessStatus</code></a> with the given status.</p>
+<dl class="rdoc-list note-list"><dt>status
+<dd>
+<p>if this responds to <a href="ProcessStatus.html#attribute-i-exitstatus"><code>exitstatus</code></a>, that method is used to extract the exit code.  If it&#39;s and Int, that is used as the exit code.  Otherwise, it&#39;s truthiness is used: 0 for truthy, 1 for falsey.</p>
+</dd><dt>expected
+<dd>
+<p>an Int or Array of Int representing the expected exit status, other than zero, that represent “success”.</p>
+</dd></dl>
+            </div>
+          
+
+          
+
+          
+
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source:
+                <a href="javascript:toggleSource('method-c-new_source')" id="l_method-c-new_source">show</a>
+                
+              </p>
+              <div id="method-c-new_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/optparse_plus/process_status.rb, line 18</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">status</span>,<span class="ruby-identifier">expected</span>)
+  <span class="ruby-ivar">@exitstatus</span> = <span class="ruby-identifier">derive_exitstatus</span>(<span class="ruby-identifier">status</span>)
+  <span class="ruby-ivar">@success</span> = ([<span class="ruby-value">0</span>] <span class="ruby-operator">+</span> <span class="ruby-constant">Array</span>(<span class="ruby-identifier">expected</span>)).<span class="ruby-identifier">include?</span>(<span class="ruby-ivar">@exitstatus</span>)
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+      
+    
+      <div class="sectiontitle">Instance Public methods</div>
+      
+        <div class="method">
+          <div class="title method-title" id="method-i-success-3F">
+            
+              <b>success?</b>()
+            
+            <a href="../../classes/OptparsePlus/ProcessStatus.html#method-i-success-3F" name="method-i-success-3F" class="permalink">Link</a>
+          </div>
+
+          
+            <div class="description">
+              <p>True if the exit status was a successul (i.e. expected) one.</p>
+            </div>
+          
+
+          
+
+          
+
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source:
+                <a href="javascript:toggleSource('method-i-success-3F_source')" id="l_method-i-success-3F_source">show</a>
+                
+              </p>
+              <div id="method-i-success-3F_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/optparse_plus/process_status.rb, line 24</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">success?</span>
+  <span class="ruby-ivar">@success</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+      
+    
+  
+</div>
+
+    </div>
+  </body>
+</html>

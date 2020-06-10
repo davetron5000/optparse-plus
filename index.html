@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Methadone by davetron5000</title>
+    <title>optparse-plus by davetron5000</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
@@ -17,17 +17,17 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1>Methadone</h1>
-        <p>Kick the bash habit - start your command line scripts off right in Ruby</p>
-        <p class="view"><a href="https://github.com/davetron5000/methadone">View the Project on GitHub <small>davetron5000/methadone</small></a></p>
+        <h1>optparse-plus</h1>
+        <p>Start your command line scripts off right in Ruby</p>
+        <p class="view"><a href="https://github.com/davetron5000/optparse-plus">View the Project on GitHub <small>davetron5000/optparse-plus</small></a></p>
         <ul>
-          <li><a href="https://github.com/davetron5000/methadone/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/davetron5000/methadone/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/davetron5000/methadone">View On <strong>GitHub</strong></a></li>
+          <li><a href="https://github.com/davetron5000/optparse-plus/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/davetron5000/optparse-plus/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/davetron5000/optparse-plus">View On <strong>GitHub</strong></a></li>
         </ul>
       </header>
       <section>
-        <p>Methadone is the best way to create simple command-line applications in Ruby.  It sports
+        <p>optparse-plus is the best way to create simple command-line applications in Ruby.  It sports
         a concise, readable set of helper methods, without sacrificing any of the power you can get
         from <code>OptionParser</code>.</p>
         <p>
@@ -35,14 +35,14 @@
         <a href="http://davetron5000.github.com/gli">GLI</a>, which makes it easy to support commands</em>
         </p>
 
-<h1>The simplest Methadone-powered app</h1>
+<h1>The simplest optparse-plus-powered app</h1>
 
 <div class="highlight">
 <pre><span class="c1">#!/usr/bin/env ruby</span>
 
-<span class="nb">require</span> <span class="s1">'methadone'</span>
+<span class="nb">require</span> <span class="s1">'optparse_plus'</span>
 
-<span class="kp">include</span> <span class="no">Methadone</span><span class="o">::</span><span class="no">Main</span>
+<span class="kp">include</span> <span class="no">OptparsePlus</span><span class="o">::</span><span class="no">Main</span>
 
 <span class="n">main</span> <span class="k">do</span> 
  <span class="c1"># whatever you want your app to do</span>
@@ -65,10 +65,10 @@
 </ul><div class="highlight">
 <pre><span class="c1">#!/usr/bin/env ruby</span>
 
-<span class="nb">require</span> <span class="s1">'methadone'</span>
+<span class="nb">require</span> <span class="s1">'optparse_plus'</span>
 
-<span class="kp">include</span> <span class="no">Methadone</span><span class="o">::</span><span class="no">Main</span>
-<span class="kp">include</span> <span class="no">Methadone</span><span class="o">::</span><span class="no">CLILogging</span>
+<span class="kp">include</span> <span class="no">OptparsePlus</span><span class="o">::</span><span class="no">Main</span>
+<span class="kp">include</span> <span class="no">OptparsePlus</span><span class="o">::</span><span class="no">CLILogging</span>
 
 <span class="n">main</span> <span class="k">do |some_arg|</span> 
   <span class="nb">puts</span> <span class="n">some_arg</span>
@@ -76,7 +76,7 @@
 <span class="k">end</span>
 
 <span class="n">version</span>     <span class="s1">'0.0.1'</span>
-<span class="n">description</span> <span class="s1">'Show off how great Methadone is!'</span>
+<span class="n">description</span> <span class="s1">'Show off how great optparse-plus is!'</span>
 <span class="n">arg</span>         <span class="s1">:some_arg, :required</span>
 
 <span class="n">on</span><span class="p">(</span><span class="s2">"--verbose"</span><span class="p">,</span><span class="s2">"Be verbose"</span><span class="p">)</span>
@@ -93,7 +93,7 @@
 <pre lang="shell"><code>$ our_app --help
 Usage: our_app [options] some_arg
 
-Show off how great Methadone is!
+Show off how great optparse-plus is!
 
 v0.0.1
 
@@ -121,12 +121,12 @@ parse error: 'some_arg' is required
 
 <h1>Bootstrapping</h1>
 
-<p>Typing all that in to get going is no fun.  Let's use <code>bin/methadone</code> to bootstrap our app:</p>
+<p>Typing all that in to get going is no fun.  Let's use <code>bin/optparse_plus</code> to bootstrap our app:</p>
 
-<pre lang="shell"><code>$ methadone -h
-Usage: methadone [options] app_name
+<pre lang="shell"><code>$ optparse_plus -h
+Usage: optparse_plus [options] app_name
 
-Kick the bash habit by bootstrapping your Ruby command-line apps
+Bootstrap your Ruby command-line apps
 
 v1.1.0
 
@@ -145,7 +145,7 @@ Arguments:
 
     app_name
         Name of your app, which is used for the gem name and executable name
-$ methadone --readme -l mit my_app
+$ optparse_plus --readme -l mit my_app
 $ cd my_app/
 $ ls
 Gemfile         LICENSE.txt     README.rdoc     bin/            lib/            test/
@@ -198,9 +198,7 @@ Feature: My bootstrapped app kinda works
 </ul><h1>Now what?</h1>
 
 <ul>
-<li>
-<a href="http://itunes.apple.com/us/book/kick-bash-habit-ruby-methadone/id515825242?ls=1">Tutorial</a> for iPad</li>
-<li><a href="http://github.com/davetron5000/methadone">Source</a></li>
+<li><a href="http://github.com/davetron5000/optparse-plus">Source</a></li>
 <li><a href="rdoc">API Documentation</a></li>
 </ul>
       </section>
