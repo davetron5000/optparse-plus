@@ -4,7 +4,7 @@ include FileUtils
 
 class TestRSpec < BaseIntegrationTest
   test_that "we can generate an app using RSpec instead of Test::Unit" do
-    When { methadone "--rspec newgem" }
+    When { optparse_plus "--rspec newgem" }
     Then {
       refute Dir.exist?("newgem/test")
       assert Dir.exist?("newgem/spec")

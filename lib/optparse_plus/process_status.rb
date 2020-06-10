@@ -1,5 +1,5 @@
-module Methadone
-  # <b>Methadone Internal - treat as private</b>
+module OptparsePlus
+  # <b>OptparsePlus Internal - treat as private</b>
   #
   # A wrapper/enhancement of Process::Status that handles coersion and expected
   # nonzero statuses

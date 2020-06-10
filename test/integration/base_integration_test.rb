@@ -1,7 +1,7 @@
-require "methadone/test/base_integration_test"
+require "optparse_plus/test/base_integration_test"
 require "clean_test/test_case"
 
-class BaseIntegrationTest < Methadone::BaseIntegrationTest
+class BaseIntegrationTest < OptparsePlus::BaseIntegrationTest
   include Clean::Test::GivenWhenThen
   include Clean::Test::TestThat
   include Clean::Test::Any
@@ -21,8 +21,8 @@ class BaseIntegrationTest < Methadone::BaseIntegrationTest
 
 private
 
-  def methadone(args, allow_failure: false)
-    command = "methadone #{args}"
+  def optparse_plus(args, allow_failure: false)
+    command = "optparse_plus #{args}"
     stdout, stderr, status = Open3.capture3(command)
     if !status.success? && !allow_failure
       raise "'#{command}' failed: #{status.inspect}\n\nSTDOUT:\n\n#{stdout}\n\nSTDERR:\n\n#{stderr}\nEND"

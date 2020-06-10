@@ -2,14 +2,14 @@
 
 require 'fileutils'
 require 'optparse'
-require 'methadone'
-require 'methadone/cli'
+require 'optparse_plus'
+require 'optparse_plus/cli'
 
 include FileUtils
-include Methadone::Main
-include Methadone::CLILogging
-include Methadone::CLI
-include Methadone::SH
+include OptparsePlus::Main
+include OptparsePlus::CLILogging
+include OptparsePlus::CLI
+include OptparsePlus::SH
 
 main do |app_name|
   check_and_prepare_basedir!(app_name,options[:force])
@@ -90,7 +90,7 @@ main do |app_name|
 
   add_to_file gemspec, [
     "  #{gem_variable}.add_development_dependency('rdoc')",
-    "  #{gem_variable}.add_dependency('methadone', '~> #{Methadone::VERSION}')",
+    "  #{gem_variable}.add_dependency('optparse_plus', '~> #{OptparsePlus::VERSION}')",
   ], :before => /^end\s*$/
   ruby_major,ruby_minor,ruby_patch = RUBY_VERSION.split(/\./).map(&:to_i)
 
@@ -125,7 +125,6 @@ use_log_level_option
 
 arg :app_name, :required, "Name of your app, which is used for the gem name and executable name"
 
-version Methadone::VERSION, :compact => true
+version OptparsePlus::VERSION, :compact => true
 
 go!
-

@@ -4,7 +4,7 @@ include FileUtils
 
 class TestVersion < BaseIntegrationTest
   test_that "--help shows the gem version" do
-    Given { methadone "newgem" }
+    Given { optparse_plus "newgem" }
     When { @stdout, _, = run_app "newgem", "--help" }
     Then {
       assert_match(/v\d+\.\d+\.\d+/, @stdout)
@@ -12,7 +12,7 @@ class TestVersion < BaseIntegrationTest
   end
 
   test_that "--version shows the gem version" do
-    Given { methadone "newgem" }
+    Given { optparse_plus "newgem" }
     When { @stdout, _, = run_app "newgem", "--version" }
     Then {
       assert_match(/v\d+\.\d+\.\d+/, @stdout)

@@ -1,6 +1,6 @@
-module Methadone
+module OptparsePlus
   module ExecutionStrategy
-    # <b>Methadone Internal - treat as private</b>
+    # <b>OptparsePlus Internal - treat as private</b>
     #
     # For RBX; it throws a different exception when a command isn't found, so we override that here.
     class RBXOpen_4 < Open_4

@@ -1,10 +1,10 @@
 require 'base_test'
-require 'methadone'
+require 'optparse_plus'
 require 'stringio'
 
 class TestExitNow < BaseTest
-  include Methadone
-  include Methadone::ExitNow
+  include OptparsePlus
+  include OptparsePlus::ExitNow
 
   test_that "exit_now raises the proper error" do
     Given {
@@ -15,7 +15,7 @@ class TestExitNow < BaseTest
       @code = lambda { exit_now!(@exit_code,@message) }
     }
     Then {
-      exception = assert_raises(Methadone::Error,&@code)
+      exception = assert_raises(OptparsePlus::Error,&@code)
       exception.exit_code.should be == @exit_code
       exception.message.should be == @message
     }
@@ -29,7 +29,7 @@ class TestExitNow < BaseTest
       @code = lambda { exit_now!(@message) }
     }
     Then {
-      exception = assert_raises(Methadone::Error,&@code)
+      exception = assert_raises(OptparsePlus::Error,&@code)
       exception.exit_code.should be == 1
       exception.message.should be == @message
     }

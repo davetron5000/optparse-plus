@@ -8,7 +8,7 @@ end
 
 module ExecutionStrategy
   class TestOpen_4 < BaseTest
-    include Methadone::ExecutionStrategy
+    include OptparsePlus::ExecutionStrategy
 
     test_that "run_command proxies to Open4.capture4" do
       Given {

@@ -1,6 +1,6 @@
-module Methadone
+module OptparsePlus
   module ExecutionStrategy
-    # <b>Methadone Internal - treat as private</b>
+    # <b>OptparsePlus Internal - treat as private</b>
     #
     # ExecutionStrategy for non-modern Rubies that must rely on
     # Open4 to get access to the standard output AND error.

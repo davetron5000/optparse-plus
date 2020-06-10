@@ -1,6 +1,6 @@
-require "methadone/test/base_integration_test"
+require "optparse_plus/test/base_integration_test"
 
-class TestSomething < Methadone::BaseIntegrationTest
+class TestSomething < OptparsePlus::BaseIntegrationTest
   def test_truth
     stdout,stderr,results = run_app("<%= gemname %>","--help")
     assert_banner(stdout, "<%= gemname %>", takes_options: true, takes_arguments: false)

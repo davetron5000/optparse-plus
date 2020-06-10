@@ -8,7 +8,7 @@ rescue NameError
   BasicObject = Object
 end
 
-module Methadone
+module OptparsePlus
   # Include this module to gain access to the "canonical command-line app structure"
   # DSL.  This is a *very* lightweight layer on top of what you might
   # normally write that gives you just a bit of help to keep your code structured
@@ -16,7 +16,7 @@ module Methadone
   # you must at least use #main to get any benefits.
   #
   # Further, you must provide access to a logger via a method named
-  # #logger.  If you include Methadone::CLILogging, this will be done for you
+  # #logger.  If you include OptparsePlus::CLILogging, this will be done for you
   #
   # You also get a more expedient interface to OptionParser as well
   # as checking for required arguments to your app.  For example, if
@@ -26,11 +26,11 @@ module Methadone
   #
   #     #!/usr/bin/env ruby
   #
-  #     require 'methadone'
+  #     require 'optparse_plus'
   #
   #     class App
-  #       include Methadone::Main
-  #       include Methadone::CLILogging
+  #       include OptparsePlus::Main
+  #       include OptparsePlus::CLILogging
   #
   #       main do |needed, maybe|
   #         options[:switch] => true or false, based on command line
@@ -64,15 +64,15 @@ module Methadone
   #     # => options[:flag] has the value "bar"
   #
   # Note that we've done all of this inside a class that we called +App+.  This isn't strictly
-  # necessary, and you can just +include+ Methadone::Main and Methadone::CLILogging at the root
+  # necessary, and you can just +include+ OptparsePlus::Main and OptparsePlus::CLILogging at the root
   # of your +bin+ file if you like.  This is somewhat unsafe, because +self+ inside the +bin+
   # file is Object, and any methods you create (or cause to be created via +include+) will be
   # present on *every* object.  This can cause odd problems, so it's recommended that you
   # *not* do this.
   #
   module Main
-    include Methadone::ExitNow
-    include Methadone::ARGVParser
+    include OptparsePlus::ExitNow
+    include OptparsePlus::ARGVParser
 
     def self.included(k)
       k.extend(self)
@@ -89,9 +89,9 @@ module Methadone
     #
     #     #!/usr/bin/env ruby -w
     #
-    #     require 'methadone'
+    #     require 'optparse_plus'
     #
-    #     include Methadone::Main
+    #     include OptparsePlus::Main
     #
     #     main do
     #       files_to_process.each do |file|
@@ -122,7 +122,7 @@ module Methadone
     #
     # leak:: if true, go! will *not* catch StandardError exceptions, but instead
     #        allow them to bubble up.  If false, they will be caught and handled as normal.
-    #        This does *not* affect Methadone::Error exceptions; those will NOT leak through.
+    #        This does *not* affect OptparsePlus::Error exceptions; those will NOT leak through.
     def leak_exceptions(leak)
       @leak_exceptions = leak
     end
@@ -396,7 +396,7 @@ module Methadone
     def call_main
       @leak_exceptions = nil unless defined? @leak_exceptions
       @main_block.call(*ARGV)
-    rescue Methadone::Error => ex
+    rescue OptparsePlus::Error => ex
       raise ex if ENV['DEBUG']
       logger.error ex.message unless no_message? ex
       ex.exit_code
@@ -414,7 +414,7 @@ module Methadone
     end
   end
 
-  # <b>Methadone Internal - treat as private</b>
+  # <b>OptparsePlus Internal - treat as private</b>
   #
   # A proxy to OptionParser that intercepts #on
   # so that we can allow a simpler interface

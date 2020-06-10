@@ -7,7 +7,7 @@ end
 
 module ExecutionStrategy
   class TestJVM < BaseTest
-    include Methadone::ExecutionStrategy
+    include OptparsePlus::ExecutionStrategy
 
     test_that "run_command proxies to Open3.capture3" do
       Given {

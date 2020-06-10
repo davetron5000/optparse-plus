@@ -1,6 +1,6 @@
-module Methadone
+module OptparsePlus
   module ExecutionStrategy
-    # <b>Methadone Internal - treat as private</b>
+    # <b>OptparsePlus Internal - treat as private</b>
     #
     # Implementation for modern Rubies that uses the built-in Open3 library
     class Open_3 < MRI

@@ -1,6 +1,6 @@
 require 'logger'
 
-module Methadone
+module OptparsePlus
   # A Logger instance that gives better control of messaging the user
   # and logging app activity.  At it's most basic, you would use <tt>info</tt>
   # as a replacement for +puts+ and <tt>error</tt> as a replacement

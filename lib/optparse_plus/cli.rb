@@ -1,11 +1,11 @@
 require 'erb'
 
-module Methadone
-  # <b>Methadone Internal - treat as private</b>
+module OptparsePlus
+  # <b>OptparsePlus Internal - treat as private</b>
   #
-  # Stuff to implement methadone's CLI app.  These
+  # Stuff to implement optparse_plus's CLI app.  These
   # stuff isn't generally for your use and it's not
-  # included when you require 'methadone'
+  # included when you require 'optparse_plus'
   module CLI
 
     # Checks that the basedir can be used, either by

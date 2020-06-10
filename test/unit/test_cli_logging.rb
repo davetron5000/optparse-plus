@@ -1,9 +1,9 @@
 require 'base_test'
-require 'methadone'
+require 'optparse_plus'
 require 'stringio'
 
 class TestCLILogging < BaseTest
-  include Methadone
+  include OptparsePlus
 
   SLEEP_TIME = 0.1
 
@@ -55,7 +55,7 @@ class TestCLILogging < BaseTest
     }
     When {
       @second.instance_eval do
-        self.logger=(Methadone::CLILogger.new)
+        self.logger=(OptparsePlus::CLILogger.new)
       end
     }
     Then {
@@ -175,7 +175,7 @@ class TestCLILogging < BaseTest
 
 
   class MyAppThatActsLikeItUsesMain
-    include Methadone::CLILogging
+    include OptparsePlus::CLILogging
 
     def call_use_log_level_option(args = {})
       use_log_level_option(args)
@@ -195,7 +195,7 @@ class TestCLILogging < BaseTest
   end
 
   class MyClassThatLogsToStdout
-    include Methadone::CLILogging
+    include OptparsePlus::CLILogging
 
     def initialize
       logger.formatter = proc do |severity,datetime,progname,msg|
@@ -217,7 +217,7 @@ class TestCLILogging < BaseTest
 
 
   class MyOtherClassThatLogsToStdout
-    include Methadone::CLILogging
+    include OptparsePlus::CLILogging
 
     def initialize
       logger.formatter = proc do |severity,datetime,progname,msg|

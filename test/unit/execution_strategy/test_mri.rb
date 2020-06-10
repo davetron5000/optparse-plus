@@ -2,7 +2,7 @@ require 'base_test'
 
 module ExecutionStrategy
   class TestMRI < BaseTest
-    include Methadone::ExecutionStrategy
+    include OptparsePlus::ExecutionStrategy
 
     test_that "run_command isn't implemented" do
       Given new_mri_strategy

@@ -4,7 +4,7 @@ include FileUtils
 
 class TestBootstrap < BaseIntegrationTest
   test_that "bootstrapping a new app generates basic boilerplate" do
-    When { methadone "newgem" }
+    When { optparse_plus "newgem" }
     Then {
       [
         "bin/newgem",
@@ -42,7 +42,7 @@ class TestBootstrap < BaseIntegrationTest
   end
 
   test_that "bootstrapping a new app with a dash in its name works" do
-    When { methadone "new-gem" }
+    When { optparse_plus "new-gem" }
     Then {
       [
         "bin/new-gem",
@@ -77,13 +77,13 @@ class TestBootstrap < BaseIntegrationTest
   end
 
   test_that "won't overwrite an existing dir" do
-    Given { methadone "newgem" }
+    Given { optparse_plus "newgem" }
     And {
       File.open("newgem/new_file.txt","w") do |file|
         file.puts "Creating a file to verify it doesn't get blown away"
       end
     }
-    When { @stdout, @stderr, @status = methadone "newgem", allow_failure: true }
+    When { @stdout, @stderr, @status = optparse_plus "newgem", allow_failure: true }
     Then {
       assert File.exist?("newgem/new_file.txt")
     }
@@ -96,13 +96,13 @@ class TestBootstrap < BaseIntegrationTest
   end
 
   test_that "will overwrite an existing dir with --force" do
-    Given { methadone "newgem" }
+    Given { optparse_plus "newgem" }
     And {
       File.open("newgem/new_file.txt","w") do |file|
         file.puts "Creating a file to verify it doesn't get blown away"
       end
     }
-    When { @stdout, @stderr, @status = methadone "newgem --force", allow_failure: true }
+    When { @stdout, @stderr, @status = optparse_plus "newgem --force", allow_failure: true }
     Then {
       refute File.exist?("newgem/new_file.txt")
     }
@@ -112,7 +112,7 @@ class TestBootstrap < BaseIntegrationTest
   end
 
   test_that "must supply a gem name" do
-    When { _, @stderr, @status = methadone "", allow_failure: true }
+    When { _, @stderr, @status = optparse_plus "", allow_failure: true }
     Then {
       refute @status.success?
     }

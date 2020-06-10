@@ -1,6 +1,6 @@
-module Methadone
+module OptparsePlus
   module ExecutionStrategy
-    # <b>Methadone Internal - treat as private</b>
+    # <b>OptparsePlus Internal - treat as private</b>
     #
     # Base strategy for MRI rubies.
     class MRI < Base

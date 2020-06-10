@@ -1,6 +1,6 @@
-module Methadone
+module OptparsePlus
 end
-module Methadone::IntegrationTestAssertions
+module OptparsePlus::IntegrationTestAssertions
   # Assert that a file's contents contains one or more regexps
   #
   # filename:: The file whose contents to check

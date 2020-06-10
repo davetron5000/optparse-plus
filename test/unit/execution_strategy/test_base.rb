@@ -2,7 +2,7 @@ require 'base_test'
 
 module ExecutionStrategy
   class TestBase < BaseTest
-    include Methadone::ExecutionStrategy
+    include OptparsePlus::ExecutionStrategy
 
     [
       [:run_command,["ls"]],

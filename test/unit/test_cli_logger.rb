@@ -1,10 +1,10 @@
 require 'base_test'
-require 'methadone'
+require 'optparse_plus'
 require 'stringio'
 require 'tempfile'
 
 class TestCLILogger < BaseTest
-  include Methadone
+  include OptparsePlus
   
   def setup
     @blank_format = proc { |severity,datetime,progname,msg|

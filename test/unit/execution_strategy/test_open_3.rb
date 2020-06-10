@@ -4,7 +4,7 @@ require 'open3'
 
 module ExecutionStrategy
   class TestOpen_3 < BaseTest
-    include Methadone::ExecutionStrategy
+    include OptparsePlus::ExecutionStrategy
 
     test_that "run_command proxies to Open3.capture3" do
       Given {

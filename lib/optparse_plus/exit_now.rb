@@ -1,4 +1,4 @@
-module Methadone
+module OptparsePlus
   # Provides #exit_now! and #help_now!.  You might mix this into your business logic classes if they will
   # need to exit the program with a human-readable error message.
   module ExitNow
@@ -24,9 +24,9 @@ module Methadone
     #       # => exit app with status 4 and dont' give the user a message (how rude of you)
     def exit_now!(exit_code,message=nil)
       if exit_code.kind_of?(String) && message.nil?
-        raise Methadone::Error.new(1,exit_code)
+        raise OptparsePlus::Error.new(1,exit_code)
       else
-        raise Methadone::Error.new(exit_code,message)
+        raise OptparsePlus::Error.new(exit_code,message)
       end
     end
 

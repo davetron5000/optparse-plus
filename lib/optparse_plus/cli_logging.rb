@@ -1,5 +1,5 @@
-module Methadone
-  # Provides easier access to a shared Methadone::CLILogger instance.
+module OptparsePlus
+  # Provides easier access to a shared OptparsePlus::CLILogger instance.
   #
   # Include this module into your class, and #logger provides access to a shared logger.
   # This is handy if you want all of your clases to have access to the same logger, but 
@@ -10,7 +10,7 @@ module Methadone
   # === Example
   #
   #     class MyClass
-  #       include Methadone::CLILogging
+  #       include OptparsePlus::CLILogging
   #       
   #       def doit
   #         debug("About to doit!")
@@ -73,7 +73,7 @@ module Methadone
       'fatal' => Logger::FATAL,
     }
 
-    # Call this *if* you've included Methadone::Main to set up a <tt>--log-level</tt> option for your app
+    # Call this *if* you've included OptparsePlus::Main to set up a <tt>--log-level</tt> option for your app
     # that will allow the user to configure the logging level. You can pass an optional hash with
     # <tt>:toggle_debug_on_signal => <SIGNAME></tt> to enable runtime toggling of the log level by sending the
     # signal <tt><SIGNAME></tt> to your app

@@ -1,10 +1,10 @@
 require 'base_test'
-require 'methadone'
+require 'optparse_plus'
 require 'stringio'
 require 'fileutils'
 
 class TestMain < BaseTest
-  include Methadone::Main
+  include OptparsePlus::Main
 
   def setup
     @original_argv = ARGV.clone
@@ -156,7 +156,7 @@ class TestMain < BaseTest
     }
   end
 
-  test_that "Non-methadone exceptions leak through if we configure it that way" do
+  test_that "Non-optparse_plus exceptions leak through if we configure it that way" do
     Given {
       main do
         raise StandardError,"oh noes"
@@ -174,7 +174,7 @@ class TestMain < BaseTest
   test_that "go exits with the exit status included in the special-purpose excepiton" do
     Given {
       main do
-        raise Methadone::Error.new(4,"oh noes")
+        raise OptparsePlus::Error.new(4,"oh noes")
       end
     }
     Then {
@@ -183,15 +183,15 @@ class TestMain < BaseTest
     }
   end
 
-  test_that "go allows the special methadone exception to leak through if DEBUG is set in the environment" do
+  test_that "go allows the special optparse_plus exception to leak through if DEBUG is set in the environment" do
     Given {
       ENV['DEBUG'] = 'true'
       main do
-        raise Methadone::Error.new(4,"oh noes")
+        raise OptparsePlus::Error.new(4,"oh noes")
       end
     }
     Then {
-      assert_raises Methadone::Error do 
+      assert_raises OptparsePlus::Error do 
         When run_go!
       end
     }
@@ -653,7 +653,7 @@ class TestMain < BaseTest
   end
 
   test_that "we can get defaults from an absolute config filename" do
-    tempfile = Tempfile.new('methadone_test.rc')
+    tempfile = Tempfile.new('optparse_plus_test.rc')
     Given app_to_use_rc_file(tempfile.path)
     And {
       @flag_value = any_string

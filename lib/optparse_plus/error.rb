@@ -1,6 +1,6 @@
-module Methadone
+module OptparsePlus
   # Standard exception you can throw to exit with a given 
-  # status code. Generally, you should prefer Methadone::Main#exit_now! over using
+  # status code. Generally, you should prefer OptparsePlus::Main#exit_now! over using
   # this directly, however you may wish to create a rich hierarchy of exceptions that extend from
   # this in your app, so this is provided if you wish to do so.
   class Error < StandardError

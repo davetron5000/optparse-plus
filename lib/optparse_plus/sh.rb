@@ -11,18 +11,18 @@ else
   require 'open3'
 end
 
-require 'methadone/process_status'
+require 'optparse_plus/process_status'
 
-module Methadone
+module OptparsePlus
   # Module with various helper methods for executing external commands.
   # In most cases, you can use #sh to run commands and have decent logging
   # done.  You will likely use this in a class that also mixes-in
-  # Methadone::CLILogging (remembering that Methadone::Main mixes this in for you).  
+  # OptparsePlus::CLILogging (remembering that OptparsePlus::Main mixes this in for you).  
   # If you <b>don't</b>, you must provide a logger via #set_sh_logger.
   #
   # == Examples
   #
-  #    include Methadone::SH
+  #    include OptparsePlus::SH
   #
   #    sh 'cp foo.txt /tmp'
   #    # => logs the command to DEBUG, executes the command, logs its output to DEBUG and its
@@ -33,7 +33,7 @@ module Methadone
   #    #    its error output to WARN, returns the nonzero exit status of the underlying command
   # 
   #    sh! 'cp non_existent_file.txt /nowhere_good'
-  #    # => same as above, EXCEPT, raises a Methadone::FailedCommandError
+  #    # => same as above, EXCEPT, raises a OptparsePlus::FailedCommandError
   #
   #    sh 'cp foo.txt /tmp' do
   #      # Behaves exactly as before, but this block is called after
@@ -75,7 +75,7 @@ module Methadone
     #           is open to injection.  If you need to execute a command that is assembled from some portion
     #           of user input, consider using an Array of String.  This form prevents tokenization that occurs
     #           in the String form.  The first element is the command to execute,
-    #           and the remainder are the arguments. See Methadone::ExecutionStrategy::Base for more info.
+    #           and the remainder are the arguments. See OptparsePlus::ExecutionStrategy::Base for more info.
     # options:: options to control the call. Currently responds to:
     #           +:expected+:: an Int or Array of Int representing error codes, <b>in addition to 0</b>, that are
     #                         expected and therefore constitute success.  Useful for commands that don't use
@@ -101,7 +101,7 @@ module Methadone
       sh_logger.debug("Executing '#{command}'")
 
       stdout,stderr,status = execution_strategy.run_command(command)
-      process_status = Methadone::ProcessStatus.new(status,options[:expected])
+      process_status = OptparsePlus::ProcessStatus.new(status,options[:expected])
 
       sh_logger.warn("stderr output of '#{command}': #{stderr}") unless stderr.strip.length == 0
 
@@ -128,7 +128,7 @@ module Methadone
     #                               app exit on shell command failures, but customize the error
     #                               message that they see.
     #
-    # Raises Methadone::FailedCommandError if the command exited nonzero.
+    # Raises OptparsePlus::FailedCommandError if the command exited nonzero.
     #
     # Examples:
     #
@@ -138,9 +138,9 @@ module Methadone
     #     # => if command fails, app exits and user sees: "error: Couldn't rsync, check log for details
     def sh!(command,options={},&block)
       sh(command,options,&block).tap do |exitstatus|
-        process_status = Methadone::ProcessStatus.new(exitstatus,options[:expected])
+        process_status = OptparsePlus::ProcessStatus.new(exitstatus,options[:expected])
         unless process_status.success?
-          raise Methadone::FailedCommandError.new(exitstatus,command,options[:on_fail]) 
+          raise OptparsePlus::FailedCommandError.new(exitstatus,command,options[:on_fail]) 
         end
       end
     end
@@ -158,17 +158,17 @@ module Methadone
     # Set the strategy to use for executing commands.  In general, you don't need to set this
     # since this module chooses an appropriate implementation based on your Ruby platform:
     #
-    # 1.8 Rubies, including 1.8, and REE:: Open4 is used via Methadone::ExecutionStrategy::Open_4. <b><tt>open4</tt> will not be
+    # 1.8 Rubies, including 1.8, and REE:: Open4 is used via OptparsePlus::ExecutionStrategy::Open_4. <b><tt>open4</tt> will not be
     #                                      installed as a dependency</b>.  RubyGems doesn't allow conditional dependencies, 
     #                                      so make sure that your app declares it as a dependency if you think you'll be 
     #                                      running on 1.8 or REE.
-    # Rubinius:: Open4 is used, but we handle things a bit differently; see Methadone::ExecutionStrategy::RBXOpen_4.
+    # Rubinius:: Open4 is used, but we handle things a bit differently; see OptparsePlus::ExecutionStrategy::RBXOpen_4.
     #            Same warning on dependencies applies.
-    # JRuby:: Use JVM calls to +Runtime+ via Methadone::ExecutionStrategy::JVM
+    # JRuby:: Use JVM calls to +Runtime+ via OptparsePlus::ExecutionStrategy::JVM
     # Windows:: Currently no support for Windows
-    # All others:: we use Open3 from the standard library, via Methadone::ExecutionStrategy::Open_3
+    # All others:: we use Open3 from the standard library, via OptparsePlus::ExecutionStrategy::Open_3
     #
-    # See Methadone::ExecutionStrategy::Base for how to implement your own.
+    # See OptparsePlus::ExecutionStrategy::Base for how to implement your own.
     def set_execution_strategy(strategy)
       @execution_strategy = strategy
     end
@@ -181,13 +181,13 @@ module Methadone
 
     def self.default_execution_strategy_class
       if RUBY_PLATFORM == 'java'
-        Methadone::ExecutionStrategy::JVM
+        OptparsePlus::ExecutionStrategy::JVM
       elsif defined?(RUBY_ENGINE) && RUBY_ENGINE == 'rbx'
-        Methadone::ExecutionStrategy::RBXOpen_4
+        OptparsePlus::ExecutionStrategy::RBXOpen_4
       elsif RUBY_VERSION =~ /^1.8/
-        Methadone::ExecutionStrategy::Open_4
+        OptparsePlus::ExecutionStrategy::Open_4
       else
-        Methadone::ExecutionStrategy::Open_3
+        OptparsePlus::ExecutionStrategy::Open_3
       end
     end
 
@@ -197,7 +197,7 @@ module Methadone
 
     def sh_logger
       @sh_logger ||= begin
-        raise StandardError, "No logger set! Please include Methadone::CLILogging or provide your own via #set_sh_logger." unless self.respond_to?(:logger)
+        raise StandardError, "No logger set! Please include OptparsePlus::CLILogging or provide your own via #set_sh_logger." unless self.respond_to?(:logger)
         self.logger
       end
     end

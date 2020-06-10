@@ -2,7 +2,7 @@ require_relative "base_integration_test"
 class TestReadme < BaseIntegrationTest
   test_that "a reasonable README is created" do
     When {
-      methadone "newgem --readme"
+      optparse_plus "newgem --readme"
     }
     Then {
       assert File.exist?("newgem/README.rdoc")
@@ -32,7 +32,7 @@ class TestReadme < BaseIntegrationTest
 
   test_that "a readme is created by default" do
     When {
-      methadone "newgem"
+      optparse_plus "newgem"
     }
     Then {
       assert File.exist?("newgem/README.rdoc")
@@ -41,7 +41,7 @@ class TestReadme < BaseIntegrationTest
 
   test_that "we can omit a README" do
     When {
-      methadone "--no-readme newgem"
+      optparse_plus "--no-readme newgem"
     }
     Then {
       refute File.exist?("newgem/README.rdoc")

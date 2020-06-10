@@ -1,4 +1,4 @@
-module Methadone #:nodoc:
+module OptparsePlus #:nodoc:
   # Assists with parsing strings in the same way that ARGV might.
   # This is *not* used to parse the command-line, but used to 
   # parse config files/environment variables so they can be placed into ARGV and properly interpretted by 

@@ -9,11 +9,11 @@ require_relative "integration_test_assertions"
 # Clean test should be setting this
 $FOR_TESTING_ONLY_SKIP_STDERR = false
 
-module Methadone
+module OptparsePlus
 end
-class Methadone::BaseIntegrationTest < Test::Unit::TestCase
+class OptparsePlus::BaseIntegrationTest < Test::Unit::TestCase
   include FileUtils
-  include Methadone::IntegrationTestAssertions
+  include OptparsePlus::IntegrationTestAssertions
 
   # Run your app, capturing stdout, stderr, and process status.
   # app_name:: Your bin name, without `bin/`

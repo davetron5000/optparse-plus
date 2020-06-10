@@ -1,9 +1,9 @@
 require 'base_test'
-require 'methadone'
+require 'optparse_plus'
 
 class TestSH < BaseTest
-  include Methadone::SH
-  include Methadone::CLILogging
+  include OptparsePlus::SH
+  include OptparsePlus::CLILogging
 
   class CapturingLogger
     attr_reader :debugs, :infos, :warns, :errors, :fatals
@@ -236,7 +236,7 @@ class TestSH < BaseTest
       @code = lambda { sh! @command }
     }
     Then {
-      exception = assert_raises(Methadone::FailedCommandError,&@code)
+      exception = assert_raises(OptparsePlus::FailedCommandError,&@code)
       exception.command.should be == @command
       assert_logger_output_for_failure(@logger,@command,test_command_stdout,test_command_stderr)
     }
@@ -252,7 +252,7 @@ class TestSH < BaseTest
       @code = lambda { sh! @command, :on_fail => @custom_error_message }
     }
     Then {
-      exception = assert_raises(Methadone::FailedCommandError,&@code)
+      exception = assert_raises(OptparsePlus::FailedCommandError,&@code)
       exception.command.should be == @command
       exception.message.should be == @custom_error_message
       assert_logger_output_for_failure(@logger,@command,test_command_stdout,test_command_stderr)
@@ -260,7 +260,7 @@ class TestSH < BaseTest
   end
 
   class MyTestApp
-    include Methadone::SH
+    include OptparsePlus::SH
     def initialize(logger=nil)
       set_sh_logger(logger) if logger
     end
@@ -317,8 +317,8 @@ class TestSH < BaseTest
   end
 
   class MyExecutionStrategyApp
-    include Methadone::CLILogging
-    include Methadone::SH
+    include OptparsePlus::CLILogging
+    include OptparsePlus::SH
 
     attr_reader :strategy
 

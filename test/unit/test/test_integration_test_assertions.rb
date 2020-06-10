@@ -1,11 +1,11 @@
 require 'base_test'
-require 'methadone'
-require 'methadone/test/integration_test_assertions'
+require 'optparse_plus'
+require 'optparse_plus/test/integration_test_assertions'
 require 'fileutils'
 require 'tmpdir'
 
 class TestIntegrationTestAssertions < BaseTest
-  include Methadone::IntegrationTestAssertions
+  include OptparsePlus::IntegrationTestAssertions
   include FileUtils
 
   def setup

@@ -1,12 +1,12 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
-require 'methadone'
+require 'optparse_plus'
 require '<%= require_file %>'
 
 class App
-  include Methadone::Main
-  include Methadone::CLILogging
+  include OptparsePlus::Main
+  include OptparsePlus::CLILogging
 
   main do # Add args you want: |like,so|
     # your program code here

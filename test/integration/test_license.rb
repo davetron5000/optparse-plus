@@ -4,14 +4,14 @@ include FileUtils
 
 class TestLicense < BaseIntegrationTest
   test_that "omitting a license generates a warning" do
-    When { _, @stderr, __ = methadone "newgem" }
+    When { _, @stderr, __ = optparse_plus "newgem" }
     Then {
       assert_match(/warning: your app has no license/,@stderr)
     }
   end
 
   test_that "explicitly omitting a license does not generate a warning" do
-    When { _, @stderr, __ = methadone "newgem -l NONE" }
+    When { _, @stderr, __ = optparse_plus "newgem -l NONE" }
     Then {
       refute_match(/warning: your app has no license/,@stderr)
     }
@@ -24,7 +24,7 @@ class TestLicense < BaseIntegrationTest
     "gplv3",
   ].each do |license|
     test_that "the #{license} license can be included" do
-      When { methadone "newgem -l #{license}" }
+      When { optparse_plus "newgem -l #{license}" }
       Then {
         assert File.exist?("newgem/LICENSE.txt")
       }
@@ -35,7 +35,7 @@ class TestLicense < BaseIntegrationTest
   end
 
   test_that "a custom license can be included" do
-    When { methadone "newgem -l custom" }
+    When { optparse_plus "newgem -l custom" }
     Then {
       assert File.exist?("newgem/LICENSE.txt")
     }
@@ -45,7 +45,7 @@ class TestLicense < BaseIntegrationTest
   end
 
   test_that "a non-custom non-supported license causes an error" do
-    When { _, @stderr, @result = methadone "newgem -l foobar", allow_failure: true }
+    When { _, @stderr, @result = optparse_plus "newgem -l foobar", allow_failure: true }
     Then {
       refute @result.success?
     }

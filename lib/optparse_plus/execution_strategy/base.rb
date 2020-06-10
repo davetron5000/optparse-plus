@@ -1,4 +1,4 @@
-module Methadone
+module OptparsePlus
   module ExecutionStrategy
     # Base for any ExecutionStrategy implementation.  Currently, this is nothing more than an interface
     # specification.

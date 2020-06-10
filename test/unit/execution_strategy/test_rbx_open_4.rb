@@ -8,7 +8,7 @@ end
 
 module ExecutionStrategy
   class TestRBXOpen_4 < BaseTest
-    include Methadone::ExecutionStrategy
+    include OptparsePlus::ExecutionStrategy
 
     test_that "exception_meaning_command_not_found returns Errno::EINVAL" do
       Given {
