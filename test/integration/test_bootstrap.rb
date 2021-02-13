@@ -38,6 +38,7 @@ class TestBootstrap < BaseIntegrationTest
       gemspec = File.read("newgem/newgem.gemspec")
       refute_match(/TODO/,gemspec)
       refute_match(/FIXME/,gemspec)
+      refute_match(/optparse_plus/,gemspec)
     }
   end
 
