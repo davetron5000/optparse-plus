@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -e
+echo "[bin/ci] Running unit tests"
+bundle exec rake test
+
+echo "[bin/ci] Running integration tests"
+bundle exec rake test:integration
