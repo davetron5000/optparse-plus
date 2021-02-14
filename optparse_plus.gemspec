@@ -14,13 +14,13 @@ Gem::Specification.new do |s|
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  s.executables   = "optparse_plus"
+  s.bindir        = "exe"
   s.require_paths = ["lib"]
   s.add_dependency("bundler")
   s.add_development_dependency("rake")
   s.add_development_dependency("rdoc","~> 6.0")
   s.add_development_dependency("sdoc")
-  s.add_development_dependency("simplecov", "~> 0.5")
   s.add_development_dependency("clean_test", "~> 1.0.1")
   s.add_development_dependency("mocha")
   s.add_development_dependency("rspec") # needed for testing the generated tests
