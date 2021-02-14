@@ -1,6 +1,7 @@
-require 'base_test'
-require 'mocha/test_unit'
-require 'open3'
+require "base_test"
+require "mocha/minitest"
+require "optparse_plus"
+require "open3"
 
 module ExecutionStrategy
   class TestOpen_3 < BaseTest
@@ -13,7 +14,9 @@ module ExecutionStrategy
         @stderr = any_string
         @status = stub('Process::Status')
       }
-      When the_test_runs
+      When {
+        # test runs
+      }
       Then {
         Open3.expects(:capture3).with(@command).returns([@stdout,@stderr,@status])
       }
@@ -36,7 +39,9 @@ module ExecutionStrategy
         @stderr = any_string
         @status = stub('Process::Status')
       }
-      When the_test_runs
+      When {
+        # test runs
+      }
       Then {
         Open3.expects(:capture3).with(*@command).returns([@stdout,@stderr,@status])
       }

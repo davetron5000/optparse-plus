@@ -385,7 +385,7 @@ class TestMain < BaseTest
   test_that "I can specify which arguments my app takes and if they are required as well as document them" do
     Given {
       main {}
-      @db_name_desc = any_string 
+      @db_name_desc = any_string
       @user_desc = any_string
       @password_desc = any_string
 
@@ -566,7 +566,7 @@ class TestMain < BaseTest
       @flag_value = '56'
       @some_arg = any_string
       set_argv([])
-      ENV['APP_OPTS'] = "--switch --flag=#{@flag_value} #{@some_arg}"
+      ENV['APP_OPTS'] = "--switch --flag=#{@flag_value} '#{@some_arg}'"
     }
     When {
       @code = lambda { go! }
@@ -615,7 +615,7 @@ class TestMain < BaseTest
   test_that "environment args correctly handle spaces via backslash stuff" do
     Given app_to_use_environment
     And {
-      cli_flag_value = any_string(:max => 4) + "\\ " + any_string(:max => 4)
+      cli_flag_value = "foo\\ bar"
       @flag_value = cli_flag_value.gsub("\\ "," ")
       ENV['APP_OPTS'] = "--switch --flag=#{cli_flag_value}"
     }
@@ -700,7 +700,7 @@ class TestMain < BaseTest
       @flag_value = any_string
       rc_file = File.join(ENV['HOME'],'.my_app.rc')
       File.open(rc_file,'w') do |file|
-        file.puts "--switch --flag=#{@flag_value}"
+        file.puts "--switch --flag='#{@flag_value}'"
       end
     }
     When {
@@ -717,7 +717,7 @@ class TestMain < BaseTest
   test_that "the text format for the rc file attempts to respect quoted arguments" do
     Given app_to_use_rc_file
     And {
-      @flag_value = any_string(:max => 10) + " " + any_string(:max => 10)
+      @flag_value = "foobar barcrud"
       rc_file = File.join(ENV['HOME'],'.my_app.rc')
       File.open(rc_file,'w') do |file|
         file.puts "--switch --flag='#{@flag_value}'"

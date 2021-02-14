@@ -21,8 +21,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency("rake")
   s.add_development_dependency("rdoc","~> 6.0")
   s.add_development_dependency("sdoc")
-  s.add_development_dependency("clean_test", "~> 1.0.1")
   s.add_development_dependency("mocha")
+  s.add_development_dependency("minitest")
   s.add_development_dependency("rspec") # needed for testing the generated tests
   s.add_development_dependency("i18n")
 end

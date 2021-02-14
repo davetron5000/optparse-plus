@@ -1,4 +1,6 @@
-require 'base_test'
+require "base_test"
+require "mocha/minitest"
+require "optparse_plus"
 
 module ExecutionStrategy
   class TestMRI < BaseTest

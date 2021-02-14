@@ -1,10 +1,8 @@
 require "optparse_plus/test/base_integration_test"
-require "clean_test/test_case"
+require_relative "../unit/clean_test_inlined"
 
 class BaseIntegrationTest < OptparsePlus::BaseIntegrationTest
-  include Clean::Test::GivenWhenThen
-  include Clean::Test::TestThat
-  include Clean::Test::Any
+  include CleanTestInlined
   def setup
     root = (Pathname(__FILE__).dirname / ".." / "..").expand_path
     ENV["PATH"] = (root / "bin").to_s + File::PATH_SEPARATOR + ENV["PATH"]

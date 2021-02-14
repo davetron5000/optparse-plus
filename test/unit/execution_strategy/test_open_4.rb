@@ -1,8 +1,9 @@
-require 'base_test'
-require 'mocha/test_unit'
+require "base_test"
+require "mocha/minitest"
+require "optparse_plus"
 
 # Define this symbol without requiring the library;
-# all we're goingn to do is mock calls to it
+# all we're going to do is mock calls to it
 module Open4
 end
 
@@ -18,10 +19,12 @@ module ExecutionStrategy
         @stdout_io = StringIO.new(@stdout)
         @stderr = any_string
         @stderr_io = StringIO.new(@stderr)
-        @pid = any_int :min => 2, :max => 65536
+        @pid = rand(65534) + 2
         @status = stub('Process::Status')
       }
-      When the_test_runs
+      When {
+        # the test runs
+      }
       Then {
         Open4.expects(:popen4).with(@command).returns([@pid,@stdin_io,@stdout_io,@stderr_io])
         @stdin_io.expects(:close)
@@ -47,10 +50,12 @@ module ExecutionStrategy
         @stdout_io = StringIO.new(@stdout)
         @stderr = any_string
         @stderr_io = StringIO.new(@stderr)
-        @pid = any_int :min => 2, :max => 65536
+        @pid = rand(65534) + 2
         @status = stub('Process::Status')
       }
-      When the_test_runs
+      When {
+        # the test runs
+      }
       Then {
         Open4.expects(:popen4).with(*@command).returns([@pid,@stdin_io,@stdout_io,@stderr_io])
         @stdin_io.expects(:close)

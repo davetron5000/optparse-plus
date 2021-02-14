@@ -294,7 +294,6 @@ class TestSH < BaseTest
   end
 
   class MyExecutionStrategy
-    include Clean::Test::Any
     attr_reader :command
 
     def initialize(exitcode)
@@ -305,9 +304,9 @@ class TestSH < BaseTest
     def run_command(command)
       @command = command
       if @exitcode.kind_of? Integer
-        [any_string,any_string,OpenStruct.new(:exitstatus => @exitcode)]
+        ["whatever","whatever else",OpenStruct.new(:exitstatus => @exitcode)]
       else
-        [any_string,any_string,@exitcode]
+        ["whatever","whatever else",@exitcode]
       end
     end
 
@@ -331,7 +330,7 @@ class TestSH < BaseTest
 
   test_that "when I provide a custom execution strategy, it gets used" do
     Given {
-      @exit_code = any_int :min => 0, :max => 127
+      @exit_code = rand(128)
       @app = MyExecutionStrategyApp.new(@exit_code)
       @command = "ls"
     }

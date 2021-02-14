@@ -1,10 +1,11 @@
-require 'test/unit'
-require 'rspec/expectations'
-require 'clean_test/test_case'
-require 'ostruct'
+require "minitest/autorun"
+require "rspec/expectations"
+require "ostruct"
+require_relative "clean_test_inlined"
 
 RSpec::Matchers.configuration.syntax = :should
 
-class BaseTest < Clean::Test::TestCase
+class BaseTest < Minitest::Test
   include RSpec::Matchers
+  include CleanTestInlined
 end

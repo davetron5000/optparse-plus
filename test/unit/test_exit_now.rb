@@ -8,7 +8,7 @@ class TestExitNow < BaseTest
 
   test_that "exit_now raises the proper error" do
     Given {
-      @exit_code = any_int :min => 1
+      @exit_code = rand(99) + 1
       @message = any_string
     }
     When {

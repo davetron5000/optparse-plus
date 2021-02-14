@@ -3,39 +3,7 @@ require 'optparse_plus'
 require 'stringio'
 
 class TestCLILogging < BaseTest
-  include OptparsePlus
-
   SLEEP_TIME = 0.1
-
-  def setup
-    @blank_format = proc do |severity,datetime,progname,msg|
-      msg + "\n"
-    end
-    @real_stderr = $stderr
-    @real_stdout = $stdout
-    $stderr = StringIO.new
-    $stdout = StringIO.new
-  end
-
-  def teardown
-    $stderr = @real_stderr
-    $stdout = @real_stdout
-  end
-
-  test_that "a class can include CLILogging and get terser logging" do
-    Given {
-      @class_with_logger = MyClassThatLogsToStdout.new
-    }
-
-    When {
-      @class_with_logger.doit
-    }
-
-    Then {
-      $stdout.string.should be == "debug\ninfo\nwarn\nerror\nfatal\n"
-      $stderr.string.should be == "warn\nerror\nfatal\n"
-    }
-  end
 
   test_that "another class using CLILogging gets the same logger instance" do
     Given {

@@ -1,5 +1,6 @@
-require 'base_test'
-require 'mocha/test_unit'
+require "base_test"
+require "mocha/minitest"
+require "optparse_plus"
 
 # Defined by JRuby, but this test must pass on any Ruby
 class NativeException
@@ -16,9 +17,11 @@ module ExecutionStrategy
         @command = "ls"
         @stdout = any_string
         @stderr = any_string
-        @exitstatus = any_int :min => 1, :max => 127
+        @exitstatus = rand(127) + 1
       }
-      When the_test_runs
+      When {
+        # test runs
+      }
       Then {
         expects_lang = mock()
         JVM.any_instance.expects(:java).returns(expects_lang)

@@ -8,6 +8,19 @@ class TestIntegrationTestAssertions < BaseTest
   include OptparsePlus::IntegrationTestAssertions
   include FileUtils
 
+  def assert_test_fails(&code)
+    code.()
+    assert false, "Expected an exception, but got none"
+  rescue Minitest::Assertion
+    assert true
+  rescue Exception => ex
+    assert false, "Expected Minitest::Assertion, but got #{ex.message}"
+  end
+
+  def assert_test_passes(&code)
+    code.()
+  end
+
   def setup
     @pwd = pwd
     @tmpdir = Dir.mktmpdir
@@ -24,7 +37,7 @@ class TestIntegrationTestAssertions < BaseTest
     When {
       @code = ->() { assert_file("some_file.txt", contains: /foo/) }
     }
-    Then { refute_raises(&@code) }
+    Then { assert_test_passes(&@code) }
   end
 
   test_that "assert_file works with many regexps" do
@@ -32,7 +45,7 @@ class TestIntegrationTestAssertions < BaseTest
     When {
       @code = ->() { assert_file("some_file.txt", contains: [ /foo/, /bar/ ]) }
     }
-    Then { refute_raises(&@code) }
+    Then { assert_test_passes(&@code) }
   end
 
   test_that "assert_file fails if any regexp fails to match" do
@@ -40,7 +53,7 @@ class TestIntegrationTestAssertions < BaseTest
     When {
       @code = ->() { assert_file("some_file.txt", contains: [ /foo/, /baz/ ]) }
     }
-    Then { assert_raises(&@code) }
+    Then { assert_test_fails(&@code) }
   end
 
   test_that "assert_banner without takes_options passes for a banner with the bin name and no '[options]'" do
@@ -51,7 +64,7 @@ class TestIntegrationTestAssertions < BaseTest
     When {
       @code = ->() { assert_banner(@stdout,@bin_name,takes_options: false) }
     }
-    Then { refute_raises(&@code) }
+    Then { assert_test_passes(&@code) }
   end
 
   test_that "assert_banner without takes_options fails for a banner with the bin name and '[options]'" do
@@ -62,7 +75,7 @@ class TestIntegrationTestAssertions < BaseTest
     When {
       @code = ->() { assert_banner(@stdout,@bin_name,takes_options: false) }
     }
-    Then { assert_raises(&@code) }
+    Then { assert_test_fails(&@code) }
   end
 
   test_that "assert_banner with takes_options passes for a banner with the bin name and '[options]'" do
@@ -73,7 +86,7 @@ class TestIntegrationTestAssertions < BaseTest
     When {
       @code = ->() { assert_banner(@stdout,@bin_name,takes_options: true) }
     }
-    Then { refute_raises(&@code) }
+    Then { assert_test_passes(&@code) }
   end
 
   test_that "assert_banner with takes_options fails for a banner with the bin name but no '[options]'" do
@@ -84,7 +97,7 @@ class TestIntegrationTestAssertions < BaseTest
     When {
       @code = ->() { assert_banner(@stdout,@bin_name,takes_options: true) }
     }
-    Then { assert_raises(&@code) }
+    Then { assert_test_fails(&@code) }
   end
 
   test_that "assert_banner with takes_options and takes_arguments passes for a banner with the bin name, '[options]' and the arg list" do
@@ -101,10 +114,10 @@ class TestIntegrationTestAssertions < BaseTest
                      )
       }
     }
-    Then { refute_raises(&@code) }
+    Then { assert_test_passes(&@code) }
   end
 
-  test_that "assert_banner with takes_options and takes_arguments failes for a banner with the bin name, '[options]' and no arg list" do
+  test_that "assert_banner with takes_options and takes_arguments fails for a banner with the bin name, '[options]' and no arg list" do
     Given {
       @bin_name = "foobar"
       @stdout = "Usage: foobar [options]\nOptions\n  --help"
@@ -118,25 +131,27 @@ class TestIntegrationTestAssertions < BaseTest
                      )
       }
     }
-    Then { assert_raises(&@code) }
+    Then {
+      assert_test_fails(&@code)
+    }
   end
 
   test_that "assert_options with one option passes when stdout contains that option" do
     Given { @stdout = some_options }
     When { @code = ->() { assert_option(@stdout,"--help") } }
-    Then { refute_raises(&@code) }
+    Then { assert_test_passes(&@code) }
   end
 
   test_that "assert_options with many option passes when stdout contains that option" do
     Given { @stdout = some_options }
     When { @code = ->() { assert_option(@stdout,"-h", "--help") } }
-    Then { refute_raises(&@code) }
+    Then { assert_test_passes(&@code) }
   end
 
   test_that "assert_options fails when stdout does not the option" do
     Given { @stdout = some_options }
     When { @code = ->() { assert_option(@stdout,"--bleorg") } }
-    Then { assert_raises(&@code) }
+    Then { assert_test_fails(&@code) }
   end
 
   test_that "assert_oneline_summary passes when the stdout has at least three lines, the second of which is blank and the third of which has some words in it" do
@@ -148,7 +163,7 @@ class TestIntegrationTestAssertions < BaseTest
       ].join("\n")
     }
     When { @code = ->() { assert_oneline_summary(@stdout) } }
-    Then { refute_raises(&@code) }
+    Then { assert_test_passes(&@code) }
   end
 
   test_that "assert_oneline_summary fails when the stdout has at least three lines, the second of which is blank and the third of which has only one word in it" do
@@ -160,7 +175,7 @@ class TestIntegrationTestAssertions < BaseTest
       ].join("\n")
     }
     When { @code = ->() { assert_oneline_summary(@stdout) } }
-    Then { assert_raises(&@code) }
+    Then { assert_test_fails(&@code) }
   end
 
   test_that "assert_oneline_summary fails when the stdout has at least three lines, the second of which is not blank and the third of which has words in it" do
@@ -172,7 +187,7 @@ class TestIntegrationTestAssertions < BaseTest
       ].join("\n")
     }
     When { @code = ->() { assert_oneline_summary(@stdout) } }
-    Then { assert_raises(&@code) }
+    Then { assert_test_fails(&@code) }
   end
 
   test_that "assert_oneline_summary fails when the stdout has less than three lines" do
@@ -183,7 +198,7 @@ class TestIntegrationTestAssertions < BaseTest
       ].join("\n")
     }
     When { @code = ->() { assert_oneline_summary(@stdout) } }
-    Then { assert_raises(&@code) }
+    Then { assert_test_fails(&@code) }
   end
 
 private
@@ -194,12 +209,6 @@ private
       "--version      Show the version",
       "--[no-]output  Print output",
     ].join("\n")
-  end
-
-  def refute_raises(&block)
-    block.()
-  rescue Exception => ex
-    assert false, "Expected block NOT to raise, but got a #{ex.class}/#{ex.message}"
   end
 
   def some_file

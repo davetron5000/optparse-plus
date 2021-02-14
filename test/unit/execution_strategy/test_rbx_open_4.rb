@@ -1,5 +1,6 @@
-require 'base_test'
-require 'mocha/test_unit'
+require "base_test"
+require "mocha/minitest"
+require "optparse_plus"
 
 # Define this symbol without requiring the library;
 # all we're going to do is mock calls to it
