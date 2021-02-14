@@ -22,8 +22,6 @@ Toward that end, this gem provides:
 
 This library only supports the latest versions of Ruby. JRuby support has been too difficult to keep up with, though the library should work for JRuby.
 
-See the {Travis config file}[./.travis.yml] for specifics.
-
 == Bootstrapping a new CLI App
 
 The +optparse_plus+ command-line app will bootstrap a new command-line app, setting up a proper gem structure, unit tests, and integration tests.
