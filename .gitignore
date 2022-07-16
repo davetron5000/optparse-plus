@@ -4,3 +4,4 @@ html
 tmp
 .DS_Store
 .*.sw?
+coverage
