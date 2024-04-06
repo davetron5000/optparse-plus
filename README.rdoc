@@ -1,5 +1,7 @@
 = optparse-plus - Wrapper around OptionParse to Make CLIs a bit Easier
 
+_formerly called methadone, {read about the name change if you care}[https://github.com/davetron5000/optparse-plus/wiki/Name-Change]_
+
 Author::  Dave Copeland (mailto:davetron5000 at g mail dot com)
 Copyright:: Copyright (c) 2011 by Dave Copeland
 License:: Distributes under the Apache License, see LICENSE.txt in the source distro
@@ -16,7 +18,6 @@ Toward that end, this gem provides:
 * Simplified zero-config logging that is a better-than-<tt>puts</tt> <tt>puts</tt>.
 * Support for integration-testing your CLI using Test::Unit
 
-{Read about the name change if you care}[https://github.com/davetron5000/optparse-plus/wiki/Name-Change]
 
 == Platforms
 
