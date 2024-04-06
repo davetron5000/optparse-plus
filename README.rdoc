@@ -1,6 +1,6 @@
 = optparse-plus - Wrapper around OptionParse to Make CLIs a bit Easier
 
-_formerly called methadone, {read about the name change if you care}[https://github.com/davetron5000/optparse-plus/wiki/Name-Change]_
+formerly called methadone, {read about the name change if you care}[https://github.com/davetron5000/optparse-plus/wiki/Name-Change]
 
 Author::  Dave Copeland (mailto:davetron5000 at g mail dot com)
 Copyright:: Copyright (c) 2011 by Dave Copeland
